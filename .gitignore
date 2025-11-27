@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/*.log
+
+# Reports
+reports/*.html
+reports/*.csv
+reports/*.json
+
+# Keep folder structure but ignore contents
+!logs/.gitkeep
+!reports/.gitkeep
+
+# Data files - exclude large CSV files from git
+DataDump/*.csv
+
+# Keep DataDump folder but not the large files
+!DataDump/.gitkeep
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Test outputs
+tests/__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,243 @@
+================================================================================
+                    INTRADAY MOMENTUM OI STRATEGY
+                         FILE GUIDE
+================================================================================
+
+📁 PROJECT STRUCTURE
+====================
+
+📂 /Users/Algo_Trading/manishsir_options/
+│
+├── 🚀 MAIN EXECUTION
+│   ├── backtest_runner.py          ⭐ RUN THIS to start backtest
+│   └── test_setup.py               ✅ Verify setup before running
+│
+├── ⚙️ CONFIGURATION (EDIT THESE)
+│   └── config/
+│       └── strategy_config.yaml    📝 All strategy parameters here
+│
+├── 🧠 STRATEGY CODE (DON'T EDIT)
+│   └── strategies/
+│       ├── intraday_momentum_oi.py      Core strategy logic
+│       └── backtrader_strategy.py       Backtrader integration
+│
+├── 🛠️ UTILITIES (DON'T EDIT)
+│   └── utils/
+│       ├── config_loader.py        Loads configuration
+│       ├── data_loader.py          Loads CSV data
+│       ├── oi_analyzer.py          OI analysis engine
+│       ├── indicators.py           VWAP calculator
+│       ├── logger.py               Logging setup
+│       └── reporter.py             Report generation
+│
+├── 📊 DATA (READ-ONLY)
+│   └── DataDump/
+│       ├── weekly_expiry.csv       2.6 GB weekly options
+│       ├── monthly_expiry.csv      2.1 GB monthly options
+│       ├── spotprice_2025.csv      Nifty spot prices
+│       └── india_vix_1min_zerodha.csv  VIX data
+│
+├── 📈 OUTPUTS (AUTO-GENERATED)
+│   ├── logs/
+│   │   ├── backtest_*.log          Detailed execution log
+│   │   └── trades_*.log            Trade entries/exits only
+│   │
+│   └── reports/
+│       ├── report_*.html           📊 Visual report (open in browser)
+│       ├── trades_*.csv            All trades (open in Excel)
+│       ├── summary_*.json          Metrics (for programs)
+│       └── monthly_*.csv           Monthly breakdown
+│
+├── 📚 DOCUMENTATION (READ THESE)
+│   ├── README.md                   Complete documentation
+│   ├── QUICKSTART.md               5-minute setup guide
+│   ├── STRATEGY_IMPLEMENTATION.md  Technical details
+│   ├── PROJECT_SUMMARY.md          Project overview
+│   └── FILE_GUIDE.txt              This file
+│
+└── 📦 DEPENDENCIES
+    ├── requirements.txt            Python packages to install
+    └── Trading Strategy PDF        Original strategy document
+
+================================================================================
+                           QUICK START
+================================================================================
+
+1. INSTALL DEPENDENCIES
+   $ pip install -r requirements.txt
+
+2. VERIFY SETUP (Optional)
+   $ python test_setup.py
+
+3. RUN BACKTEST
+   $ python backtest_runner.py
+
+4. VIEW RESULTS
+   Open: reports/report_YYYYMMDD_HHMMSS.html in browser
+
+================================================================================
+                        CUSTOMIZATION
+================================================================================
+
+TO CHANGE STRATEGY PARAMETERS:
+   Edit: config/strategy_config.yaml
+
+   Example changes:
+   - Risk per trade: risk_per_trade_percent: 0.5
+   - Stop loss: initial_stop_loss_percent: 20
+   - Timeframe: candle_timeframe: 3
+   - Date range: backtest.start_date / end_date
+
+DON'T EDIT THE PYTHON FILES!
+   All parameters are in the config file
+
+================================================================================
+                          FILE PURPOSES
+================================================================================
+
+📝 FILES YOU SHOULD READ:
+   1. QUICKSTART.md              ← Start here (5 min read)
+   2. config/strategy_config.yaml ← Customize here
+   3. README.md                   ← Full documentation
+   4. reports/*.html              ← View results here
+
+🔧 FILES YOU MIGHT EDIT:
+   1. config/strategy_config.yaml ← Only edit this!
+
+🚀 FILES YOU SHOULD RUN:
+   1. python test_setup.py        ← Verify setup
+   2. python backtest_runner.py   ← Run backtest
+
+📊 FILES YOU SHOULD VIEW:
+   1. reports/report_*.html       ← In web browser
+   2. reports/trades_*.csv        ← In Excel
+   3. logs/backtest_*.log         ← If debugging
+
+================================================================================
+                        WORKFLOW DIAGRAM
+================================================================================
+
+    [Edit Config]
+         │
+         ↓
+    [Run Backtest] ──→ backtest_runner.py
+         │
+         ├──→ Load config (config_loader.py)
+         ├──→ Load data (data_loader.py)
+         ├──→ Initialize strategy (intraday_momentum_oi.py)
+         │
+         ├──→ For each candle:
+         │    ├─→ Analyze OI (oi_analyzer.py)
+         │    ├─→ Calculate VWAP (indicators.py)
+         │    ├─→ Check entry conditions
+         │    ├─→ Check exit conditions
+         │    └─→ Log trades (logger.py)
+         │
+         └──→ Generate reports (reporter.py)
+              ├─→ HTML report
+              ├─→ CSV export
+              └─→ JSON summary
+         
+    [View Results]
+         │
+         └──→ Open reports/*.html in browser
+
+================================================================================
+                      DATA FLOW SUMMARY
+================================================================================
+
+Input Data:
+   weekly_expiry.csv     ──┐
+   monthly_expiry.csv    ──┤
+   spotprice_2025.csv    ──┼──→ [DataLoader]
+   india_vix_*.csv       ──┘
+                            │
+Configuration:                 ↓
+   strategy_config.yaml ─────→ [Strategy Engine]
+                               │
+Strategy Logic:                ↓
+   OI Analysis           ──┐
+   VWAP Calculation      ──┤
+   Entry/Exit Rules      ──┼──→ [Trade Decisions]
+   Position Sizing       ──┘
+                            │
+                            ↓
+Output Reports:
+   HTML Report          ──┐
+   Trades CSV           ──┤
+   Summary JSON         ──┼──→ [Results]
+   Logs                 ──┘
+
+================================================================================
+                        SUPPORT & HELP
+================================================================================
+
+Problem: "Module not found"
+   → Run: pip install -r requirements.txt
+
+Problem: "Config file not found"
+   → Check: config/strategy_config.yaml exists
+
+Problem: "No trades executed"
+   → Enable DEBUG logging in config
+   → Check logs/backtest_*.log
+   → Verify date range has data
+
+Problem: "Data file not found"
+   → Check DataDump/ folder has all CSV files
+   → Verify paths in config match actual files
+
+Questions about strategy:
+   → Read: STRATEGY_IMPLEMENTATION.md
+   → Check: Original PDF document
+
+Questions about usage:
+   → Read: README.md (comprehensive)
+   → Read: QUICKSTART.md (quick overview)
+
+================================================================================
+                      FILE SIZE REFERENCE
+================================================================================
+
+Large Files (Don't Open in Text Editor):
+   weekly_expiry.csv     ~2.6 GB
+   monthly_expiry.csv    ~2.1 GB
+   
+Medium Files:
+   spotprice_2025.csv    ~4.5 MB
+   india_vix_*.csv       ~2.0 MB
+
+Small Files (Safe to Open):
+   All Python files      < 50 KB each
+   Config YAML           < 10 KB
+   Documentation         < 100 KB each
+
+================================================================================
+                      IMPORTANT REMINDERS
+================================================================================
+
+✅ DO:
+   - Edit config/strategy_config.yaml to customize
+   - Run python backtest_runner.py to backtest
+   - View reports/*.html for results
+   - Read QUICKSTART.md first
+
+❌ DON'T:
+   - Edit Python files (unless extending)
+   - Modify data files in DataDump/
+   - Delete logs or reports folders
+   - Open large CSV files in Excel/text editor
+
+⚠️ NOTES:
+   - Backtesting large datasets may take time
+   - First run loads all data (be patient)
+   - Reports auto-generate with timestamps
+   - Logs help with debugging
+
+================================================================================
+
+Last Updated: 2025-01-26
+Project: Intraday Momentum OI Strategy Backtesting System
+Status: ✅ Complete and Ready to Use
+
+================================================================================
