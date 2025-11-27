@@ -10,7 +10,9 @@ instrument: "NIFTY"
 # Future extension: ["NIFTY", "BANKNIFTY", "FINNIFTY"]
 
 # Expiry Selection
-expiry_type: "weekly"  # Options: "weekly", "monthly", "closest"
+expiry_type: "weekly"  # Options: "weekly", "monthly"
+# NOTE: PDF says "Closest" expiry. "weekly" implements this.
+# "monthly" is supported but NOT mentioned in PDF - use for testing only
 skip_monday_tuesday_expiry: False  # Set to True to skip Mon/Tue expiries
 # Note from PDF: "Might need to be revisited for Monday and Tuesday based on test results"
 
@@ -53,9 +55,9 @@ max_concurrent_positions: 1  # Only one position at a time
 # Data File Paths (relative to project root)
 data_paths:
   weekly_expiry: "DataDump/weekly_expiry.csv"
-  monthly_expiry: "DataDump/monthly_expiry.csv"
+  monthly_expiry: "DataDump/monthly_expiry.csv"  # NOT in PDF, for future use
   spot_price: "DataDump/spotprice_2025.csv"
-  india_vix: "DataDump/india_vix_1min_zerodha.csv"
+  india_vix: "DataDump/india_vix_1min_zerodha.csv"  # NOT USED (loaded but not in strategy)
 
 # Backtesting Configuration
 backtest:

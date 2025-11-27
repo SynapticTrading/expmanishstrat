@@ -190,12 +190,18 @@ class IntradayMomentumOIStrategy:
 
         current_price = option_row.iloc[0]['close']
 
-        # Calculate VWAP for this option
-        if len(option_history) < 2:
-            logger.debug("Insufficient history for VWAP calculation")
+        # Calculate VWAP for this specific option (not all strikes!)
+        # Filter option_history to only this strike and option type
+        specific_option_history = option_history[
+            (option_history['strike'] == selected_strike) &
+            (option_history['option_type'] == option_type)
+        ].copy()
+
+        if len(specific_option_history) < 2:
+            logger.debug(f"Insufficient history for VWAP calculation (only {len(specific_option_history)} candles)")
             return False, None
 
-        vwap = self.vwap_calculator.calculate_vwap_for_option(option_history)
+        vwap = self.vwap_calculator.calculate_vwap_for_option(specific_option_history)
 
         if pd.isna(vwap.iloc[-1]):
             logger.debug("VWAP is NaN")

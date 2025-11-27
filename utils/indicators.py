@@ -117,144 +117,56 @@ class VWAPCalculator:
         return current_price > vwap_value
 
 
-class IndicatorCalculator:
-    """Calculate various technical indicators"""
+# NOTE: The following classes/functions are NOT used in the current strategy
+# They are kept for potential future enhancements
+# The PDF strategy only requires VWAP calculation
 
-    @staticmethod
-    def calculate_ema(data: pd.Series, period: int) -> pd.Series:
-        """
-        Calculate Exponential Moving Average
+# Uncomment if needed for future strategies:
 
-        Args:
-            data: Price series
-            period: EMA period
+# class IndicatorCalculator:
+#     """Calculate various technical indicators (NOT USED IN CURRENT STRATEGY)"""
+#     @staticmethod
+#     def calculate_ema(data: pd.Series, period: int) -> pd.Series:
+#         return data.ewm(span=period, adjust=False).mean()
+#
+#     @staticmethod
+#     def calculate_sma(data: pd.Series, period: int) -> pd.Series:
+#         return data.rolling(window=period).mean()
+#
+#     @staticmethod
+#     def calculate_rsi(data: pd.Series, period: int = 14) -> pd.Series:
+#         delta = data.diff()
+#         gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+#         loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+#         rs = gain / loss
+#         return 100 - (100 / (1 + rs))
+#
+#     @staticmethod
+#     def calculate_atr(high, low, close, period=14):
+#         tr1 = high - low
+#         tr2 = abs(high - close.shift())
+#         tr3 = abs(low - close.shift())
+#         tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+#         return tr.rolling(window=period).mean()
+#
+#     @staticmethod
+#     def calculate_bollinger_bands(data, period=20, num_std=2.0):
+#         middle_band = data.rolling(window=period).mean()
+#         std = data.rolling(window=period).std()
+#         upper_band = middle_band + (std * num_std)
+#         lower_band = middle_band - (std * num_std)
+#         return upper_band, middle_band, lower_band
 
-        Returns:
-            EMA series
-        """
-        return data.ewm(span=period, adjust=False).mean()
-
-    @staticmethod
-    def calculate_sma(data: pd.Series, period: int) -> pd.Series:
-        """
-        Calculate Simple Moving Average
-
-        Args:
-            data: Price series
-            period: SMA period
-
-        Returns:
-            SMA series
-        """
-        return data.rolling(window=period).mean()
-
-    @staticmethod
-    def calculate_rsi(data: pd.Series, period: int = 14) -> pd.Series:
-        """
-        Calculate Relative Strength Index
-
-        Args:
-            data: Price series
-            period: RSI period
-
-        Returns:
-            RSI series
-        """
-        delta = data.diff()
-
-        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-
-        rs = gain / loss
-        rsi = 100 - (100 / (1 + rs))
-
-        return rsi
-
-    @staticmethod
-    def calculate_atr(
-        high: pd.Series,
-        low: pd.Series,
-        close: pd.Series,
-        period: int = 14
-    ) -> pd.Series:
-        """
-        Calculate Average True Range
-
-        Args:
-            high: High prices
-            low: Low prices
-            close: Close prices
-            period: ATR period
-
-        Returns:
-            ATR series
-        """
-        tr1 = high - low
-        tr2 = abs(high - close.shift())
-        tr3 = abs(low - close.shift())
-
-        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
-        atr = tr.rolling(window=period).mean()
-
-        return atr
-
-    @staticmethod
-    def calculate_bollinger_bands(
-        data: pd.Series,
-        period: int = 20,
-        num_std: float = 2.0
-    ) -> tuple:
-        """
-        Calculate Bollinger Bands
-
-        Args:
-            data: Price series
-            period: Period for moving average
-            num_std: Number of standard deviations
-
-        Returns:
-            Tuple of (upper_band, middle_band, lower_band)
-        """
-        middle_band = data.rolling(window=period).mean()
-        std = data.rolling(window=period).std()
-
-        upper_band = middle_band + (std * num_std)
-        lower_band = middle_band - (std * num_std)
-
-        return upper_band, middle_band, lower_band
-
-
-def calculate_option_greeks_simple(
-    spot: float,
-    strike: float,
-    option_price: float,
-    option_type: str
-) -> dict:
-    """
-    Calculate simple option Greeks approximations
-
-    Note: For accurate Greeks, use the IV and delta from the data
-
-    Args:
-        spot: Spot price
-        strike: Strike price
-        option_price: Option price
-        option_type: 'CE' or 'PE'
-
-    Returns:
-        Dict with simple Greek approximations
-    """
-    # Simple ITM/OTM calculation
-    if option_type == 'CE':
-        itm_amount = max(0, spot - strike)
-    else:  # PE
-        itm_amount = max(0, strike - spot)
-
-    intrinsic_value = itm_amount
-    time_value = max(0, option_price - intrinsic_value)
-
-    return {
-        'intrinsic_value': intrinsic_value,
-        'time_value': time_value,
-        'itm_amount': itm_amount
-    }
+# def calculate_option_greeks_simple(spot, strike, option_price, option_type):
+#     """NOT USED - Greeks are already in the data (IV, delta)"""
+#     if option_type == 'CE':
+#         itm_amount = max(0, spot - strike)
+#     else:
+#         itm_amount = max(0, strike - spot)
+#     intrinsic_value = itm_amount
+#     time_value = max(0, option_price - intrinsic_value)
+#     return {
+#         'intrinsic_value': intrinsic_value,
+#         'time_value': time_value,
+#         'itm_amount': itm_amount
+#     }

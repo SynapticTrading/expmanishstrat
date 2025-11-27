@@ -250,9 +250,11 @@ class BacktestRunner:
 
     def _get_spot_price(self, timestamp: pd.Timestamp) -> float:
         """Get spot price for timestamp"""
-        spot_row = self.spot_data[self.spot_data['date'] == timestamp]
+        # Spot data has 'date' column with datetime, match on date only
+        timestamp_date = timestamp.normalize()  # Get date at 00:00:00
+        spot_row = self.spot_data[self.spot_data['date'] == timestamp_date]
         if len(spot_row) > 0:
-            return spot_row.iloc[0]['close']
+            return spot_row.iloc[0]['spot_price']  # Was renamed from 'close'
         return None
 
     def _get_position_price(
