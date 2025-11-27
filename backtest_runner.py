@@ -163,7 +163,10 @@ class BacktestRunner:
                     continue
 
                 # Get current expiry
-                expiry = self.data_loader.get_closest_expiry(timestamp, expiry_type)
+                skip_mon_tue = self.config.get('skip_monday_tuesday_expiry', False)
+                expiry = self.data_loader.get_closest_expiry(
+                    timestamp, expiry_type, skip_mon_tue=skip_mon_tue
+                )
                 if expiry is None:
                     self.logger.debug(f"No expiry found for {timestamp}")
                     previous_data = current_data

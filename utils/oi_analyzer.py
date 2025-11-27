@@ -203,9 +203,11 @@ class OIAnalyzer:
         # Find max Put buildup strike
         max_put_strike, max_put_change = self.find_max_buildup_strikes(put_oi_changes, 'PE')
 
-        # Calculate distances from spot
-        call_distance = abs(max_call_strike - spot_price) if max_call_strike else float('inf')
-        put_distance = abs(spot_price - max_put_strike) if max_put_strike else float('inf')
+        # Calculate distances from spot (as per PDF)
+        # CallStrikeDistance = MaxOICallStrike – Spot
+        # PutStrikeDistance = Spot – MaxOIPutStrike
+        call_distance = (max_call_strike - spot_price) if max_call_strike else float('inf')
+        put_distance = (spot_price - max_put_strike) if max_put_strike else float('inf')
 
         # Determine Call or Put
         # Call if CallStrikeDistance < PutStrikeDistance else Put

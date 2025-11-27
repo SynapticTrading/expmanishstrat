@@ -212,7 +212,8 @@ class DataLoader:
     def get_closest_expiry(
         self,
         current_date: datetime,
-        expiry_type: str = 'weekly'
+        expiry_type: str = 'weekly',
+        skip_mon_tue: bool = False
     ) -> Optional[datetime]:
         """
         Get closest expiry date from current date
@@ -220,6 +221,9 @@ class DataLoader:
         Args:
             current_date: Current trading date
             expiry_type: 'weekly' or 'monthly'
+            skip_mon_tue: If True, skip Monday/Tuesday expiries (for testing)
+                         Note from PDF: "Might need to be revisited for Monday
+                         and Tuesday based on the test results"
 
         Returns:
             Closest expiry datetime or None
@@ -232,8 +236,25 @@ class DataLoader:
         if len(future_expiries) == 0:
             return None
 
+        # Sort expiries
+        sorted_expiries = sorted(future_expiries)
+
+        # If skip_mon_tue is enabled, filter out Monday/Tuesday expiries
+        if skip_mon_tue:
+            filtered_expiries = []
+            for expiry in sorted_expiries:
+                expiry_dt = pd.to_datetime(expiry)
+                # 0=Monday, 1=Tuesday, 2=Wednesday, etc.
+                if expiry_dt.weekday() not in [0, 1]:
+                    filtered_expiries.append(expiry)
+
+            if len(filtered_expiries) > 0:
+                return pd.to_datetime(filtered_expiries[0])
+
+            logger.warning("No non-Monday/Tuesday expiries found, using closest")
+
         # Return the closest one
-        return pd.to_datetime(sorted(future_expiries)[0])
+        return pd.to_datetime(sorted_expiries[0])
 
     def filter_trading_hours(
         self,

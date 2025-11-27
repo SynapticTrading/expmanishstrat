@@ -11,7 +11,8 @@ instrument: "NIFTY"
 
 # Expiry Selection
 expiry_type: "weekly"  # Options: "weekly", "monthly", "closest"
-# Note: May need adjustment for Monday/Tuesday based on test results
+skip_monday_tuesday_expiry: False  # Set to True to skip Mon/Tue expiries
+# Note from PDF: "Might need to be revisited for Monday and Tuesday based on test results"
 
 # Timeframe Configuration
 candle_timeframe: 5  # in minutes (3 or 5)
@@ -24,10 +25,6 @@ exit_end_time: "15:00"
 num_strikes_to_analyze: 10  # Total strikes to analyze (5 below, 5 above spot)
 strikes_below_spot: 5
 strikes_above_spot: 5
-
-# OI Analysis Parameters
-oi_unwinding_threshold: 0  # Negative value indicates unwinding
-min_oi_change_percent: -1  # Minimum OI change % to consider as unwinding (negative)
 
 # VWAP Parameters
 vwap_lookback_periods: 20  # Number of candles for VWAP calculation
@@ -47,7 +44,10 @@ initial_capital: 1000000  # 10 lakhs initial capital
 
 # Trade Management
 allow_add_to_losing_positions: False
-max_positions_per_day: 5  # Maximum number of positions in a day
+# Note: PDF says "Reenter whenever conditions exist before 2:30"
+# This means unlimited re-entries are allowed, not max 5 per day
+# Keeping max_positions_per_day as safety limit (remove to allow unlimited)
+max_positions_per_day: 999  # Essentially unlimited as per PDF
 max_concurrent_positions: 1  # Only one position at a time
 
 # Data File Paths (relative to project root)
