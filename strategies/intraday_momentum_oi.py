@@ -148,11 +148,12 @@ class IntradayMomentumOIStrategy:
         if self.current_position is not None:
             return False, None
 
-        # Perform OI analysis if not done yet or if we need to update
-        if self.oi_analysis is None:
-            self.analyze_oi_setup(current_data, previous_data, spot_price, current_time)
+        # PDF says "Keep on Updating CallStrike/PutStrike till entry is found"
+        # This means we should re-analyze OI on EVERY candle to determine direction
+        # Direction can change as spot moves and OI buildups shift
+        self.analyze_oi_setup(current_data, previous_data, spot_price, current_time)
 
-        # Get selected strike and option type from analysis
+        # Get selected strike and option type from fresh analysis
         selected_strike = self.oi_analysis['selected_strike']
         option_type = self.oi_analysis['selected_option_type']
 

@@ -161,9 +161,11 @@ class IntradayMomentumOIBacktrader(bt.Strategy):
         if self.spot_data is None:
             return None
 
-        spot_row = self.spot_data[self.spot_data['date'] == timestamp]
+        # Spot data has 'date' column with datetime, match on date only
+        timestamp_date = timestamp.normalize()  # Get date at 00:00:00
+        spot_row = self.spot_data[self.spot_data['date'] == timestamp_date]
         if len(spot_row) > 0:
-            return spot_row.iloc[0]['close']
+            return spot_row.iloc[0]['spot_price']  # Was renamed from 'close'
 
         return None
 
