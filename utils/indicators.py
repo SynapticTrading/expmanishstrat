@@ -14,14 +14,16 @@ logger = logging.getLogger(__name__)
 class VWAPCalculator:
     """Calculate VWAP (Volume Weighted Average Price) for options"""
 
-    def __init__(self, lookback_periods: int = 20):
+    def __init__(self, lookback_periods: int = 20, anchored: bool = True):
         """
         Initialize VWAP calculator
 
         Args:
-            lookback_periods: Number of periods to use for VWAP calculation
+            lookback_periods: Number of periods to use for rolling VWAP (ignored if anchored=True)
+            anchored: If True, VWAP is anchored to opening (9:15 AM). If False, uses rolling window.
         """
-        self.lookback_periods = lookback_periods
+        self.lookback_periods = int(lookback_periods)  # Ensure it's an integer
+        self.anchored = anchored
 
     def calculate_vwap(
         self,
@@ -61,6 +63,46 @@ class VWAPCalculator:
 
         return vwap
 
+    def calculate_anchored_vwap(
+        self,
+        prices: pd.Series,
+        volumes: pd.Series,
+        highs: Optional[pd.Series] = None,
+        lows: Optional[pd.Series] = None,
+        closes: Optional[pd.Series] = None
+    ) -> pd.Series:
+        """
+        Calculate anchored VWAP (from opening to current time)
+        
+        Anchored VWAP = Cumulative(Price * Volume) / Cumulative(Volume)
+        
+        Args:
+            prices: Price series (can be close prices)
+            volumes: Volume series
+            highs: High prices (optional)
+            lows: Low prices (optional)
+            closes: Close prices (optional)
+            
+        Returns:
+            Anchored VWAP series
+        """
+        # Calculate typical price if high, low, close are provided
+        if highs is not None and lows is not None and closes is not None:
+            typical_price = (highs + lows + closes) / 3
+        else:
+            typical_price = prices
+        
+        # Calculate cumulative VWAP (anchored to start)
+        pv = typical_price * volumes
+        cumulative_pv = pv.cumsum()
+        cumulative_volume = volumes.cumsum()
+        
+        # Avoid division by zero
+        vwap = cumulative_pv / cumulative_volume
+        vwap = vwap.replace([np.inf, -np.inf], np.nan)
+        
+        return vwap
+
     def calculate_vwap_for_option(
         self,
         option_data: pd.DataFrame,
@@ -68,32 +110,52 @@ class VWAPCalculator:
     ) -> pd.Series:
         """
         Calculate VWAP for option data DataFrame
+        
+        Uses anchored VWAP (from 9:15 AM) if self.anchored=True,
+        otherwise uses rolling VWAP with lookback periods.
 
         Args:
             option_data: DataFrame with columns: high, low, close, volume
-            lookback: Lookback periods (overrides default if provided)
+            lookback: Lookback periods (only used if anchored=False)
 
         Returns:
             VWAP series
         """
-        periods = lookback if lookback is not None else self.lookback_periods
-
         # Check if required columns exist
         required_cols = ['high', 'low', 'close', 'volume']
-        if not all(col in option_data.columns for col in required_cols):
-            logger.warning("Missing required columns for VWAP calculation, using close price only")
+        missing_cols = [col for col in required_cols if col not in option_data.columns]
+        
+        if missing_cols:
+            logger.warning(f"Missing columns {missing_cols} for VWAP calculation, using close price only")
+            if self.anchored:
+                return self.calculate_anchored_vwap(
+                    option_data['close'],
+                    option_data['volume']
+                )
+            else:
+                return self.calculate_vwap(
+                    option_data['close'],
+                    option_data['volume']
+                )
+        
+        # Use anchored or rolling VWAP based on configuration
+        if self.anchored:
+            return self.calculate_anchored_vwap(
+                option_data['close'],
+                option_data['volume'],
+                option_data['high'],
+                option_data['low'],
+                option_data['close']
+            )
+        else:
+            periods = lookback if lookback is not None else self.lookback_periods
             return self.calculate_vwap(
                 option_data['close'],
-                option_data['volume']
+                option_data['volume'],
+                option_data['high'],
+                option_data['low'],
+                option_data['close']
             )
-
-        return self.calculate_vwap(
-            option_data['close'],
-            option_data['volume'],
-            option_data['high'],
-            option_data['low'],
-            option_data['close']
-        )
 
     def is_price_above_vwap(
         self,

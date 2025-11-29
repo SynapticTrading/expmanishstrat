@@ -1,21 +1,19 @@
-# Core dependencies for Intraday Momentum OI Strategy Backtesting
+# Requirements for Intraday Momentum OI Unwinding Strategy Backtest
 
-# Data manipulation
-pandas>=2.0.0
-numpy>=1.24.0
+# Core
+backtrader==1.9.78.123
+pandas==2.0.3
+numpy==1.24.3
 
-# Backtesting framework
-backtrader>=1.9.78.123
+# Data handling
+pytz==2023.3
 
 # Configuration
-PyYAML>=6.0
+PyYAML==6.0.1
 
-# Visualization and reporting
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# Visualization
+matplotlib==3.7.2
 
-# Logging and utilities
-python-dateutil>=2.8.0
+# Utilities
+python-dateutil==2.8.2
 
-# Optional: For enhanced analytics
-scipy>=1.10.0

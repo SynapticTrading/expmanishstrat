@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 19, in <module>
+    from strategies.intraday_momentum_oi import IntradayMomentumOI
+  File "/Users/Algo_Trading/manishsir_options/strategies/intraday_momentum_oi.py", line 422
+    continue  # Skip if we can't get current option price
+    ^
+SyntaxError: 'continue' not properly in loop

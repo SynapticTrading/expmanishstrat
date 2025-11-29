@@ -405,7 +405,7 @@ class BacktestReporter:
                 <th>P&L %</th>
                 <th>Exit Reason</th>
             </tr>
-            {''.join([f"<tr><td>{row['entry_time']}</td><td>{row['exit_time']}</td><td>{row['option_type']}</td><td>{row['strike']}</td><td>₹{row['entry_price']:.2f}</td><td>₹{row['exit_price']:.2f}</td><td class=\"{'positive' if row['pnl'] > 0 else 'negative'}\">₹{row['pnl']:,.2f}</td><td class=\"{'positive' if row['pnl_pct'] > 0 else 'negative'}\">{row['pnl_pct']:.2f}%</td><td>{row['exit_reason']}</td></tr>" for _, row in trades_df.tail(20).iterrows()])}
+            {self._generate_trade_rows(trades_df.tail(20))}
         </table>
     </div>
 </body>
@@ -413,6 +413,28 @@ class BacktestReporter:
         """
 
         return html
+
+    def _generate_trade_rows(self, trades_df: pd.DataFrame) -> str:
+        """Generate HTML table rows for trades"""
+        rows = []
+        for _, row in trades_df.iterrows():
+            pnl_class = 'positive' if row['pnl'] > 0 else 'negative'
+            pnl_pct_class = 'positive' if row['pnl_pct'] > 0 else 'negative'
+            row_html = (
+                f"<tr>"
+                f"<td>{row['entry_time']}</td>"
+                f"<td>{row['exit_time']}</td>"
+                f"<td>{row['option_type']}</td>"
+                f"<td>{row['strike']}</td>"
+                f"<td>₹{row['entry_price']:.2f}</td>"
+                f"<td>₹{row['exit_price']:.2f}</td>"
+                f"<td class=\"{pnl_class}\">₹{row['pnl']:,.2f}</td>"
+                f"<td class=\"{pnl_pct_class}\">{row['pnl_pct']:.2f}%</td>"
+                f"<td>{row['exit_reason']}</td>"
+                f"</tr>"
+            )
+            rows.append(row_html)
+        return ''.join(rows)
 
     def _print_summary(self, summary: Dict):
         """Print summary to console"""

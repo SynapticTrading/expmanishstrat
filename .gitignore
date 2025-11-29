@@ -22,50 +22,46 @@ wheels/
 
 # Virtual Environment
 venv/
-ENV/
 env/
+ENV/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 .DS_Store
 
-# Logs
-logs/*.log
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Reports
-reports/*.html
+# Reports and Logs (keep folder structure, ignore contents)
+reports/*.png
 reports/*.csv
 reports/*.json
-
-# Keep folder structure but ignore contents
-!logs/.gitkeep
 !reports/.gitkeep
+logs/*.log
+!logs/.gitkeep
 
-# Data files - exclude large CSV files from git
-DataDump/*.csv
+# Data files (keep DataDump folder out of git)
+DataDump/
 
-# Keep DataDump folder but not the large files
-!DataDump/.gitkeep
-
-# Jupyter Notebooks
-.ipynb_checkpoints/
-*.ipynb
-
-# Test outputs
-tests/__pycache__/
-.pytest_cache/
-.coverage
-htmlcov/
+# Temporary files
+*.tmp
+*.bak
+*.cache
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation builds
+docs/_build/
+

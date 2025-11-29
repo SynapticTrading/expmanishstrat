@@ -1,408 +1,602 @@
 """
 Intraday Momentum OI Unwinding Strategy
-
-Strategy Logic:
-1. Identify 10 strikes (5 below, 5 above spot)
-2. Calculate max Call and Put buildup strikes
-3. Determine direction based on distance from spot
-4. Monitor for OI unwinding at selected strike
-5. Enter when OI unwinding + price > VWAP
-6. Manage with 25% stop loss initially, then 10% trailing after 10% profit
-7. Exit by 2:50-3:00 PM or on trailing stop
+Implements the trading logic based on Open Interest changes and VWAP
 """
 
-import pandas as pd
+import backtrader as bt
 from datetime import datetime, time
-from typing import Dict, Optional, Tuple
-import logging
-
-from utils.config_loader import ConfigLoader
-from utils.oi_analyzer import OIAnalyzer
-from utils.indicators import VWAPCalculator
-
-logger = logging.getLogger(__name__)
+import pandas as pd
+import numpy as np
+import signal
+import sys
+import csv
+from pathlib import Path
 
 
-class IntradayMomentumOIStrategy:
+class IntradayMomentumOI(bt.Strategy):
     """
-    Core strategy implementation for Intraday Momentum OI Unwinding
-
-    This class implements the exact logic from the strategy document
+    Strategy that trades based on:
+    1. OI unwinding (short covering/long unwinding)
+    2. Option price above VWAP
+    3. Direction determined by max OI buildup
     """
-
-    def __init__(self, config: ConfigLoader):
-        """
-        Initialize strategy
-
-        Args:
-            config: Configuration loader instance
-        """
-        self.config = config
-        self.oi_analyzer = OIAnalyzer(config)
-        self.vwap_calculator = VWAPCalculator(
-            lookback_periods=config.get('vwap_lookback_periods', 20)
-        )
-
-        # Strategy parameters from config
-        self.entry_start_time = self._parse_time(config.get('entry_start_time', '09:30'))
-        self.entry_end_time = self._parse_time(config.get('entry_end_time', '14:30'))
-        self.exit_start_time = self._parse_time(config.get('exit_start_time', '14:50'))
-        self.exit_end_time = self._parse_time(config.get('exit_end_time', '15:00'))
-
-        # Stop loss and target parameters
-        self.initial_stop_loss_pct = config.get('initial_stop_loss_percent', 25) / 100
-        self.profit_threshold = config.get('profit_threshold_for_trailing', 1.1)
-        self.trailing_stop_pct = config.get('trailing_stop_percent', 10) / 100
-
+    
+    params = (
+        # Entry parameters
+        ('entry_start_time', time(9, 30)),
+        ('entry_end_time', time(14, 30)),
+        ('strikes_above_spot', 5),
+        ('strikes_below_spot', 5),
+        
+        # Exit parameters
+        ('exit_start_time', time(14, 50)),
+        ('exit_end_time', time(15, 0)),
+        ('initial_stop_loss_pct', 0.25),
+        ('profit_threshold', 1.10),
+        ('trailing_stop_pct', 0.10),
+        
         # Position sizing
-        self.risk_per_trade = config.get('risk_per_trade_percent', 1.0) / 100
-        self.initial_capital = config.get('initial_capital', 1000000)
+        ('position_size', 1),
+        ('max_positions', 3),
+        
+        # Risk management
+        ('avoid_monday_tuesday', False),
+        
+        # Options data and analyzer
+        ('options_df', None),
+        ('oi_analyzer', None),
+    )
+    
+    def __init__(self):
+        # Track positions
+        self.positions_dict = {}  # key: order, value: position info
+        self.current_position = None  # Current open position info
+        self.pending_exit = False  # Flag to prevent repeated exit signals
+        self.pending_entry = False  # Flag to prevent multiple entry orders
 
-        # Current position tracking
-        self.current_position = None
-        self.position_entry_price = None
-        self.position_entry_time = None
-        self.position_strike = None
-        self.position_option_type = None
-        self.position_qty = 0
-        self.highest_price_since_entry = 0
-        self.stop_loss_price = 0
+        # Track daily state
+        self.current_date = None
+        self.daily_direction = None  # 'CALL' or 'PUT'
+        self.daily_strike = None
+        self.daily_expiry = None
 
-        # Previous data for OI comparison
-        self.previous_options_data = None
+        # Performance tracking
+        self.trade_log = []
 
-        # OI analysis result (cached for the day)
-        self.oi_analysis = None
-        self.oi_analysis_timestamp = None
+        # Setup trade log file - write immediately to disk
+        self.trade_log_file = Path('reports') / 'trades.csv'
+        self.trade_log_file.parent.mkdir(parents=True, exist_ok=True)
 
-    def _parse_time(self, time_str: str) -> time:
-        """Parse time string to time object"""
-        return datetime.strptime(time_str, "%H:%M").time()
+        # Write CSV header
+        with open(self.trade_log_file, 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=[
+                'entry_time', 'exit_time', 'strike', 'option_type', 'expiry',
+                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct'
+            ])
+            writer.writeheader()
 
-    def analyze_oi_setup(
-        self,
-        current_data: pd.DataFrame,
-        previous_data: pd.DataFrame,
-        spot_price: float,
-        current_time: datetime
-    ) -> Dict:
+        # Setup signal handler for graceful shutdown
+        def signal_handler(sig, frame):
+            print('\n\n⚠️  Interrupt received! Saving summary...')
+            self.save_summary_to_file()
+            print('✓ Files saved. Exiting...')
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+
+        print("Strategy initialized")
+    
+    def log(self, txt, dt=None):
+        """Logging function"""
+        dt = dt or self.datas[0].datetime.datetime(0)
+        print(f'[{dt}] {txt}')
+    
+    def notify_order(self, order):
+        """Handle order notifications - Using OPTION PRICES for P&L calculation"""
+        if order.status in [order.Submitted, order.Accepted]:
+            return
+        
+        if order.status in [order.Completed]:
+            dt = self.datas[0].datetime.datetime(0)
+            
+            if order.isbuy():
+                # Get actual option price at entry
+                option_type = 'CE' if self.daily_direction == 'CALL' else 'PE'
+                option_data = self.params.oi_analyzer.get_option_price_data(
+                    strike=self.daily_strike,
+                    option_type=option_type,
+                    timestamp=pd.Timestamp(dt),
+                    expiry_date=self.daily_expiry
+                )
+                
+                if option_data is not None:
+                    option_entry_price = option_data['close']
+                    
+                    self.log(f'🔵 BUY OPTION EXECUTED: {option_type} {self.daily_strike} @ ₹{option_entry_price:.2f} '
+                            f'(Expiry: {self.daily_expiry.date()}, Lot size: {order.executed.size})')
+
+                    # Reset pending flags
+                    self.pending_exit = False
+                    self.pending_entry = False
+
+                    # Store position info with OPTION details - use current_position for easy access
+                    self.current_position = {
+                        'entry_price': option_entry_price,  # OPTION price, not spot
+                        'entry_time': dt,
+                        'size': order.executed.size,
+                        'strike': self.daily_strike,
+                        'option_type': option_type,
+                        'expiry': self.daily_expiry,
+                        'stop_loss': option_entry_price * (1 - self.params.initial_stop_loss_pct),
+                        'trailing_stop': None,
+                        'highest_price': option_entry_price,
+                    }
+                    self.positions_dict[order.ref] = self.current_position
+                else:
+                    self.log(f'⚠️  ERROR: Could not get option price at entry!')
+                    
+            else:
+                # Get actual option price at exit
+                # Use current_position since SELL order has different ref than BUY order!
+                if self.current_position is not None:
+                    pos_info = self.current_position
+
+                    option_data = self.params.oi_analyzer.get_option_price_data(
+                        strike=pos_info['strike'],
+                        option_type=pos_info['option_type'],
+                        timestamp=pd.Timestamp(dt),
+                        expiry_date=pos_info['expiry']
+                    )
+
+                    if option_data is not None:
+                        option_exit_price = option_data['close']
+                        
+                        # Calculate P&L based on OPTION prices
+                        pnl = (option_exit_price - pos_info['entry_price']) * order.executed.size
+                        pnl_pct = ((option_exit_price / pos_info['entry_price']) - 1) * 100
+                        
+                        self.log(f'🔴 SELL OPTION EXECUTED: {pos_info["option_type"]} {pos_info["strike"]} @ ₹{option_exit_price:.2f} '
+                                f'| Entry: ₹{pos_info["entry_price"]:.2f} | P&L: ₹{pnl:.2f} ({pnl_pct:+.2f}%)')
+
+                        trade_record = {
+                            'entry_time': pos_info['entry_time'],
+                            'exit_time': dt,
+                            'strike': pos_info['strike'],
+                            'option_type': pos_info['option_type'],
+                            'expiry': pos_info['expiry'],
+                            'entry_price': pos_info['entry_price'],
+                            'exit_price': option_exit_price,
+                            'size': order.executed.size,
+                            'pnl': pnl,
+                            'pnl_pct': pnl_pct,
+                        }
+                        self.trade_log.append(trade_record)
+
+                        # ✅ WRITE TRADE TO CSV IMMEDIATELY - NO DATA LOSS!
+                        with open(self.trade_log_file, 'a', newline='') as f:
+                            writer = csv.DictWriter(f, fieldnames=[
+                                'entry_time', 'exit_time', 'strike', 'option_type', 'expiry',
+                                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct'
+                            ])
+                            writer.writerow(trade_record)
+
+                        # Clear current position
+                        self.current_position = None
+                        self.pending_exit = False  # Reset pending exit flag
+                    else:
+                        self.log(f'⚠️  ERROR: Could not get option price at exit!')
+                        self.pending_exit = False  # Reset even on error
+        
+        elif order.status in [order.Canceled, order.Margin, order.Rejected]:
+            self.log(f'Order Canceled/Margin/Rejected')
+    
+    def notify_trade(self, trade):
+        """Handle trade notifications"""
+        if not trade.isclosed:
+            return
+        
+        self.log(f'TRADE PROFIT: Gross {trade.pnl:.2f}, Net {trade.pnlcomm:.2f}')
+    
+    def should_skip_day(self, dt):
+        """Check if we should skip trading on this day"""
+        if self.params.avoid_monday_tuesday:
+            weekday = dt.weekday()
+            if weekday in [0, 1]:  # Monday = 0, Tuesday = 1
+                return True
+        return False
+    
+    def is_trading_time(self, dt):
+        """Check if current time is within entry window"""
+        current_time = dt.time()
+        return self.params.entry_start_time <= current_time <= self.params.entry_end_time
+    
+    def is_exit_time(self, dt):
+        """Check if it's time to exit positions"""
+        current_time = dt.time()
+        return current_time >= self.params.exit_start_time
+    
+    def get_spot_price(self):
+        """Get current spot price from data feed"""
+        return self.datas[0].close[0]
+    
+    def analyze_market(self, dt):
         """
-        Analyze OI to determine setup (Call or Put direction)
-
-        This is done once and cached until we find an entry or reset
-
-        Args:
-            current_data: Current options data
-            previous_data: Previous options data
-            spot_price: Current spot price
-            current_time: Current timestamp
-
-        Returns:
-            OI analysis dict
+        Analyze market to determine direction and strike
+        Called once per day
         """
-        # Perform OI analysis
-        analysis = self.oi_analyzer.analyze_oi_for_entry(
-            current_data, previous_data, spot_price
+        if self.params.options_df is None or self.params.oi_analyzer is None:
+            self.log('ERROR: Options data or OI analyzer not available')
+            return False
+        
+        spot_price = self.get_spot_price()
+        self.log(f'Starting daily analysis - Spot: {spot_price:.2f}')
+        
+        # Get closest expiry
+        expiry = self.params.oi_analyzer.get_closest_expiry(pd.Timestamp(dt))
+        if expiry is None:
+            self.log('ERROR: No expiry found')
+            return False
+        
+        self.log(f'Found expiry: {expiry.date()}')
+        
+        self.daily_expiry = expiry
+        
+        # Get strikes near spot
+        options_near_spot, selected_strikes = self.params.oi_analyzer.get_strikes_near_spot(
+            spot_price=spot_price,
+            timestamp=pd.Timestamp(dt),
+            expiry_date=expiry,
+            num_strikes_above=self.params.strikes_above_spot,
+            num_strikes_below=self.params.strikes_below_spot
         )
-
-        self.oi_analysis = analysis
-        self.oi_analysis_timestamp = current_time
-
-        logger.info(f"OI Analysis at {current_time}: Direction={analysis['call_or_put']}, "
-                   f"Strike={analysis['selected_strike']}")
-
-        return analysis
-
-    def check_entry_conditions(
-        self,
-        current_data: pd.DataFrame,
-        previous_data: pd.DataFrame,
-        spot_price: float,
-        current_time: datetime,
-        option_history: pd.DataFrame
-    ) -> Tuple[bool, Optional[Dict]]:
+        
+        if options_near_spot is None or len(options_near_spot) == 0:
+            self.log(f'ERROR: No options data found near spot at {pd.Timestamp(dt)}')
+            return False
+        
+        self.log(f'Found {len(options_near_spot)} options near spot, {len(selected_strikes)} strikes')
+        
+        # Calculate max OI buildup
+        max_call_strike, max_put_strike, call_distance, put_distance = \
+            self.params.oi_analyzer.calculate_max_oi_buildup(options_near_spot, spot_price)
+        
+        if max_call_strike is None or max_put_strike is None:
+            self.log('ERROR: Could not determine max OI buildup')
+            return False
+        
+        self.log(f'Max Call OI: {max_call_strike}, Max Put OI: {max_put_strike}')
+        
+        # Determine direction
+        self.daily_direction = self.params.oi_analyzer.determine_direction(call_distance, put_distance)
+        
+        if self.daily_direction is None:
+            self.log('ERROR: Could not determine direction')
+            return False
+        
+        self.log(f'Direction determined: {self.daily_direction} (Call dist: {call_distance:.2f}, Put dist: {put_distance:.2f})')
+        
+        # Get nearest strike based on direction
+        option_type = 'CE' if self.daily_direction == 'CALL' else 'PE'
+        self.daily_strike = self.params.oi_analyzer.get_nearest_strike(
+            spot_price, self.daily_direction, selected_strikes
+        )
+        
+        if self.daily_strike is None:
+            self.log(f'ERROR: Could not find suitable strike for {self.daily_direction}')
+            return False
+        
+        self.log(f'✓ Daily Analysis Complete: Direction={self.daily_direction}, Strike={self.daily_strike}, '
+                f'Expiry={self.daily_expiry.date()}, Spot={spot_price:.2f}')
+        
+        return True
+    
+    def check_entry_conditions(self, dt):
         """
         Check if entry conditions are met
+        Returns option price if conditions met, None otherwise
 
-        Entry Logic:
-        1. Must be within entry timeframe (9:30 to 14:30)
-        2. OI must be unwinding at selected strike
-        3. Option price must be > VWAP
-
-        Args:
-            current_data: Current options data
-            previous_data: Previous options data
-            spot_price: Current spot price
-            current_time: Current timestamp
-            option_history: Historical data for selected option (for VWAP)
-
-        Returns:
-            Tuple of (should_enter, entry_signal_dict)
+        PDF Strategy: "Keep on Updating CallStrike/PutStrike till entry is found"
+        This means the strike should be dynamically updated based on current spot price
         """
-        # Check if within entry timeframe
-        current_t = current_time.time()
-        if not (self.entry_start_time <= current_t <= self.entry_end_time):
-            return False, None
+        if self.daily_direction is None or self.daily_expiry is None:
+            # Only log once per minute to avoid spam
+            if dt.minute % 10 == 0:
+                self.log(f'No daily analysis available yet (Dir={self.daily_direction}, Expiry={self.daily_expiry})')
+            return None
 
-        # Check if we already have a position
-        if self.current_position is not None:
-            return False, None
+        # Check if we have room for more positions (using Backtrader's built-in position tracking)
+        has_position = self.position.size != 0
+        if has_position or self.pending_entry:
+            if dt.minute % 30 == 0 and has_position:
+                self.log(f'⚠️  Already in position: size={self.position.size}')
+            if dt.minute % 30 == 0 and self.pending_entry:
+                self.log(f'⚠️  Entry order pending')
+            return None
 
-        # PDF says "Keep on Updating CallStrike/PutStrike till entry is found"
-        # This means we should re-analyze OI on EVERY candle to determine direction
-        # Direction can change as spot moves and OI buildups shift
-        self.analyze_oi_setup(current_data, previous_data, spot_price, current_time)
+        # ✅ DYNAMIC STRIKE UPDATE - As per PDF: "Keep on Updating CallStrike/PutStrike till entry is found"
+        # Get current spot price
+        spot_price = self.get_spot_price()
 
-        # Get selected strike and option type from fresh analysis
-        selected_strike = self.oi_analysis['selected_strike']
-        option_type = self.oi_analysis['selected_option_type']
-
-        # Update selected strike to nearest to current spot
-        # (Keep updating till entry is found - as per strategy doc)
-        if option_type == 'CE':
-            selected_strike = self.oi_analyzer._get_nearest_strike_above_spot(
-                spot_price, current_data['strike'].unique()
-            )
-        else:
-            selected_strike = self.oi_analyzer._get_nearest_strike_below_spot(
-                spot_price, current_data['strike'].unique()
-            )
-
-        logger.debug(f"Checking entry for {option_type} {selected_strike}")
-
-        # Check if OI is unwinding at selected strike
-        is_unwinding, oi_change = self.oi_analyzer.check_oi_unwinding(
-            current_data, previous_data, selected_strike, option_type
+        # Get strikes near current spot
+        options_near_spot, selected_strikes = self.params.oi_analyzer.get_strikes_near_spot(
+            spot_price=spot_price,
+            timestamp=pd.Timestamp(dt),
+            expiry_date=self.daily_expiry,
+            num_strikes_above=self.params.strikes_above_spot,
+            num_strikes_below=self.params.strikes_below_spot
         )
 
+        if options_near_spot is None or len(selected_strikes) == 0:
+            return None
+
+        # Update strike to nearest based on current spot and direction
+        updated_strike = self.params.oi_analyzer.get_nearest_strike(
+            spot_price, self.daily_direction, selected_strikes
+        )
+
+        if updated_strike is None:
+            return None
+
+        # Log strike updates (only when it changes)
+        if updated_strike != self.daily_strike:
+            self.log(f'📍 STRIKE UPDATED: {self.daily_strike} → {updated_strike} (Spot: {spot_price:.2f})')
+            self.daily_strike = updated_strike
+
+        option_type = 'CE' if self.daily_direction == 'CALL' else 'PE'
+        
+        # Log what we're looking for (every 30 min)
+        if dt.minute % 30 == 0:
+            expiry_str = self.daily_expiry.date() if self.daily_expiry else 'None'
+            self.log(f'Checking entry: {option_type} {self.daily_strike}, Expiry={expiry_str}')
+        
+        # Calculate OI change
+        current_oi, oi_change, oi_change_pct = self.params.oi_analyzer.calculate_oi_change(
+            strike=self.daily_strike,
+            option_type=option_type,
+            timestamp=pd.Timestamp(dt),
+            expiry_date=self.daily_expiry
+        )
+        
+        if current_oi is None:
+            # Log every 30 minutes to see the problem
+            if dt.minute % 30 == 0:
+                self.log(f'⚠️  No OI data found for {option_type} {self.daily_strike} at {pd.Timestamp(dt)}')
+            return None
+        
+        # Check if OI is unwinding
+        is_unwinding = self.params.oi_analyzer.is_unwinding(oi_change)
+        
+        # Log OI status every 30 minutes
+        if dt.minute % 30 == 0:
+            status = "UNWINDING ✓" if is_unwinding else "BUILDING"
+            self.log(f'{option_type} {self.daily_strike}: OI={current_oi:.0f}, Change={oi_change:.0f} ({oi_change_pct:.2f}%) - {status}')
+        
         if not is_unwinding:
-            logger.debug(f"OI not unwinding at {option_type} {selected_strike}")
-            return False, None
-
-        # Get current option price
-        option_row = current_data[
-            (current_data['strike'] == selected_strike) &
-            (current_data['option_type'] == option_type)
-        ]
-
-        if len(option_row) == 0:
-            logger.warning(f"No data found for {option_type} {selected_strike}")
-            return False, None
-
-        current_price = option_row.iloc[0]['close']
-
-        # Calculate VWAP for this specific option (not all strikes!)
-        # Filter option_history to only this strike and option type
-        specific_option_history = option_history[
-            (option_history['strike'] == selected_strike) &
-            (option_history['option_type'] == option_type)
-        ].copy()
-
-        if len(specific_option_history) < 2:
-            logger.debug(f"Insufficient history for VWAP calculation (only {len(specific_option_history)} candles)")
-            return False, None
-
-        vwap = self.vwap_calculator.calculate_vwap_for_option(specific_option_history)
-
-        if pd.isna(vwap.iloc[-1]):
-            logger.debug("VWAP is NaN")
-            return False, None
-
-        current_vwap = vwap.iloc[-1]
-
-        # Check if price > VWAP
-        is_above_vwap = self.vwap_calculator.is_price_above_vwap(current_price, current_vwap)
-
-        if not is_above_vwap:
-            logger.debug(f"Price {current_price} not above VWAP {current_vwap}")
-            return False, None
-
-        # All conditions met - generate entry signal
-        entry_signal = {
-            'timestamp': current_time,
-            'strike': selected_strike,
-            'option_type': option_type,
-            'entry_price': current_price,
-            'spot_price': spot_price,
-            'vwap': current_vwap,
-            'oi_change': oi_change,
-            'direction': self.oi_analysis['call_or_put']
-        }
-
-        logger.info(f"ENTRY SIGNAL: {option_type} {selected_strike} at {current_price}, "
-                   f"VWAP={current_vwap:.2f}, OI Change={oi_change}")
-
-        return True, entry_signal
-
-    def enter_position(self, entry_signal: Dict):
-        """
-        Enter a position based on entry signal
-
-        Implements position sizing based on risk management
-
-        Args:
-            entry_signal: Entry signal dict from check_entry_conditions
-        """
-        entry_price = entry_signal['entry_price']
-
-        # Calculate position size based on stop loss and risk
-        # Risk amount = initial_capital * risk_per_trade
-        risk_amount = self.initial_capital * self.risk_per_trade
-
-        # Stop loss amount per unit = entry_price * initial_stop_loss_pct
-        stop_loss_per_unit = entry_price * self.initial_stop_loss_pct
-
-        # Position size = risk_amount / stop_loss_per_unit
-        # For options, this gives us the number of lots
-        if stop_loss_per_unit > 0:
-            position_qty = int(risk_amount / stop_loss_per_unit)
-        else:
-            position_qty = 1
-
-        # Set stop loss price
-        stop_loss_price = entry_price * (1 - self.initial_stop_loss_pct)
-
-        # Record position
-        self.current_position = entry_signal
-        self.position_entry_price = entry_price
-        self.position_entry_time = entry_signal['timestamp']
-        self.position_strike = entry_signal['strike']
-        self.position_option_type = entry_signal['option_type']
-        self.position_qty = position_qty
-        self.highest_price_since_entry = entry_price
-        self.stop_loss_price = stop_loss_price
-
-        logger.info(f"ENTERED POSITION: {self.position_option_type} {self.position_strike}, "
-                   f"Price={entry_price}, Qty={position_qty}, SL={stop_loss_price:.2f}")
-
-    def check_exit_conditions(
-        self,
-        current_data: pd.DataFrame,
-        current_time: datetime
-    ) -> Tuple[bool, Optional[str], Optional[float]]:
-        """
-        Check if exit conditions are met
-
-        Exit Logic:
-        1. Time-based: Exit between 14:50 and 15:00
-        2. Stop loss: Exit if price hits stop loss
-        3. Trailing stop: After 10% profit, trail by 10%
-
-        Args:
-            current_data: Current options data
-            current_time: Current timestamp
-
-        Returns:
-            Tuple of (should_exit, exit_reason, exit_price)
-        """
-        if self.current_position is None:
-            return False, None, None
-
-        current_t = current_time.time()
-
-        # Get current price for position
-        option_row = current_data[
-            (current_data['strike'] == self.position_strike) &
-            (current_data['option_type'] == self.position_option_type)
-        ]
-
-        if len(option_row) == 0:
-            logger.warning(f"No data for position {self.position_option_type} {self.position_strike}")
-            return False, None, None
-
-        current_price = option_row.iloc[0]['close']
-
-        # Update highest price
-        if current_price > self.highest_price_since_entry:
-            self.highest_price_since_entry = current_price
-
-        # Check time-based exit
-        if self.exit_start_time <= current_t <= self.exit_end_time:
-            logger.info(f"TIME-BASED EXIT at {current_time}")
-            return True, "TIME_EXIT", current_price
-
-        # Check if profit threshold reached for trailing stop
-        if current_price >= self.position_entry_price * self.profit_threshold:
-            # Activate trailing stop
-            # Trail by 10% from highest price
-            trailing_stop_price = self.highest_price_since_entry * (1 - self.trailing_stop_pct)
-
-            if current_price <= trailing_stop_price:
-                logger.info(f"TRAILING STOP HIT: Price={current_price}, "
-                           f"Trailing SL={trailing_stop_price:.2f}")
-                return True, "TRAILING_STOP", current_price
-
-        else:
-            # Before profit threshold, use initial stop loss
-            if current_price <= self.stop_loss_price:
-                logger.info(f"STOP LOSS HIT: Price={current_price}, SL={self.stop_loss_price:.2f}")
-                return True, "STOP_LOSS", current_price
-
-        return False, None, None
-
-    def exit_position(self, exit_price: float, exit_reason: str, exit_time: datetime):
-        """
-        Exit current position
-
-        Args:
-            exit_price: Exit price
-            exit_reason: Reason for exit
-            exit_time: Exit timestamp
-        """
-        if self.current_position is None:
+            return None
+        
+        # Get option price data
+        option_data = self.params.oi_analyzer.get_option_price_data(
+            strike=self.daily_strike,
+            option_type=option_type,
+            timestamp=pd.Timestamp(dt),
+            expiry_date=self.daily_expiry
+        )
+        
+        if option_data is None:
+            if dt.minute % 30 == 0:
+                self.log(f'⚠️  No option price data for {option_type} {self.daily_strike}')
+            return None
+        
+        option_price = option_data['close']
+        
+        # Calculate VWAP anchored to market opening (9:15 AM)
+        # VWAP = Sum(Typical Price * Volume) / Sum(Volume) from market open to current time
+        dt_ts = pd.Timestamp(dt)
+        market_open_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=9, minutes=15)
+        
+        mask = (
+            (self.params.options_df['strike'] == self.daily_strike) &
+            (self.params.options_df['option_type'] == option_type) &
+            (self.params.options_df['expiry'] == self.daily_expiry) &
+            (self.params.options_df['datetime'] >= market_open_today) &
+            (self.params.options_df['datetime'] <= dt_ts)
+        )
+        
+        option_history_today = self.params.options_df[mask].copy()
+        
+        if len(option_history_today) < 2:
+            if dt.minute % 30 == 0:
+                self.log(f'⚠️  Insufficient history for VWAP: only {len(option_history_today)} records for {option_type} {self.daily_strike}')
+            return None
+        
+        # Calculate VWAP anchored to opening
+        option_history_today['typical_price'] = (
+            option_history_today['high'] + option_history_today['low'] + option_history_today['close']
+        ) / 3.0
+        option_history_today['volume_filled'] = option_history_today['volume'].replace(0, 1)
+        
+        total_tpv = (option_history_today['typical_price'] * option_history_today['volume_filled']).sum()
+        total_volume = option_history_today['volume_filled'].sum()
+        
+        vwap = total_tpv / total_volume if total_volume > 0 else option_history_today['typical_price'].mean()
+        
+        # Log VWAP check every 30 minutes
+        if dt.minute % 30 == 0:
+            price_vs_vwap = "ABOVE ✓" if option_price > vwap else "BELOW ✗"
+            self.log(f'{option_type} {self.daily_strike}: Price={option_price:.2f}, VWAP={vwap:.2f} - {price_vs_vwap}')
+        
+        # Check if option price is above VWAP
+        if option_price > vwap:
+            self.log(f'🎯 ENTRY SIGNAL: {option_type} {self.daily_strike} - Price: {option_price:.2f}, '
+                    f'VWAP: {vwap:.2f}, OI Change: {oi_change:.0f} ({oi_change_pct:.2f}%)')
+            return option_price
+        
+        return None
+    
+    def manage_positions(self, dt):
+        """Manage open positions - update stops and check exits using OPTION PRICES"""
+        # Don't check exits if we already have a pending exit order
+        if self.pending_exit or self.current_position is None:
             return
 
-        entry_price = self.position_entry_price
-        pnl = (exit_price - entry_price) * self.position_qty
-        pnl_pct = (exit_price - entry_price) / entry_price * 100
+        pos_info = self.current_position
 
-        logger.info(f"EXITED POSITION: {self.position_option_type} {self.position_strike}, "
-                   f"Entry={entry_price:.2f}, Exit={exit_price:.2f}, "
-                   f"PnL={pnl:.2f} ({pnl_pct:.2f}%), Reason={exit_reason}")
+        # Get current OPTION price
+        option_data = self.params.oi_analyzer.get_option_price_data(
+            strike=pos_info['strike'],
+            option_type=pos_info['option_type'],
+            timestamp=pd.Timestamp(dt),
+            expiry_date=pos_info['expiry']
+        )
 
-        # Record exit
-        exit_record = {
-            'entry_time': self.position_entry_time,
-            'exit_time': exit_time,
-            'strike': self.position_strike,
-            'option_type': self.position_option_type,
-            'entry_price': entry_price,
-            'exit_price': exit_price,
-            'qty': self.position_qty,
-            'pnl': pnl,
-            'pnl_pct': pnl_pct,
-            'exit_reason': exit_reason,
-            'highest_price': self.highest_price_since_entry
+        if option_data is None:
+            return  # Skip if we can't get current option price
+
+        current_price = option_data['close']
+        entry_price = pos_info['entry_price']
+
+        # Update highest price
+        if current_price > pos_info['highest_price']:
+            pos_info['highest_price'] = current_price
+
+        # Check if profit threshold reached
+        if current_price >= entry_price * self.params.profit_threshold:
+            # Activate trailing stop
+            trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
+            pos_info['trailing_stop'] = trailing_stop
+
+            # Check trailing stop
+            if current_price <= trailing_stop:
+                self.log(f'📉 TRAILING STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
+                        f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{trailing_stop:.2f}')
+                self.close()
+                self.pending_exit = True  # Mark that we have a pending exit
+                return  # Exit immediately, don't process more positions
+
+        # Check initial stop loss
+        if pos_info['trailing_stop'] is None:
+            if current_price <= pos_info['stop_loss']:
+                self.log(f'🛑 STOP LOSS HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
+                        f'Current: ₹{current_price:.2f}, Stop: ₹{pos_info["stop_loss"]:.2f}')
+                self.close()
+                self.pending_exit = True  # Mark that we have a pending exit
+                return  # Exit immediately, don't process more positions
+    
+    def next(self):
+        """Main strategy logic called on each bar"""
+        dt = self.datas[0].datetime.datetime(0)
+        current_date = dt.date()
+
+        # Check if new day
+        if self.current_date is None or current_date != self.current_date:
+            self.current_date = current_date
+            self.daily_direction = None
+            self.daily_strike = None
+            self.daily_expiry = None
+            self.pending_exit = False  # Reset pending exit for new day
+            self.pending_entry = False  # Reset pending entry for new day
+            
+            # Check if we should skip this day
+            if self.should_skip_day(dt):
+                self.log(f'Skipping day: {current_date}')
+                return
+            
+            # Analyze market for the day
+            self.analyze_market(dt)
+        
+        # Force exit all positions near market close
+        if self.is_exit_time(dt):
+            if self.position.size != 0 and not self.pending_exit:
+                self.log(f'END OF DAY - Closing all positions (size={self.position.size})')
+                self.close()
+                self.pending_exit = True
+            return
+        
+        # Manage existing positions
+        if self.position.size != 0:
+            self.manage_positions(dt)
+        
+        # Check for new entries
+        if self.is_trading_time(dt):
+            entry_price = self.check_entry_conditions(dt)
+            if entry_price is not None:
+                # Place buy order
+                self.log(f'📈 PLACING BUY ORDER: size={self.params.position_size}, expected_price={entry_price:.2f}')
+                self.buy(size=self.params.position_size)
+                self.pending_entry = True  # Mark that we have a pending entry order
+    
+    def save_summary_to_file(self):
+        """Save trade summary to files - called on ANY exit"""
+        import json
+
+        summary_file = Path('reports') / 'trade_summary.txt'
+        summary_json = Path('reports') / 'trade_summary.json'
+
+        summary_data = {
+            'final_portfolio_value': float(self.broker.getvalue()),
+            'total_trades': len(self.trade_log),
         }
 
-        # Reset position
-        self.current_position = None
-        self.position_entry_price = None
-        self.position_entry_time = None
-        self.position_strike = None
-        self.position_option_type = None
-        self.position_qty = 0
-        self.highest_price_since_entry = 0
-        self.stop_loss_price = 0
+        if len(self.trade_log) > 0:
+            df_trades = pd.DataFrame(self.trade_log)
+            summary_data.update({
+                'winning_trades': int(len(df_trades[df_trades['pnl'] > 0])),
+                'losing_trades': int(len(df_trades[df_trades['pnl'] < 0])),
+                'win_rate': float(len(df_trades[df_trades['pnl'] > 0]) / len(df_trades) * 100),
+                'total_pnl': float(df_trades['pnl'].sum()),
+                'average_pnl': float(df_trades['pnl'].mean()),
+                'average_pnl_pct': float(df_trades['pnl_pct'].mean()),
+                'best_trade': float(df_trades['pnl'].max()),
+                'worst_trade': float(df_trades['pnl'].min())
+            })
 
-        return exit_record
+        # Write text summary
+        with open(summary_file, 'w') as f:
+            f.write("="*80 + "\n")
+            f.write("TRADE SUMMARY\n")
+            f.write("="*80 + "\n")
+            f.write(f"Final Portfolio Value: ₹{summary_data['final_portfolio_value']:,.2f}\n")
+            f.write(f"Total Trades: {summary_data['total_trades']}\n")
 
-    def reset_daily(self):
-        """Reset strategy state for new trading day"""
-        self.current_position = None
-        self.position_entry_price = None
-        self.position_entry_time = None
-        self.position_strike = None
-        self.position_option_type = None
-        self.position_qty = 0
-        self.highest_price_since_entry = 0
-        self.stop_loss_price = 0
-        self.previous_options_data = None
-        self.oi_analysis = None
-        self.oi_analysis_timestamp = None
+            if len(self.trade_log) > 0:
+                f.write(f"Winning Trades: {summary_data['winning_trades']}\n")
+                f.write(f"Losing Trades: {summary_data['losing_trades']}\n")
+                f.write(f"Win Rate: {summary_data['win_rate']:.2f}%\n")
+                f.write(f"Total PnL: ₹{summary_data['total_pnl']:,.2f}\n")
+                f.write(f"Average PnL: ₹{summary_data['average_pnl']:,.2f}\n")
+                f.write(f"Average PnL %: {summary_data['average_pnl_pct']:.2f}%\n")
+                f.write(f"Best Trade: ₹{summary_data['best_trade']:,.2f}\n")
+                f.write(f"Worst Trade: ₹{summary_data['worst_trade']:,.2f}\n")
+            f.write("="*80 + "\n")
 
-        logger.info("Strategy reset for new trading day")
+        # Write JSON summary
+        with open(summary_json, 'w') as f:
+            json.dump(summary_data, f, indent=2, default=str)
 
-    def update_previous_data(self, current_data: pd.DataFrame):
-        """Update previous data for OI comparison"""
-        self.previous_options_data = current_data.copy()
+        print(f"\n✓ Summary saved to: {summary_file}")
+        print(f"✓ Summary JSON saved to: {summary_json}")
+
+    def stop(self):
+        """Called when strategy ends"""
+        self.log(f'Strategy Ended. Final Portfolio Value: {self.broker.getvalue():.2f}')
+
+        # Save summary to file IMMEDIATELY
+        self.save_summary_to_file()
+
+        # Print trade summary to console
+        if len(self.trade_log) > 0:
+            df_trades = pd.DataFrame(self.trade_log)
+            print("\n" + "="*80)
+            print("TRADE SUMMARY")
+            print("="*80)
+            print(f"Total Trades: {len(df_trades)}")
+            print(f"Winning Trades: {len(df_trades[df_trades['pnl'] > 0])}")
+            print(f"Losing Trades: {len(df_trades[df_trades['pnl'] < 0])}")
+            print(f"Win Rate: {len(df_trades[df_trades['pnl'] > 0]) / len(df_trades) * 100:.2f}%")
+            print(f"Total PnL: {df_trades['pnl'].sum():.2f}")
+            print(f"Average PnL: {df_trades['pnl'].mean():.2f}")
+            print(f"Average PnL%: {df_trades['pnl_pct'].mean():.2f}%")
+            print("="*80)
+        else:
+            print("\nNo trades were recorded")

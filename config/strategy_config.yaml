@@ -1,83 +1,63 @@
-# Strategy Configuration: Intraday Momentum OI Unwinding
-# All parameters can be modified here without touching the core strategy code
+# Strategy Configuration for Intraday Momentum OI Unwinding
 
-# Strategy Identification
-strategy_name: "Intraday_Momentum_OI"
-strategy_type: "Wealth Creation, Long Volatility"
+strategy:
+  name: "Intraday_Momentum_OI"
+  type: "Wealth Creation, Long Volatility"
+  
+# Data Configuration
+data:
+  spot_price_file: "DataDump/spotprice_2025.csv"
+  options_file: "DataDump/weekly_expiry.csv"
+  timeframe: 1  # minutes - backtesting on 1-minute candles
+  start_date: "2025-01-01"
+  end_date: "2025-01-22"
+  timezone: "Asia/Kolkata"  # IST timezone
 
-# Market & Instrument
-instrument: "NIFTY"
-# Future extension: ["NIFTY", "BANKNIFTY", "FINNIFTY"]
-
-# Expiry Selection
-expiry_type: "weekly"  # Options: "weekly", "monthly"
-# NOTE: PDF says "Closest" expiry. "weekly" implements this.
-# "monthly" is supported but NOT mentioned in PDF - use for testing only
-skip_monday_tuesday_expiry: False  # Set to True to skip Mon/Tue expiries
-# Note from PDF: "Might need to be revisited for Monday and Tuesday based on test results"
-
-# Timeframe Configuration
-candle_timeframe: 5  # in minutes (3 or 5)
-entry_start_time: "09:30"
-entry_end_time: "14:30"
-exit_start_time: "14:50"
-exit_end_time: "15:00"
-
-# Entry Parameters
-num_strikes_to_analyze: 10  # Total strikes to analyze (5 below, 5 above spot)
-strikes_below_spot: 5
-strikes_above_spot: 5
-
-# VWAP Parameters
-vwap_lookback_periods: 20  # Number of candles for VWAP calculation
-
-# Stop Loss Configuration
-initial_stop_loss_percent: 25  # 25% stop loss before 10% gain
-profit_threshold_for_trailing: 1.1  # 1.1x (10% profit) to activate trailing stop
-trailing_stop_percent: 10  # Trail by 10% once profit threshold is reached
-
-# Target / Exit Configuration
-time_based_exit_enabled: True
-price_based_trailing_enabled: True
-
+# Market Configuration
+market:
+  instrument: "NIFTY"
+  expiry_type: "weekly"  # Weekly expiry options
+  option_lot_size: 75  # Standard NIFTY lot size (update if different)
+  
+# Entry Configuration
+entry:
+  start_time: "09:30"  # Entry starts after 9:30 AM IST
+  end_time: "14:30"    # Last entry at 2:30 PM IST
+  strikes_above_spot: 5  # Number of strikes to consider above spot
+  strikes_below_spot: 5  # Number of strikes to consider below spot
+  
+# Exit Configuration
+exit:
+  exit_start_time: "14:50"  # Start exiting positions at 2:50 PM IST
+  exit_end_time: "15:00"    # All positions must be closed by 3:00 PM IST
+  initial_stop_loss_pct: 0.25  # 25% stop loss initially
+  profit_threshold: 1.10  # 110% of buy price (10% profit)
+  trailing_stop_pct: 0.10  # Trail by 10% after profit threshold reached
+  
 # Position Sizing
-risk_per_trade_percent: 1.0  # Risk 1% of capital per trade
-initial_capital: 1000000  # 10 lakhs initial capital
-
-# Trade Management
-allow_add_to_losing_positions: False
-# Note: PDF says "Reenter whenever conditions exist before 2:30"
-# This means unlimited re-entries are allowed, not max 5 per day
-# Keeping max_positions_per_day as safety limit (remove to allow unlimited)
-max_positions_per_day: 999  # Essentially unlimited as per PDF
-max_concurrent_positions: 1  # Only one position at a time
-
-# Data File Paths (relative to project root)
-data_paths:
-  weekly_expiry: "DataDump/weekly_expiry.csv"
-  monthly_expiry: "DataDump/monthly_expiry.csv"  # NOT in PDF, for future use
-  spot_price: "DataDump/spotprice_2025.csv"
-  india_vix: "DataDump/india_vix_1min_zerodha.csv"  # NOT USED (loaded but not in strategy)
-
+position_sizing:
+  initial_capital: 100000  # 1L starting capital
+  risk_per_trade_pct: 0.01  # Risk 1% of capital per trade
+  position_size: 1  # Start with 1 lot for evaluation
+  
+# Risk Management
+risk_management:
+  max_positions: 2 # Maximum concurrent positions
+  avoid_monday_tuesday: false  # Set to true to skip Mon/Tue (near expiry)
+  
 # Backtesting Configuration
 backtest:
-  start_date: "2025-01-01"
-  end_date: "2025-12-31"
-  commission: 20  # per trade in INR
-  slippage_percent: 0.1  # 0.1% slippage
-
-# Logging Configuration
-logging:
-  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
-  log_trades: True
-  log_oi_analysis: True
-  log_signals: True
-
-# Report Configuration
-reports:
-  generate_html: True
-  generate_csv: True
-  save_plots: True
-  plot_equity_curve: True
-  plot_drawdown: True
-  plot_monthly_returns: True
+  commission: 0.0005  # 0.05% commission per trade
+  slippage: 0.001  # 0.1% slippage
+  
+# Reporting
+reporting:
+  output_dir: "reports"
+  generate_plots: true
+  save_trades: true
+  metrics:
+    - "Total Return"
+    - "Sharpe Ratio"
+    - "Max Drawdown"
+    - "Win Rate"
+    - "Profit Factor"

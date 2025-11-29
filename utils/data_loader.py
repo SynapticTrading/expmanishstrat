@@ -42,17 +42,25 @@ class DataLoader:
         logger.info("Loading weekly options data...")
         self.weekly_data = self._load_options_data('weekly_expiry')
 
-        # Load monthly options data
+        # Load monthly options data (optional - only if file exists)
         logger.info("Loading monthly options data...")
-        self.monthly_data = self._load_options_data('monthly_expiry')
+        try:
+            self.monthly_data = self._load_options_data('monthly_expiry')
+        except FileNotFoundError:
+            logger.warning("Monthly expiry file not found. Skipping monthly data (not required for weekly strategy).")
+            self.monthly_data = pd.DataFrame()  # Empty dataframe
 
         # Load spot price data
         logger.info("Loading spot price data...")
         self.spot_data = self._load_spot_data()
 
-        # Load India VIX data
+        # Load India VIX data (optional - not used in current strategy)
         logger.info("Loading India VIX data...")
-        self.vix_data = self._load_vix_data()
+        try:
+            self.vix_data = self._load_vix_data()
+        except FileNotFoundError:
+            logger.warning("India VIX file not found. Skipping VIX data (not required for current strategy).")
+            self.vix_data = pd.DataFrame()  # Empty dataframe
 
         logger.info("All data loaded successfully")
 
@@ -229,6 +237,11 @@ class DataLoader:
             Closest expiry datetime or None
         """
         data = self.weekly_data if expiry_type == 'weekly' else self.monthly_data
+        
+        # Handle timezone mismatch - remove timezone from current_date if expiry column is timezone-naive
+        if hasattr(current_date, 'tz') and current_date.tz is not None:
+            if data['expiry'].dt.tz is None:
+                current_date = current_date.tz_localize(None)
 
         # Get unique expiries after current date
         future_expiries = data[data['expiry'] >= current_date]['expiry'].unique()

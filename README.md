@@ -1,359 +1,336 @@
-# Intraday Momentum OI Unwinding Strategy - Backtesting System
+# Intraday Momentum OI Unwinding Strategy - Backtest System
 
-A comprehensive backtesting system for the Intraday Momentum OI Unwinding strategy for Nifty options trading.
+## Overview
 
-## Strategy Overview
+This is a comprehensive backtesting system for the **Intraday Momentum OI Unwinding Strategy** designed for Nifty weekly options. The strategy identifies and trades based on Open Interest (OI) unwinding patterns (short covering/long unwinding) combined with VWAP confirmations.
 
-**Strategy Name:** Intraday_Momentum_OI
-**Type:** Wealth Creation, Long Volatility
-**Market:** Nifty Index Options
-**Timeframe:** Intraday (3-5 min candles)
+## Strategy Description
 
 ### Core Concept
+- **Identification**: Detects direction based on maximum Call/Put OI buildup near spot price
+- **Entry Signal**: OI unwinding (decrease) at selected strike + Option price above VWAP
+- **Exit**: Time-based (EOD) or trailing stop after 10% profit
+- **Risk Management**: 25% initial stop loss, 10% trailing stop after profit threshold
 
-The strategy identifies momentum trades based on Open Interest (OI) unwinding:
-- Monitors OI changes across strikes near spot price
-- Detects short covering (Call OI unwinding) or long unwinding (Put OI unwinding)
-- Enters when OI unwinding + price above VWAP
-- Manages with dynamic stop-loss and trailing profit targets
+### Key Features
+- ✅ **1-minute candle backtesting** for high granularity
+- ✅ **IST timezone handling** for Indian market hours
+- ✅ **Weekly expiry options** analysis
+- ✅ **OI change tracking** for short covering/long unwinding detection
+- ✅ **VWAP anchored to market open**
+- ✅ **Configurable parameters** via YAML
+- ✅ **Comprehensive reporting** with metrics and visualizations
 
 ## Project Structure
 
 ```
 manishsir_options/
 ├── config/
-│   └── strategy_config.yaml          # Configuration file (MODIFY THIS)
+│   └── strategy_config.yaml      # Strategy configuration (editable)
+├── src/
+│   ├── __init__.py
+│   ├── config_loader.py          # Configuration loader
+│   ├── data_loader.py            # Data loading & preprocessing
+│   ├── oi_analyzer.py            # OI analysis module
+│   ├── indicators.py             # Custom indicators (VWAP)
+│   └── reporter.py               # Performance reporting
 ├── strategies/
-│   ├── intraday_momentum_oi.py       # Core strategy logic
-│   └── backtrader_strategy.py        # Backtrader wrapper
-├── utils/
-│   ├── config_loader.py              # Configuration management
-│   ├── data_loader.py                # Data loading and preprocessing
-│   ├── oi_analyzer.py                # Open Interest analysis
-│   ├── indicators.py                 # VWAP and other indicators
-│   ├── logger.py                     # Logging configuration
-│   └── reporter.py                   # Report generation
-├── data/                              # Additional data (if needed)
-├── logs/                              # Log files (auto-generated)
-├── reports/                           # Backtest reports (auto-generated)
-├── DataDump/                          # Source data files
-│   ├── weekly_expiry.csv
-│   ├── monthly_expiry.csv
-│   ├── spotprice_2025.csv
-│   └── india_vix_1min_zerodha.csv
-├── backtest_runner.py                 # Main backtest script
-├── requirements.txt                   # Python dependencies
-└── README.md                          # This file
+│   ├── __init__.py
+│   └── intraday_momentum_oi.py   # Main strategy implementation
+├── DataDump/
+│   ├── spotprice_2025.csv        # Spot price data (1-min)
+│   └── weekly_expiry.csv         # Options data with OI
+├── reports/                      # Generated reports (output)
+├── logs/                         # Log files (output)
+├── docs/                         # Documentation
+├── backtest_runner.py            # Main backtest script
+├── requirements.txt              # Python dependencies
+└── README.md                     # This file
 ```
 
 ## Installation
 
-### 1. Install Dependencies
+### Prerequisites
+- Python 3.8+
+- pip
 
+### Setup
+
+1. **Install dependencies**:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Verify Data Files
-
-Ensure the following data files are present in `DataDump/`:
-- `weekly_expiry.csv` - Weekly options data with OI, IV, Delta, OHLCV
-- `monthly_expiry.csv` - Monthly options data
-- `spotprice_2025.csv` - Nifty spot prices
-- `india_vix_1min_zerodha.csv` - India VIX data
+2. **Verify data files**:
+Ensure the following files exist in `DataDump/`:
+- `spotprice_2025.csv` - Spot price data (1-minute granularity, IST timezone)
+- `weekly_expiry.csv` - Options data with OI information
 
 ## Configuration
 
-All strategy parameters can be modified in `config/strategy_config.yaml` **without touching the core strategy code**.
+Edit `config/strategy_config.yaml` to customize strategy parameters:
 
-### Key Configuration Parameters
+### Key Configurable Parameters
 
 ```yaml
-# Instrument & Expiry
-instrument: "NIFTY"
-expiry_type: "weekly"              # weekly, monthly, or closest
+data:
+  timeframe: 1                    # Candle timeframe in minutes (1, 3, 5, etc.)
+  start_date: "2025-01-01"        # Backtest start date
+  end_date: "2025-10-31"          # Backtest end date
 
-# Timeframe
-candle_timeframe: 5                # 3 or 5 minutes
-entry_start_time: "09:30"
-entry_end_time: "14:30"
-exit_start_time: "14:50"
-exit_end_time: "15:00"
+entry:
+  start_time: "09:30"             # Entry window start (IST)
+  end_time: "14:30"               # Last entry time (IST)
+  strikes_above_spot: 5           # Strikes to analyze above spot
+  strikes_below_spot: 5           # Strikes to analyze below spot
 
-# OI Analysis
-num_strikes_to_analyze: 10         # 5 below + 5 above spot
-strikes_below_spot: 5
-strikes_above_spot: 5
+exit:
+  exit_start_time: "14:50"        # Start closing positions (IST)
+  exit_end_time: "15:00"          # Force close all by (IST)
+  initial_stop_loss_pct: 0.25     # 25% stop loss initially
+  profit_threshold: 1.10          # 110% for trailing stop activation
+  trailing_stop_pct: 0.10         # 10% trailing stop
 
-# VWAP
-vwap_lookback_periods: 20          # Number of candles
+position_sizing:
+  initial_capital: 100000         # Starting capital (₹1L)
+  position_size: 1                # Lots per trade
+  risk_per_trade_pct: 0.01        # 1% risk per trade
 
-# Stop Loss & Targets
-initial_stop_loss_percent: 25      # 25% SL before 10% profit
-profit_threshold_for_trailing: 1.1 # 1.1x (10% profit) to activate trailing
-trailing_stop_percent: 10          # 10% trailing stop
-
-# Position Sizing
-risk_per_trade_percent: 1.0        # Risk 1% of capital per trade
-initial_capital: 1000000           # 10 lakhs
-
-# Trade Management
-max_positions_per_day: 5
-max_concurrent_positions: 1
-
-# Backtesting
-backtest:
-  start_date: "2025-01-01"
-  end_date: "2025-12-31"
-  commission: 20                    # INR per trade
-  slippage_percent: 0.1
+risk_management:
+  max_positions: 3                # Max concurrent positions
+  avoid_monday_tuesday: false     # Skip Mon/Tue (near expiry)
 ```
 
 ## Usage
 
 ### Run Backtest
 
+**Basic usage**:
 ```bash
 python backtest_runner.py
 ```
 
-This will:
-1. Load configuration from `config/strategy_config.yaml`
-2. Load all data files
-3. Run the backtest
-4. Generate comprehensive reports in `reports/` folder
-5. Save logs in `logs/` folder
+**With custom config**:
+```bash
+python backtest_runner.py --config config/custom_config.yaml
+```
 
 ### Output
 
 The backtest generates:
 
-1. **Logs** (`logs/` folder):
-   - `backtest_YYYYMMDD_HHMMSS.log` - Detailed execution log
-   - `trades_YYYYMMDD_HHMMSS.log` - Trade-specific log
+1. **Console Output**: Real-time progress and summary metrics
+2. **Reports folder** (`reports/`):
+   - `backtest_metrics.json` - Performance metrics
+   - `trades.csv` - Detailed trade log
+   - `equity_curve.png` - Equity curve and drawdown chart
+   - `trade_analysis.png` - Trade distribution analysis
 
-2. **Reports** (`reports/` folder):
-   - `report_YYYYMMDD_HHMMSS.html` - Interactive HTML report
-   - `trades_YYYYMMDD_HHMMSS.csv` - All trades in CSV
-   - `summary_YYYYMMDD_HHMMSS.json` - Summary statistics
-   - `monthly_YYYYMMDD_HHMMSS.csv` - Monthly breakdown
-
-### Sample Output
+### Example Output
 
 ```
 ================================================================================
-BACKTEST SUMMARY
+                          BACKTEST RESULTS
 ================================================================================
-Initial Capital:       ₹10,00,000.00
-Final Capital:         ₹11,25,000.00
-Total P&L:             ₹1,25,000.00 (12.50%)
-Total Trades:          45
-Win Rate:              55.56%
-Profit Factor:         1.85
-Max Drawdown:          ₹-25,000.00 (-2.50%)
-Sharpe Ratio:          1.45
+
+Capital:
+  Initial Capital:        ₹100,000.00
+  Final Value:            ₹115,432.50
+  Total Return:           ₹15,432.50
+  Total Return %:         15.43%
+
+Trade Statistics:
+  Total Trades:           48
+  Winning Trades:         32
+  Losing Trades:          16
+  Win Rate:               66.67%
+
+Profitability:
+  Total PnL:              ₹15,432.50
+  Average PnL:            ₹321.51
+  Average PnL %:          3.21%
+  Best Trade:             ₹2,150.00
+  Worst Trade:            ₹-875.00
+  Profit Factor:          2.34
+
+Risk Metrics:
+  Sharpe Ratio:           1.85
+  Max Drawdown:           ₹-3,250.00
+  Max Drawdown %:         -3.25%
 ================================================================================
 ```
 
-## Strategy Logic (Exact Implementation)
+## Strategy Logic Details
 
-### Entry Conditions
+### Entry Process
 
-1. **Time Filter**: 9:30 AM to 2:30 PM
-2. **OI Analysis**:
-   - Identify 10 strikes (5 below, 5 above spot)
-   - Calculate max Call buildup strike (MaxOICallStrike)
-   - Calculate max Put buildup strike (MaxOIPutStrike)
-   - Calculate distances from spot
-   - Choose Call if CallDistance < PutDistance, else Put
+1. **Market Analysis** (Daily, at market open):
+   - Identify 10 strikes around spot (5 above, 5 below)
+   - Calculate max Call OI buildup strike
+   - Calculate max Put OI buildup strike
+   - Determine direction: CALL if Call buildup closer to spot, else PUT
 
-3. **Strike Selection**:
-   - **Call**: Nearest strike above spot (e.g., if spot = 25965, choose 26000)
-   - **Put**: Nearest strike below spot (e.g., if spot = 25965, choose 25950)
+2. **Strike Selection**:
+   - **For CALL direction**: Nearest strike ≥ spot
+   - **For PUT direction**: Nearest strike < spot
 
-4. **Entry Signal**:
-   - OI must be unwinding (decreasing) at selected strike
-   - Option price must be > VWAP
-   - **If both conditions met → BUY OPTION**
+3. **Entry Conditions** (From 9:30 AM to 2:30 PM IST):
+   - OI at selected strike is unwinding (decreasing)
+   - Option price > VWAP
+   - → **BUY OPTION**
 
-### Exit Conditions
+### Exit Process
 
-1. **Stop Loss** (before 10% profit):
+1. **Stop Loss** (Before profit threshold):
    - 25% of entry price
 
-2. **Trailing Stop** (after 10% profit):
-   - Trail by 10% from highest price
+2. **Trailing Stop** (After 10% profit):
+   - Trail by 10% from highest price reached
 
-3. **Time-Based Exit**:
-   - Force exit between 2:50 PM - 3:00 PM
-
-### Position Sizing
-
-- Risk 1% of capital per trade
-- Position Size = (Risk Amount) / (Stop Loss Amount per unit)
+3. **Time-based Exit**:
+   - All positions closed between 2:50 - 3:00 PM IST
 
 ## Data Requirements
 
-### Options Data Columns
-
-```
-timestamp, strike, expiry, option_type, open, high, low, close, volume,
-underlying_price, futures_price, IV, time_to_expiry, delta, OI
-```
-
-### Spot Price Data Columns
-
-```
-date, open, high, low, close, volume
+### Spot Price CSV Format
+```csv
+date,open,high,low,close,volume
+2025-01-01 09:15:00+05:30,23637.65,23681.7,23633.35,23649.55,0
 ```
 
-### VIX Data Columns
+### Options CSV Format
+```csv
+timestamp,strike,expiry,option_type,open,high,low,close,volume,underlying_price,futures_price,IV,time_to_expiry,delta,OI
+2025-01-01 09:15:00+05:30,22000,2025-01-02,CE,1421.75,1427.15,1421.75,1427.15,975,23649.55,23651.94,0.759,0.0016,0.976,12255300
+```
 
-```
-datetime, vix
-```
+**Required columns**:
+- `timestamp`: Date-time in IST (with timezone)
+- `strike`: Strike price
+- `expiry`: Expiry date
+- `option_type`: CE (Call) or PE (Put)
+- `open`, `high`, `low`, `close`: Option prices
+- `volume`: Trading volume
+- `OI`: Open Interest
 
 ## Customization
 
-### Modify Strategy Parameters
+### Change Timeframe
 
-Edit `config/strategy_config.yaml` to change:
-- Timeframes
-- Stop loss levels
-- Position sizing
-- Entry/exit times
-- Risk parameters
-
-**No code changes needed!**
-
-### Extend to BankNifty
-
+Edit `config/strategy_config.yaml`:
 ```yaml
-instrument: "BANKNIFTY"
-expiry_type: "weekly"
+data:
+  timeframe: 3  # Change to 3-minute candles
 ```
 
-### Change Candle Timeframe
+### Modify Entry/Exit Times
 
 ```yaml
-candle_timeframe: 3  # or 5
+entry:
+  start_time: "10:00"  # Start entries at 10 AM
+  end_time: "14:00"    # Last entry at 2 PM
 ```
 
-## Modules Overview
-
-### 1. `strategies/intraday_momentum_oi.py`
-Core strategy implementation following the exact logic from the strategy document.
-
-### 2. `utils/oi_analyzer.py`
-- Identifies strikes around spot
-- Calculates OI buildup and unwinding
-- Determines entry direction (Call/Put)
-
-### 3. `utils/indicators.py`
-- VWAP calculation for options
-- Other technical indicators
-
-### 4. `utils/data_loader.py`
-- Loads all data files
-- Filters by date, expiry, trading hours
-- Provides data access methods
-
-### 5. `utils/reporter.py`
-- Generates HTML, CSV, JSON reports
-- Calculates performance metrics
-- Monthly breakdowns
-
-### 6. `backtest_runner.py`
-- Main entry point
-- Orchestrates entire backtest workflow
-- Handles data flow and strategy execution
-
-## Performance Metrics
-
-The backtest reports include:
-
-- Total P&L and P&L %
-- Win rate and profit factor
-- Average win/loss
-- Max consecutive wins/losses
-- Maximum drawdown
-- Sharpe ratio
-- Monthly performance
-- Trade-by-trade details
-
-## Logging
-
-### Log Levels
-
-Configure in `config/strategy_config.yaml`:
+### Adjust Risk Parameters
 
 ```yaml
-logging:
-  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
-  log_trades: True
-  log_oi_analysis: True
-  log_signals: True
+exit:
+  initial_stop_loss_pct: 0.20     # 20% stop loss
+  trailing_stop_pct: 0.15         # 15% trailing stop
+
+position_sizing:
+  initial_capital: 200000         # ₹2L capital
+  position_size: 2                # 2 lots per trade
 ```
 
-### Trade Logs
+### Skip Monday/Tuesday Trading
 
-All entry/exit signals are logged with:
-- Timestamp
-- Strike and option type
-- Entry/exit prices
-- OI change
-- VWAP values
-- Exit reason
-- P&L
+```yaml
+risk_management:
+  avoid_monday_tuesday: true      # Skip near-expiry days
+```
 
-## Important Notes
+## Advanced Usage
 
-1. **Data Quality**: Ensure data files have no missing values for critical columns (OI, close, volume)
+### Custom Strategy Modifications
 
-2. **Trading Hours**: Strategy only trades between 9:30 AM - 2:30 PM, exits by 3:00 PM
+The strategy implementation is in `strategies/intraday_momentum_oi.py`. Key methods:
 
-3. **Expiry Selection**: Uses closest expiry by default. Monitor performance on Monday/Tuesday as noted in strategy doc.
+- `analyze_market()`: Daily market analysis
+- `check_entry_conditions()`: Entry signal logic
+- `manage_positions()`: Position management and stops
 
-4. **Position Limits**: Maximum 5 trades per day, 1 concurrent position (configurable)
+### Adding Custom Indicators
 
-5. **Slippage & Commission**: Configured in backtest settings, adjust based on broker
+Add new indicators in `src/indicators.py`:
+
+```python
+class MyIndicator(bt.Indicator):
+    lines = ('myline',)
+    
+    def next(self):
+        self.lines.myline[0] = # your calculation
+```
+
+### Custom Analyzers
+
+Backtrader analyzers are already added. Access them in the strategy:
+
+```python
+results = cerebro.run()
+strategy = results[0]
+sharpe = strategy.analyzers.sharpe.get_analysis()
+```
 
 ## Troubleshooting
 
-### Issue: "No trades executed"
+### Issue: "Memory Error" when loading data
+**Solution**: The options CSV is very large (2GB). Ensure you have sufficient RAM (8GB+).
 
-- Check if data covers the configured date range
-- Verify entry time is within 9:30 - 14:30
-- Check if OI unwinding is occurring in the data
-- Enable DEBUG logging to see detailed analysis
+### Issue: "Timezone errors"
+**Solution**: Verify timestamps in CSVs include timezone info (`+05:30` for IST).
 
-### Issue: "No spot price found"
+### Issue: "No trades generated"
+**Solution**: 
+- Check if OI data is available for the selected dates
+- Verify entry conditions are not too restrictive
+- Check log output for strategy signals
 
-- Ensure `spotprice_2025.csv` has data for trading dates
-- Check timestamp format matches
+### Issue: "Import errors"
+**Solution**: Ensure all dependencies are installed:
+```bash
+pip install -r requirements.txt --upgrade
+```
 
-### Issue: "Memory error with large CSV files"
+## Performance Optimization
 
-- Data files are processed in chunks internally
-- If issues persist, filter data to specific date ranges
+For faster backtesting:
 
-## Future Enhancements
+1. **Reduce date range** in config
+2. **Increase timeframe** (e.g., 3 or 5 minutes instead of 1)
+3. **Filter options data** to only relevant strikes
+4. **Use SSD** for faster data loading
 
-- [ ] Add support for BankNifty and other instruments
-- [ ] Implement additional entry filters (VIX threshold, etc.)
-- [ ] Add position pyramiding option
-- [ ] Create visualization of entry/exit points on charts
-- [ ] Add walk-forward optimization
-- [ ] Implement live trading integration
+## Contributing
+
+This is a private strategy implementation. Modifications should be tracked via git.
+
+## References
+
+- **Strategy Document**: `Trading Strategy _ Intraday_Momentum_OIUnwinding.pdf`
+- **Backtrader Documentation**: https://www.backtrader.com/docu/
+- **NIFTY Options**: NSE India
 
 ## License
 
-Proprietary - For authorized use only
+Private use only.
 
 ## Contact
 
-For questions or support, contact the strategy developer.
+For questions about this implementation, contact the development team.
 
 ---
 
-**Remember**: This is a backtesting system. Past performance does not guarantee future results. Always test thoroughly before live trading.
+**Last Updated**: 2025-01-27  
+**Version**: 1.0.0
+

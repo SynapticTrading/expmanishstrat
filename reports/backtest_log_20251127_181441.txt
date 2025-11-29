@@ -1,0 +1,819 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 5625 spot price records from 2025-01-01 09:15:00 to 2025-01-21 15:29:00
+Loading options data (this may take a while for large files)...
+Loaded 1206944 options records
+Filtered to 773758 weekly expiry option records
+
+Data Summary:
+  Spot data: 5625 bars from 2025-01-01 09:15:00 to 2025-01-21 15:29:00
+  Options data: 773758 records
+  Timeframe: 1 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Strategy initialized
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23649.55
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-01 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-01 09:15:00] Direction determined: PUT (Call dist: 150.45, Put dist: 149.55)
+[2025-01-01 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23600, Expiry=2025-01-02, Spot=23649.55
+[2025-01-01 09:30:00] Checking entry: PE 23600, Expiry=2025-01-02
+[2025-01-01 09:30:00] PE 23600: OI=7673325, Change=0 (0.00%) - BUILDING
+[2025-01-01 09:36:00] 🎯 ENTRY SIGNAL: PE 23600 - Price: 103.50, VWAP: 97.47, OI Change: -186975 (-2.41%)
+[2025-01-01 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=103.50
+[2025-01-01 09:37:00] 🔵 BUY OPTION EXECUTED: PE 23600 @ ₹103.40 (Expiry: 2025-01-02, Lot size: 1)
+[2025-01-01 10:00:00] ⚠️  Already in position: size=1
+[2025-01-01 10:30:00] ⚠️  Already in position: size=1
+[2025-01-01 11:00:00] ⚠️  Already in position: size=1
+[2025-01-01 11:30:00] ⚠️  Already in position: size=1
+[2025-01-01 12:00:00] ⚠️  Already in position: size=1
+[2025-01-01 12:30:00] ⚠️  Already in position: size=1
+[2025-01-01 13:00:00] ⚠️  Already in position: size=1
+[2025-01-01 13:30:00] ⚠️  Already in position: size=1
+[2025-01-01 14:00:00] ⚠️  Already in position: size=1
+[2025-01-01 14:30:00] ⚠️  Already in position: size=1
+[2025-01-01 14:50:00] END OF DAY - Closing all positions (size=1)
+[2025-01-01 14:51:00] TRADE PROFIT: Gross 135.40, Net 111.71
+[2025-01-02 09:15:00] Starting daily analysis - Spot: 23787.60
+[2025-01-02 09:15:00] Found expiry: 2025-01-09
+[2025-01-02 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-02 09:15:00] Max Call OI: 23800, Max Put OI: 23700
+[2025-01-02 09:15:00] Direction determined: CALL (Call dist: 12.40, Put dist: 87.60)
+[2025-01-02 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=23800, Expiry=2025-01-09, Spot=23787.60
+[2025-01-02 09:30:00] Checking entry: CE 23800, Expiry=2025-01-09
+[2025-01-02 09:30:00] CE 23800: OI=2224350, Change=0 (0.00%) - BUILDING
+[2025-01-02 09:33:00] 🎯 ENTRY SIGNAL: CE 23800 - Price: 239.00, VWAP: 235.12, OI Change: -3375 (-0.15%)
+[2025-01-02 09:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=239.00
+[2025-01-02 09:34:00] 🔵 BUY OPTION EXECUTED: CE 23800 @ ₹237.95 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-02 10:00:00] ⚠️  Already in position: size=1
+[2025-01-02 10:30:00] ⚠️  Already in position: size=1
+[2025-01-02 11:00:00] ⚠️  Already in position: size=1
+[2025-01-02 11:30:00] ⚠️  Already in position: size=1
+[2025-01-02 12:00:00] ⚠️  Already in position: size=1
+[2025-01-02 12:30:00] ⚠️  Already in position: size=1
+[2025-01-02 13:00:00] ⚠️  Already in position: size=1
+[2025-01-02 13:30:00] ⚠️  Already in position: size=1
+[2025-01-02 14:00:00] ⚠️  Already in position: size=1
+[2025-01-02 14:30:00] ⚠️  Already in position: size=1
+[2025-01-02 14:50:00] END OF DAY - Closing all positions (size=1)
+[2025-01-02 14:51:00] TRADE PROFIT: Gross 416.50, Net 392.51
+[2025-01-03 09:15:00] Starting daily analysis - Spot: 24152.65
+[2025-01-03 09:15:00] Found expiry: 2025-01-09
+[2025-01-03 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-03 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-03 09:15:00] Direction determined: CALL (Call dist: 47.35, Put dist: 152.65)
+[2025-01-03 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=24200, Expiry=2025-01-09, Spot=24152.65
+[2025-01-03 09:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 09:30:00] CE 24200: OI=5648025, Change=0 (0.00%) - BUILDING
+[2025-01-03 10:00:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 10:00:00] CE 24200: OI=7094925, Change=97725 (1.40%) - BUILDING
+[2025-01-03 10:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 10:30:00] CE 24200: OI=7762500, Change=164250 (2.16%) - BUILDING
+[2025-01-03 11:00:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 11:00:00] CE 24200: OI=8550075, Change=28650 (0.34%) - BUILDING
+[2025-01-03 11:24:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 127.45, VWAP: 121.86, OI Change: -168150 (-2.11%)
+[2025-01-03 11:24:00] 📈 PLACING BUY ORDER: size=1, expected_price=127.45
+[2025-01-03 11:25:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹122.45 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:25:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹364.35, Trailing Stop: ₹414.00
+[2025-01-03 11:26:00] TRADE PROFIT: Gross -12.45, Net -36.58
+[2025-01-03 11:27:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 125.30, VWAP: 121.97, OI Change: -161550 (-2.07%)
+[2025-01-03 11:27:00] 📈 PLACING BUY ORDER: size=1, expected_price=125.30
+[2025-01-03 11:28:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹121.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:28:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹360.00, Trailing Stop: ₹414.00
+[2025-01-03 11:29:00] TRADE PROFIT: Gross -11.25, Net -35.37
+[2025-01-03 11:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 11:30:00] CE 24200: OI=7721175, Change=77775 (1.02%) - BUILDING
+[2025-01-03 11:42:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 125.00, VWAP: 121.87, OI Change: -6600 (-0.08%)
+[2025-01-03 11:42:00] 📈 PLACING BUY ORDER: size=1, expected_price=125.00
+[2025-01-03 11:43:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹125.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:43:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹371.05, Trailing Stop: ₹414.00
+[2025-01-03 11:44:00] TRADE PROFIT: Gross 4.35, Net -19.78
+[2025-01-03 11:54:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 126.00, VWAP: 121.91, OI Change: -46200 (-0.57%)
+[2025-01-03 11:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=126.00
+[2025-01-03 11:55:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹123.10 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:55:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹369.10, Trailing Stop: ₹414.00
+[2025-01-03 11:56:00] TRADE PROFIT: Gross -5.35, Net -29.47
+[2025-01-03 11:57:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 128.90, VWAP: 121.98, OI Change: -94725 (-1.17%)
+[2025-01-03 11:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=128.90
+[2025-01-03 11:58:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹128.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:58:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹382.50, Trailing Stop: ₹414.00
+[2025-01-03 11:59:00] TRADE PROFIT: Gross 1.85, Net -22.28
+[2025-01-03 12:00:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 12:00:00] CE 24200: OI=7994175, Change=-26400 (-0.33%) - UNWINDING ✓
+[2025-01-03 12:00:00] CE 24200: Price=126.40, VWAP=122.07 - ABOVE ✓
+[2025-01-03 12:00:00] 🎯 ENTRY SIGNAL: CE 24200 - Price: 126.40, VWAP: 122.07, OI Change: -26400 (-0.33%)
+[2025-01-03 12:00:00] 📈 PLACING BUY ORDER: size=1, expected_price=126.40
+[2025-01-03 12:01:00] 🔵 BUY OPTION EXECUTED: CE 24200 @ ₹128.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 12:01:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹381.00, Trailing Stop: ₹414.00
+[2025-01-03 12:02:00] TRADE PROFIT: Gross 4.50, Net -19.63
+[2025-01-03 12:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 12:30:00] CE 24200: OI=8362650, Change=119100 (1.44%) - BUILDING
+[2025-01-03 13:00:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 13:00:00] CE 24200: OI=8852925, Change=68175 (0.78%) - BUILDING
+[2025-01-03 13:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 13:30:00] CE 24200: OI=8536800, Change=0 (0.00%) - BUILDING
+[2025-01-03 14:00:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 14:00:00] CE 24200: OI=8735700, Change=0 (0.00%) - BUILDING
+[2025-01-03 14:30:00] Checking entry: CE 24200, Expiry=2025-01-09
+[2025-01-03 14:30:00] CE 24200: OI=9050400, Change=0 (0.00%) - BUILDING
+[2025-01-06 09:15:00] Starting daily analysis - Spot: 24039.65
+[2025-01-06 09:15:00] Found expiry: 2025-01-09
+[2025-01-06 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-06 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-06 09:15:00] Direction determined: PUT (Call dist: 160.35, Put dist: 39.65)
+[2025-01-06 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=24000, Expiry=2025-01-09, Spot=24039.65
+[2025-01-06 09:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 09:30:00] PE 24000: OI=7384500, Change=0 (0.00%) - BUILDING
+[2025-01-06 09:36:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 218.30, VWAP: 154.98, OI Change: -765375 (-10.30%)
+[2025-01-06 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=218.30
+[2025-01-06 09:37:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹230.85 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 09:37:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹55.70, Stop: ₹91.84
+[2025-01-06 09:38:00] TRADE PROFIT: Gross -6.10, Net -30.09
+[2025-01-06 09:39:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 199.20, VWAP: 163.34, OI Change: -258750 (-3.88%)
+[2025-01-06 09:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=199.20
+[2025-01-06 09:40:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹207.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 09:40:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹63.75, Stop: ₹91.84
+[2025-01-06 09:41:00] TRADE PROFIT: Gross -38.90, Net -62.90
+[2025-01-06 09:45:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 200.45, VWAP: 170.61, OI Change: -31125 (-0.47%)
+[2025-01-06 09:45:00] 📈 PLACING BUY ORDER: size=1, expected_price=200.45
+[2025-01-06 09:46:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹207.35 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 09:46:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹62.60, Stop: ₹91.84
+[2025-01-06 09:47:00] TRADE PROFIT: Gross -15.80, Net -39.72
+[2025-01-06 09:48:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 187.55, VWAP: 172.23, OI Change: -220650 (-3.33%)
+[2025-01-06 09:48:00] 📈 PLACING BUY ORDER: size=1, expected_price=187.55
+[2025-01-06 09:49:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹180.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 09:49:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹68.90, Stop: ₹91.84
+[2025-01-06 09:50:00] TRADE PROFIT: Gross 20.00, Net -3.95
+[2025-01-06 09:57:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 179.70, VWAP: 173.49, OI Change: -85200 (-1.30%)
+[2025-01-06 09:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=179.70
+[2025-01-06 09:58:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹177.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 09:58:00] 📉 TRAILING STOP HIT: CE 23800 - Current: ₹264.60, Trailing Stop: ₹414.00
+[2025-01-06 09:59:00] TRADE PROFIT: Gross 1.75, Net -22.21
+[2025-01-06 10:00:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 10:00:00] PE 24000: OI=6465000, Change=-28275 (-0.44%) - UNWINDING ✓
+[2025-01-06 10:00:00] PE 24000: Price=163.70, VWAP=173.47 - BELOW ✗
+[2025-01-06 10:24:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 169.45, VWAP: 168.24, OI Change: -58800 (-0.79%)
+[2025-01-06 10:24:00] 📈 PLACING BUY ORDER: size=1, expected_price=169.45
+[2025-01-06 10:25:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹167.35 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:25:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹68.55, Stop: ₹91.84
+[2025-01-06 10:26:00] TRADE PROFIT: Gross 7.10, Net -16.88
+[2025-01-06 10:27:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 169.45, VWAP: 168.25, OI Change: -202800 (-2.74%)
+[2025-01-06 10:27:00] 📈 PLACING BUY ORDER: size=1, expected_price=169.45
+[2025-01-06 10:28:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹171.85 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:28:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹65.70, Stop: ₹91.84
+[2025-01-06 10:29:00] TRADE PROFIT: Gross -2.45, Net -26.43
+[2025-01-06 10:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 10:30:00] PE 24000: OI=6971550, Change=-225600 (-3.13%) - UNWINDING ✓
+[2025-01-06 10:30:00] PE 24000: Price=181.00, VWAP=168.64 - ABOVE ✓
+[2025-01-06 10:30:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 181.00, VWAP: 168.64, OI Change: -225600 (-3.13%)
+[2025-01-06 10:30:00] 📈 PLACING BUY ORDER: size=1, expected_price=181.00
+[2025-01-06 10:31:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹183.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:31:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹58.75, Stop: ₹91.84
+[2025-01-06 10:32:00] TRADE PROFIT: Gross -6.85, Net -30.81
+[2025-01-06 10:33:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 190.55, VWAP: 169.21, OI Change: -140400 (-2.01%)
+[2025-01-06 10:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=190.55
+[2025-01-06 10:34:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹192.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:34:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹56.00, Stop: ₹91.84
+[2025-01-06 10:35:00] TRADE PROFIT: Gross -1.50, Net -25.44
+[2025-01-06 10:36:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 192.90, VWAP: 169.81, OI Change: -411375 (-6.02%)
+[2025-01-06 10:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=192.90
+[2025-01-06 10:37:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹206.35 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:37:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹52.50, Stop: ₹91.84
+[2025-01-06 10:38:00] TRADE PROFIT: Gross -21.75, Net -45.68
+[2025-01-06 10:39:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 202.70, VWAP: 170.84, OI Change: -438900 (-6.84%)
+[2025-01-06 10:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=202.70
+[2025-01-06 10:40:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹205.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:40:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹54.55, Stop: ₹91.84
+[2025-01-06 10:41:00] TRADE PROFIT: Gross 3.45, Net -20.48
+[2025-01-06 10:42:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 231.25, VWAP: 172.36, OI Change: -167250 (-2.80%)
+[2025-01-06 10:42:00] 📈 PLACING BUY ORDER: size=1, expected_price=231.25
+[2025-01-06 10:43:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹230.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:43:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹47.85, Stop: ₹91.84
+[2025-01-06 10:44:00] TRADE PROFIT: Gross 4.65, Net -19.24
+[2025-01-06 10:45:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 256.50, VWAP: 174.62, OI Change: -234975 (-4.04%)
+[2025-01-06 10:45:00] 📈 PLACING BUY ORDER: size=1, expected_price=256.50
+[2025-01-06 10:46:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹257.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:46:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹43.45, Stop: ₹91.84
+[2025-01-06 10:47:00] TRADE PROFIT: Gross -4.60, Net -28.46
+[2025-01-06 10:48:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 248.20, VWAP: 175.97, OI Change: -193200 (-3.46%)
+[2025-01-06 10:48:00] 📈 PLACING BUY ORDER: size=1, expected_price=248.20
+[2025-01-06 10:49:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹243.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:49:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹44.75, Stop: ₹91.84
+[2025-01-06 10:50:00] TRADE PROFIT: Gross -1.45, Net -25.32
+[2025-01-06 10:51:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 266.20, VWAP: 177.11, OI Change: -66225 (-1.23%)
+[2025-01-06 10:51:00] 📈 PLACING BUY ORDER: size=1, expected_price=266.20
+[2025-01-06 10:52:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹260.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:52:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹41.90, Stop: ₹91.84
+[2025-01-06 10:53:00] TRADE PROFIT: Gross 9.00, Net -14.85
+[2025-01-06 10:54:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 266.05, VWAP: 178.04, OI Change: -138000 (-2.59%)
+[2025-01-06 10:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=266.05
+[2025-01-06 10:55:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹274.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:55:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹40.30, Stop: ₹91.84
+[2025-01-06 10:56:00] TRADE PROFIT: Gross -6.90, Net -30.73
+[2025-01-06 10:57:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 273.00, VWAP: 179.01, OI Change: -128550 (-2.48%)
+[2025-01-06 10:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=273.00
+[2025-01-06 10:58:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹274.10 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:58:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹41.85, Stop: ₹91.84
+[2025-01-06 10:59:00] TRADE PROFIT: Gross -5.10, Net -28.93
+[2025-01-06 11:00:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 11:00:00] PE 24000: OI=4997625, Change=-55050 (-1.09%) - UNWINDING ✓
+[2025-01-06 11:00:00] PE 24000: Price=273.20, VWAP=179.76 - ABOVE ✓
+[2025-01-06 11:00:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 273.20, VWAP: 179.76, OI Change: -55050 (-1.09%)
+[2025-01-06 11:00:00] 📈 PLACING BUY ORDER: size=1, expected_price=273.20
+[2025-01-06 11:01:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹274.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:01:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹43.05, Stop: ₹91.84
+[2025-01-06 11:02:00] TRADE PROFIT: Gross 0.00, Net -23.83
+[2025-01-06 11:03:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 283.70, VWAP: 180.51, OI Change: -44025 (-0.88%)
+[2025-01-06 11:03:00] 📈 PLACING BUY ORDER: size=1, expected_price=283.70
+[2025-01-06 11:04:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹287.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:04:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹40.85, Stop: ₹91.84
+[2025-01-06 11:05:00] TRADE PROFIT: Gross -8.55, Net -32.36
+[2025-01-06 11:06:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 275.50, VWAP: 181.07, OI Change: -32700 (-0.66%)
+[2025-01-06 11:06:00] 📈 PLACING BUY ORDER: size=1, expected_price=275.50
+[2025-01-06 11:07:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹277.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:07:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹43.45, Stop: ₹91.84
+[2025-01-06 11:08:00] TRADE PROFIT: Gross -3.15, Net -26.97
+[2025-01-06 11:09:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 300.05, VWAP: 181.95, OI Change: -64350 (-1.31%)
+[2025-01-06 11:09:00] 📈 PLACING BUY ORDER: size=1, expected_price=300.05
+[2025-01-06 11:10:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹325.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:10:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.95, Stop: ₹91.84
+[2025-01-06 11:11:00] TRADE PROFIT: Gross -29.85, Net -53.63
+[2025-01-06 11:12:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 346.10, VWAP: 184.49, OI Change: -261825 (-5.39%)
+[2025-01-06 11:12:00] 📈 PLACING BUY ORDER: size=1, expected_price=346.10
+[2025-01-06 11:13:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹340.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:13:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.10, Stop: ₹91.84
+[2025-01-06 11:14:00] TRADE PROFIT: Gross 6.65, Net -17.08
+[2025-01-06 11:15:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 339.10, VWAP: 185.62, OI Change: -144225 (-3.14%)
+[2025-01-06 11:15:00] 📈 PLACING BUY ORDER: size=1, expected_price=339.10
+[2025-01-06 11:16:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹349.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:16:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.80, Stop: ₹91.84
+[2025-01-06 11:17:00] TRADE PROFIT: Gross -10.20, Net -33.93
+[2025-01-06 11:18:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 347.55, VWAP: 186.61, OI Change: -65925 (-1.48%)
+[2025-01-06 11:18:00] 📈 PLACING BUY ORDER: size=1, expected_price=347.55
+[2025-01-06 11:19:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹327.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:19:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹41.70, Stop: ₹91.84
+[2025-01-06 11:20:00] TRADE PROFIT: Gross 42.40, Net 18.66
+[2025-01-06 11:21:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 338.35, VWAP: 187.45, OI Change: -9375 (-0.21%)
+[2025-01-06 11:21:00] 📈 PLACING BUY ORDER: size=1, expected_price=338.35
+[2025-01-06 11:22:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹342.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:22:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹40.30, Stop: ₹91.84
+[2025-01-06 11:23:00] TRADE PROFIT: Gross -9.35, Net -33.09
+[2025-01-06 11:24:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 338.60, VWAP: 188.20, OI Change: -4875 (-0.11%)
+[2025-01-06 11:24:00] 📈 PLACING BUY ORDER: size=1, expected_price=338.60
+[2025-01-06 11:25:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹329.25 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:25:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹42.20, Stop: ₹91.84
+[2025-01-06 11:26:00] TRADE PROFIT: Gross 15.60, Net -8.16
+[2025-01-06 11:27:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 321.00, VWAP: 188.71, OI Change: -42075 (-0.96%)
+[2025-01-06 11:27:00] 📈 PLACING BUY ORDER: size=1, expected_price=321.00
+[2025-01-06 11:28:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹322.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:28:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹42.35, Stop: ₹91.84
+[2025-01-06 11:29:00] TRADE PROFIT: Gross 1.45, Net -22.33
+[2025-01-06 11:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 11:30:00] PE 24000: OI=4281150, Change=-47100 (-1.09%) - UNWINDING ✓
+[2025-01-06 11:30:00] PE 24000: Price=323.50, VWAP=189.14 - ABOVE ✓
+[2025-01-06 11:30:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 323.50, VWAP: 189.14, OI Change: -47100 (-1.09%)
+[2025-01-06 11:30:00] 📈 PLACING BUY ORDER: size=1, expected_price=323.50
+[2025-01-06 11:31:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹313.25 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:31:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹41.75, Stop: ₹91.84
+[2025-01-06 11:32:00] TRADE PROFIT: Gross 19.05, Net -4.73
+[2025-01-06 11:33:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 318.95, VWAP: 189.67, OI Change: -56775 (-1.33%)
+[2025-01-06 11:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=318.95
+[2025-01-06 11:34:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹334.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:34:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.50, Stop: ₹91.84
+[2025-01-06 11:35:00] TRADE PROFIT: Gross -19.55, Net -43.33
+[2025-01-06 11:36:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 331.85, VWAP: 190.26, OI Change: -15075 (-0.36%)
+[2025-01-06 11:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=331.85
+[2025-01-06 11:37:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹332.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:37:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹39.65, Stop: ₹91.84
+[2025-01-06 11:38:00] TRADE PROFIT: Gross 0.75, Net -23.03
+[2025-01-06 11:39:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 339.65, VWAP: 190.79, OI Change: -14850 (-0.35%)
+[2025-01-06 11:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=339.65
+[2025-01-06 11:40:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹345.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:40:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.45, Stop: ₹91.84
+[2025-01-06 11:41:00] TRADE PROFIT: Gross -7.15, Net -30.92
+[2025-01-06 11:42:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 371.20, VWAP: 191.54, OI Change: -32175 (-0.77%)
+[2025-01-06 11:42:00] 📈 PLACING BUY ORDER: size=1, expected_price=371.20
+[2025-01-06 11:43:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹365.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:43:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.65, Stop: ₹91.84
+[2025-01-06 11:44:00] TRADE PROFIT: Gross 2.40, Net -21.33
+[2025-01-06 11:45:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 373.80, VWAP: 192.48, OI Change: -14925 (-0.36%)
+[2025-01-06 11:45:00] 📈 PLACING BUY ORDER: size=1, expected_price=373.80
+[2025-01-06 11:46:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹382.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:46:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹33.75, Stop: ₹91.84
+[2025-01-06 11:47:00] TRADE PROFIT: Gross -8.75, Net -32.45
+[2025-01-06 11:48:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 411.25, VWAP: 193.64, OI Change: -53100 (-1.28%)
+[2025-01-06 11:48:00] 📈 PLACING BUY ORDER: size=1, expected_price=411.25
+[2025-01-06 11:49:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹428.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:49:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.85, Stop: ₹91.84
+[2025-01-06 11:50:00] TRADE PROFIT: Gross -17.35, Net -41.00
+[2025-01-06 11:51:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 429.40, VWAP: 194.82, OI Change: -45150 (-1.10%)
+[2025-01-06 11:51:00] 📈 PLACING BUY ORDER: size=1, expected_price=429.40
+[2025-01-06 11:52:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹425.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:52:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.85, Stop: ₹91.84
+[2025-01-06 11:53:00] TRADE PROFIT: Gross -0.45, Net -24.09
+[2025-01-06 11:54:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 434.05, VWAP: 195.48, OI Change: -33225 (-0.82%)
+[2025-01-06 11:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=434.05
+[2025-01-06 11:55:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹433.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:55:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.40, Stop: ₹91.84
+[2025-01-06 11:56:00] TRADE PROFIT: Gross -2.30, Net -25.92
+[2025-01-06 11:57:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 436.40, VWAP: 196.23, OI Change: -47325 (-1.18%)
+[2025-01-06 11:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=436.40
+[2025-01-06 11:58:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹440.65 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:58:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.75, Stop: ₹91.84
+[2025-01-06 11:59:00] TRADE PROFIT: Gross -7.00, Net -30.61
+[2025-01-06 12:00:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 12:00:00] PE 24000: OI=3968550, Change=0 (0.00%) - BUILDING
+[2025-01-06 12:01:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 414.00, VWAP: 197.22, OI Change: -53475 (-1.35%)
+[2025-01-06 12:01:00] 📈 PLACING BUY ORDER: size=1, expected_price=414.00
+[2025-01-06 12:02:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹384.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:02:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹33.70, Stop: ₹91.84
+[2025-01-06 12:03:00] TRADE PROFIT: Gross 30.95, Net 7.30
+[2025-01-06 12:04:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 385.30, VWAP: 198.01, OI Change: -40725 (-1.04%)
+[2025-01-06 12:04:00] 📈 PLACING BUY ORDER: size=1, expected_price=385.30
+[2025-01-06 12:05:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹368.10 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:05:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.85, Stop: ₹91.84
+[2025-01-06 12:06:00] TRADE PROFIT: Gross 21.15, Net -2.53
+[2025-01-06 12:07:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 365.60, VWAP: 198.54, OI Change: -67350 (-1.74%)
+[2025-01-06 12:07:00] 📈 PLACING BUY ORDER: size=1, expected_price=365.60
+[2025-01-06 12:08:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹370.30 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:08:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.55, Stop: ₹91.84
+[2025-01-06 12:09:00] TRADE PROFIT: Gross -5.70, Net -29.40
+[2025-01-06 12:10:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 365.15, VWAP: 199.06, OI Change: -3975 (-0.10%)
+[2025-01-06 12:10:00] 📈 PLACING BUY ORDER: size=1, expected_price=365.15
+[2025-01-06 12:11:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹359.30 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:11:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹36.70, Stop: ₹91.84
+[2025-01-06 12:12:00] TRADE PROFIT: Gross 5.60, Net -18.11
+[2025-01-06 12:13:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 361.50, VWAP: 199.39, OI Change: -17925 (-0.47%)
+[2025-01-06 12:13:00] 📈 PLACING BUY ORDER: size=1, expected_price=361.50
+[2025-01-06 12:14:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹357.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:14:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.60, Stop: ₹91.84
+[2025-01-06 12:15:00] TRADE PROFIT: Gross 5.60, Net -18.12
+[2025-01-06 12:19:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 389.10, VWAP: 200.25, OI Change: -21225 (-0.56%)
+[2025-01-06 12:19:00] 📈 PLACING BUY ORDER: size=1, expected_price=389.10
+[2025-01-06 12:20:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹376.35 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:20:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹34.15, Stop: ₹91.84
+[2025-01-06 12:21:00] TRADE PROFIT: Gross 18.60, Net -5.10
+[2025-01-06 12:22:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 370.65, VWAP: 200.62, OI Change: -36150 (-0.96%)
+[2025-01-06 12:22:00] 📈 PLACING BUY ORDER: size=1, expected_price=370.65
+[2025-01-06 12:23:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹366.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:23:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.80, Stop: ₹91.84
+[2025-01-06 12:24:00] TRADE PROFIT: Gross 5.30, Net -18.42
+[2025-01-06 12:28:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 394.00, VWAP: 201.12, OI Change: -1575 (-0.04%)
+[2025-01-06 12:28:00] 📈 PLACING BUY ORDER: size=1, expected_price=394.00
+[2025-01-06 12:29:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹408.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:29:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.50, Stop: ₹91.84
+[2025-01-06 12:30:00] TRADE PROFIT: Gross -10.70, Net -34.38
+[2025-01-06 12:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 12:30:00] PE 24000: OI=3731775, Change=0 (0.00%) - BUILDING
+[2025-01-06 12:31:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 398.95, VWAP: 201.62, OI Change: -24975 (-0.67%)
+[2025-01-06 12:31:00] 📈 PLACING BUY ORDER: size=1, expected_price=398.95
+[2025-01-06 12:32:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹376.85 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:32:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹33.65, Stop: ₹91.84
+[2025-01-06 12:33:00] TRADE PROFIT: Gross 18.70, Net -5.00
+[2025-01-06 12:34:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 378.60, VWAP: 201.99, OI Change: -39750 (-1.07%)
+[2025-01-06 12:34:00] 📈 PLACING BUY ORDER: size=1, expected_price=378.60
+[2025-01-06 12:35:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹368.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:35:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹34.60, Stop: ₹91.84
+[2025-01-06 12:36:00] TRADE PROFIT: Gross 2.40, Net -21.31
+[2025-01-06 12:37:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 347.75, VWAP: 202.39, OI Change: -24000 (-0.65%)
+[2025-01-06 12:37:00] 📈 PLACING BUY ORDER: size=1, expected_price=347.75
+[2025-01-06 12:38:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹346.65 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:38:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.00, Stop: ₹91.84
+[2025-01-06 12:39:00] TRADE PROFIT: Gross 1.75, Net -22.00
+[2025-01-06 12:40:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 335.45, VWAP: 202.81, OI Change: -3000 (-0.08%)
+[2025-01-06 12:40:00] 📈 PLACING BUY ORDER: size=1, expected_price=335.45
+[2025-01-06 12:41:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹335.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:41:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.70, Stop: ₹91.84
+[2025-01-06 12:42:00] TRADE PROFIT: Gross -1.80, Net -25.56
+[2025-01-06 12:43:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 354.50, VWAP: 203.17, OI Change: -39750 (-1.09%)
+[2025-01-06 12:43:00] 📈 PLACING BUY ORDER: size=1, expected_price=354.50
+[2025-01-06 12:44:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹354.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:44:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹35.60, Stop: ₹91.84
+[2025-01-06 12:45:00] TRADE PROFIT: Gross 4.85, Net -18.89
+[2025-01-06 12:46:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 362.00, VWAP: 203.46, OI Change: -21150 (-0.59%)
+[2025-01-06 12:46:00] 📈 PLACING BUY ORDER: size=1, expected_price=362.00
+[2025-01-06 12:47:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹350.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:47:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹37.45, Stop: ₹91.84
+[2025-01-06 12:48:00] TRADE PROFIT: Gross 17.40, Net -6.34
+[2025-01-06 12:49:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 350.65, VWAP: 203.66, OI Change: -150 (-0.00%)
+[2025-01-06 12:49:00] 📈 PLACING BUY ORDER: size=1, expected_price=350.65
+[2025-01-06 12:50:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹351.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:50:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹37.60, Stop: ₹91.84
+[2025-01-06 12:51:00] TRADE PROFIT: Gross 3.00, Net -20.75
+[2025-01-06 12:52:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 368.00, VWAP: 203.83, OI Change: -2400 (-0.07%)
+[2025-01-06 12:52:00] 📈 PLACING BUY ORDER: size=1, expected_price=368.00
+[2025-01-06 12:53:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹367.45 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:53:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹36.00, Stop: ₹91.84
+[2025-01-06 12:54:00] TRADE PROFIT: Gross 1.45, Net -22.28
+[2025-01-06 12:55:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 369.35, VWAP: 204.06, OI Change: -11625 (-0.33%)
+[2025-01-06 12:55:00] 📈 PLACING BUY ORDER: size=1, expected_price=369.35
+[2025-01-06 12:56:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹368.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:56:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹36.65, Stop: ₹91.84
+[2025-01-06 12:57:00] TRADE PROFIT: Gross -1.65, Net -25.39
+[2025-01-06 12:58:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 353.30, VWAP: 204.25, OI Change: -11925 (-0.33%)
+[2025-01-06 12:58:00] 📈 PLACING BUY ORDER: size=1, expected_price=353.30
+[2025-01-06 12:59:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹332.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:59:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹41.10, Stop: ₹91.84
+[2025-01-06 13:00:00] TRADE PROFIT: Gross 20.40, Net -3.36
+[2025-01-06 13:00:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 13:00:00] PE 24000: OI=3553050, Change=0 (0.00%) - BUILDING
+[2025-01-06 13:01:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 356.40, VWAP: 204.69, OI Change: -4875 (-0.14%)
+[2025-01-06 13:01:00] 📈 PLACING BUY ORDER: size=1, expected_price=356.40
+[2025-01-06 13:02:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹358.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:02:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.10, Stop: ₹91.84
+[2025-01-06 13:03:00] TRADE PROFIT: Gross 4.35, Net -19.40
+[2025-01-06 13:04:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 354.75, VWAP: 204.85, OI Change: -33450 (-0.94%)
+[2025-01-06 13:04:00] 📈 PLACING BUY ORDER: size=1, expected_price=354.75
+[2025-01-06 13:05:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹351.25 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:05:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹38.50, Stop: ₹91.84
+[2025-01-06 13:06:00] TRADE PROFIT: Gross 1.90, Net -21.85
+[2025-01-06 13:07:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 357.70, VWAP: 204.98, OI Change: -3600 (-0.10%)
+[2025-01-06 13:07:00] 📈 PLACING BUY ORDER: size=1, expected_price=357.70
+[2025-01-06 13:08:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹354.20 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:08:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹37.65, Stop: ₹91.84
+[2025-01-06 13:09:00] TRADE PROFIT: Gross -0.20, Net -23.94
+[2025-01-06 13:10:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 370.45, VWAP: 205.21, OI Change: -1275 (-0.04%)
+[2025-01-06 13:10:00] 📈 PLACING BUY ORDER: size=1, expected_price=370.45
+[2025-01-06 13:11:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹369.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:11:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹36.35, Stop: ₹91.84
+[2025-01-06 13:12:00] TRADE PROFIT: Gross 2.75, Net -20.98
+[2025-01-06 13:16:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 393.75, VWAP: 205.99, OI Change: -49575 (-1.41%)
+[2025-01-06 13:16:00] 📈 PLACING BUY ORDER: size=1, expected_price=393.75
+[2025-01-06 13:17:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹401.25 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:17:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.70, Stop: ₹91.84
+[2025-01-06 13:18:00] TRADE PROFIT: Gross -8.30, Net -31.99
+[2025-01-06 13:19:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 400.30, VWAP: 206.34, OI Change: -17250 (-0.50%)
+[2025-01-06 13:19:00] 📈 PLACING BUY ORDER: size=1, expected_price=400.30
+[2025-01-06 13:20:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹406.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:20:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.50, Stop: ₹91.84
+[2025-01-06 13:21:00] TRADE PROFIT: Gross -7.60, Net -31.28
+[2025-01-06 13:22:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 395.75, VWAP: 206.76, OI Change: -20850 (-0.60%)
+[2025-01-06 13:22:00] 📈 PLACING BUY ORDER: size=1, expected_price=395.75
+[2025-01-06 13:23:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹409.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:23:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.70, Stop: ₹91.84
+[2025-01-06 13:24:00] TRADE PROFIT: Gross -11.90, Net -35.58
+[2025-01-06 13:25:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 410.55, VWAP: 207.17, OI Change: -11850 (-0.35%)
+[2025-01-06 13:25:00] 📈 PLACING BUY ORDER: size=1, expected_price=410.55
+[2025-01-06 13:26:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹412.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:26:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.30, Stop: ₹91.84
+[2025-01-06 13:27:00] TRADE PROFIT: Gross -2.00, Net -25.67
+[2025-01-06 13:28:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 416.20, VWAP: 207.48, OI Change: -17025 (-0.50%)
+[2025-01-06 13:28:00] 📈 PLACING BUY ORDER: size=1, expected_price=416.20
+[2025-01-06 13:29:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹408.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:29:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.55, Stop: ₹91.84
+[2025-01-06 13:30:00] TRADE PROFIT: Gross 6.90, Net -16.77
+[2025-01-06 13:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 13:30:00] PE 24000: OI=3400800, Change=0 (0.00%) - BUILDING
+[2025-01-06 13:31:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 421.00, VWAP: 207.85, OI Change: -45075 (-1.33%)
+[2025-01-06 13:31:00] 📈 PLACING BUY ORDER: size=1, expected_price=421.00
+[2025-01-06 13:32:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹431.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:32:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.20, Stop: ₹91.84
+[2025-01-06 13:33:00] TRADE PROFIT: Gross -13.85, Net -37.49
+[2025-01-06 13:34:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 426.65, VWAP: 208.41, OI Change: -33750 (-1.01%)
+[2025-01-06 13:34:00] 📈 PLACING BUY ORDER: size=1, expected_price=426.65
+[2025-01-06 13:35:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹416.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:35:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.70, Stop: ₹91.84
+[2025-01-06 13:36:00] TRADE PROFIT: Gross 15.55, Net -8.10
+[2025-01-06 13:37:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 413.80, VWAP: 208.68, OI Change: -1875 (-0.06%)
+[2025-01-06 13:37:00] 📈 PLACING BUY ORDER: size=1, expected_price=413.80
+[2025-01-06 13:38:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹410.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:38:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹33.10, Stop: ₹91.84
+[2025-01-06 13:39:00] TRADE PROFIT: Gross 8.70, Net -14.96
+[2025-01-06 13:40:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 416.10, VWAP: 208.91, OI Change: -3750 (-0.11%)
+[2025-01-06 13:40:00] 📈 PLACING BUY ORDER: size=1, expected_price=416.10
+[2025-01-06 13:41:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹420.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:41:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.85, Stop: ₹91.84
+[2025-01-06 13:42:00] TRADE PROFIT: Gross -10.15, Net -33.81
+[2025-01-06 13:43:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 424.60, VWAP: 209.18, OI Change: -11175 (-0.34%)
+[2025-01-06 13:43:00] 📈 PLACING BUY ORDER: size=1, expected_price=424.60
+[2025-01-06 13:44:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹420.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:44:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.35, Stop: ₹91.84
+[2025-01-06 13:45:00] TRADE PROFIT: Gross 1.10, Net -22.55
+[2025-01-06 13:55:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 460.50, VWAP: 210.39, OI Change: -18075 (-0.55%)
+[2025-01-06 13:55:00] 📈 PLACING BUY ORDER: size=1, expected_price=460.50
+[2025-01-06 13:56:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹459.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:56:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹30.65, Stop: ₹91.84
+[2025-01-06 13:57:00] TRADE PROFIT: Gross -0.90, Net -24.51
+[2025-01-06 13:58:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 437.40, VWAP: 210.79, OI Change: -6825 (-0.21%)
+[2025-01-06 13:58:00] 📈 PLACING BUY ORDER: size=1, expected_price=437.40
+[2025-01-06 13:59:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹438.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 13:59:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.60, Stop: ₹91.84
+[2025-01-06 14:00:00] TRADE PROFIT: Gross -0.40, Net -24.03
+[2025-01-06 14:00:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 14:00:00] PE 24000: OI=3286200, Change=0 (0.00%) - BUILDING
+[2025-01-06 14:04:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 432.25, VWAP: 211.14, OI Change: -2550 (-0.08%)
+[2025-01-06 14:04:00] 📈 PLACING BUY ORDER: size=1, expected_price=432.25
+[2025-01-06 14:05:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹435.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:05:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.10, Stop: ₹91.84
+[2025-01-06 14:06:00] TRADE PROFIT: Gross -4.90, Net -28.54
+[2025-01-06 14:10:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 416.10, VWAP: 211.62, OI Change: -4950 (-0.15%)
+[2025-01-06 14:10:00] 📈 PLACING BUY ORDER: size=1, expected_price=416.10
+[2025-01-06 14:11:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹422.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:11:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.30, Stop: ₹91.84
+[2025-01-06 14:12:00] TRADE PROFIT: Gross -6.60, Net -30.25
+[2025-01-06 14:16:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 444.25, VWAP: 212.21, OI Change: -2025 (-0.06%)
+[2025-01-06 14:16:00] 📈 PLACING BUY ORDER: size=1, expected_price=444.25
+[2025-01-06 14:17:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹427.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:17:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.15, Stop: ₹91.84
+[2025-01-06 14:18:00] TRADE PROFIT: Gross 16.95, Net -6.68
+[2025-01-06 14:19:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 424.40, VWAP: 212.38, OI Change: -8100 (-0.25%)
+[2025-01-06 14:19:00] 📈 PLACING BUY ORDER: size=1, expected_price=424.40
+[2025-01-06 14:20:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹421.70 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:20:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹32.15, Stop: ₹91.84
+[2025-01-06 14:21:00] TRADE PROFIT: Gross 2.05, Net -21.60
+[2025-01-06 14:22:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 421.10, VWAP: 212.48, OI Change: -1725 (-0.05%)
+[2025-01-06 14:22:00] 📈 PLACING BUY ORDER: size=1, expected_price=421.10
+[2025-01-06 14:23:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹426.30 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:23:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹31.45, Stop: ₹91.84
+[2025-01-06 14:24:00] TRADE PROFIT: Gross -7.20, Net -30.85
+[2025-01-06 14:28:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 446.85, VWAP: 212.86, OI Change: -5625 (-0.17%)
+[2025-01-06 14:28:00] 📈 PLACING BUY ORDER: size=1, expected_price=446.85
+[2025-01-06 14:29:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹451.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:29:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹29.55, Stop: ₹91.84
+[2025-01-06 14:30:00] TRADE PROFIT: Gross -5.15, Net -28.77
+[2025-01-06 14:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 14:30:00] PE 24000: OI=3277125, Change=0 (0.00%) - BUILDING
+[2025-01-07 09:15:00] Starting daily analysis - Spot: 23756.75
+[2025-01-07 09:15:00] Found expiry: 2025-01-09
+[2025-01-07 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-07 09:15:00] Max Call OI: 24000, Max Put OI: 23600
+[2025-01-07 09:15:00] Direction determined: PUT (Call dist: 243.25, Put dist: 156.75)
+[2025-01-07 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23750, Expiry=2025-01-09, Spot=23756.75
+[2025-01-07 09:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 09:30:00] PE 23750: OI=3363675, Change=0 (0.00%) - BUILDING
+[2025-01-07 09:48:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 174.00, VWAP: 157.91, OI Change: -92925 (-2.32%)
+[2025-01-07 09:48:00] 📈 PLACING BUY ORDER: size=1, expected_price=174.00
+[2025-01-07 09:49:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹189.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 09:49:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹16.30, Stop: ₹91.84
+[2025-01-07 09:50:00] TRADE PROFIT: Gross -34.40, Net -58.09
+[2025-01-07 09:51:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 185.70, VWAP: 161.37, OI Change: -468225 (-11.99%)
+[2025-01-07 09:51:00] 📈 PLACING BUY ORDER: size=1, expected_price=185.70
+[2025-01-07 09:52:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹185.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 09:52:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹16.65, Stop: ₹91.84
+[2025-01-07 09:53:00] TRADE PROFIT: Gross -2.45, Net -26.14
+[2025-01-07 09:54:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 183.65, VWAP: 162.89, OI Change: -150525 (-4.38%)
+[2025-01-07 09:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=183.65
+[2025-01-07 09:55:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹194.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 09:55:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹16.45, Stop: ₹91.84
+[2025-01-07 09:56:00] TRADE PROFIT: Gross -14.10, Net -37.78
+[2025-01-07 09:57:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 192.30, VWAP: 163.60, OI Change: -2325 (-0.07%)
+[2025-01-07 09:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=192.30
+[2025-01-07 09:58:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹177.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 09:58:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹16.10, Stop: ₹91.84
+[2025-01-07 09:59:00] TRADE PROFIT: Gross 16.55, Net -7.13
+[2025-01-07 10:00:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 10:00:00] PE 23750: OI=3185625, Change=-99975 (-3.04%) - UNWINDING ✓
+[2025-01-07 10:00:00] PE 23750: Price=190.00, VWAP=164.58 - ABOVE ✓
+[2025-01-07 10:00:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 190.00, VWAP: 164.58, OI Change: -99975 (-3.04%)
+[2025-01-07 10:00:00] 📈 PLACING BUY ORDER: size=1, expected_price=190.00
+[2025-01-07 10:01:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹179.75 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:01:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹14.70, Stop: ₹91.84
+[2025-01-07 10:02:00] TRADE PROFIT: Gross 20.10, Net -3.58
+[2025-01-07 10:03:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 199.25, VWAP: 165.42, OI Change: -100575 (-3.16%)
+[2025-01-07 10:03:00] 📈 PLACING BUY ORDER: size=1, expected_price=199.25
+[2025-01-07 10:04:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹204.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:04:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹12.80, Stop: ₹91.84
+[2025-01-07 10:05:00] TRADE PROFIT: Gross -10.10, Net -33.76
+[2025-01-07 10:06:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 198.80, VWAP: 166.54, OI Change: -125175 (-4.06%)
+[2025-01-07 10:06:00] 📈 PLACING BUY ORDER: size=1, expected_price=198.80
+[2025-01-07 10:07:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹187.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:07:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹13.35, Stop: ₹91.84
+[2025-01-07 10:08:00] TRADE PROFIT: Gross 12.60, Net -11.06
+[2025-01-07 10:09:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 205.35, VWAP: 167.32, OI Change: -13950 (-0.47%)
+[2025-01-07 10:09:00] 📈 PLACING BUY ORDER: size=1, expected_price=205.35
+[2025-01-07 10:10:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹196.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:10:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹12.60, Stop: ₹91.84
+[2025-01-07 10:11:00] TRADE PROFIT: Gross 15.50, Net -8.15
+[2025-01-07 10:12:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 172.65, VWAP: 167.77, OI Change: -34800 (-1.18%)
+[2025-01-07 10:12:00] 📈 PLACING BUY ORDER: size=1, expected_price=172.65
+[2025-01-07 10:13:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹173.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:13:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹14.00, Stop: ₹91.84
+[2025-01-07 10:14:00] TRADE PROFIT: Gross 0.35, Net -23.34
+[2025-01-07 10:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 10:30:00] PE 23750: OI=3383175, Change=127200 (3.91%) - BUILDING
+[2025-01-07 10:54:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 161.25, VWAP: 160.41, OI Change: -45075 (-1.23%)
+[2025-01-07 10:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=161.25
+[2025-01-07 10:55:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹153.25 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 10:55:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹14.95, Stop: ₹91.84
+[2025-01-07 10:56:00] TRADE PROFIT: Gross 9.65, Net -14.07
+[2025-01-07 11:00:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 11:00:00] PE 23750: OI=3548175, Change=8250 (0.23%) - BUILDING
+[2025-01-07 11:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 11:30:00] PE 23750: OI=3707250, Change=-11775 (-0.32%) - UNWINDING ✓
+[2025-01-07 11:30:00] PE 23750: Price=130.65, VWAP=157.40 - BELOW ✗
+[2025-01-07 12:00:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 12:00:00] PE 23750: OI=3770175, Change=-11925 (-0.32%) - UNWINDING ✓
+[2025-01-07 12:00:00] PE 23750: Price=132.00, VWAP=154.25 - BELOW ✗
+[2025-01-07 12:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 12:30:00] PE 23750: OI=3492075, Change=57375 (1.67%) - BUILDING
+[2025-01-07 13:00:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 13:00:00] PE 23750: OI=3424650, Change=0 (0.00%) - BUILDING
+[2025-01-07 13:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 13:30:00] PE 23750: OI=3326325, Change=0 (0.00%) - BUILDING
+[2025-01-07 13:58:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 154.20, VWAP: 149.28, OI Change: -138900 (-4.15%)
+[2025-01-07 13:58:00] 📈 PLACING BUY ORDER: size=1, expected_price=154.20
+[2025-01-07 13:59:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹156.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-07 13:59:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹9.25, Stop: ₹91.84
+[2025-01-07 14:00:00] TRADE PROFIT: Gross -1.55, Net -25.24
+[2025-01-07 14:00:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 14:00:00] PE 23750: OI=3205200, Change=0 (0.00%) - BUILDING
+[2025-01-07 14:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 14:30:00] PE 23750: OI=3134175, Change=0 (0.00%) - BUILDING
+[2025-01-08 09:15:00] Starting daily analysis - Spot: 23702.75
+[2025-01-08 09:15:00] Found expiry: 2025-01-09
+[2025-01-08 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-08 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-08 09:15:00] Direction determined: CALL (Call dist: 97.25, Put dist: 202.75)
+[2025-01-08 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=23750, Expiry=2025-01-09, Spot=23702.75
+[2025-01-08 09:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 09:30:00] CE 23750: OI=5272275, Change=0 (0.00%) - BUILDING
+[2025-01-08 09:54:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 58.10, VWAP: 57.08, OI Change: -42600 (-0.78%)
+[2025-01-08 09:54:00] 📈 PLACING BUY ORDER: size=1, expected_price=58.10
+[2025-01-08 09:55:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹62.85 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 09:55:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹4.60, Stop: ₹91.84
+[2025-01-08 09:56:00] TRADE PROFIT: Gross 9.55, Net -14.13
+[2025-01-08 10:00:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 10:00:00] CE 23750: OI=5346150, Change=145425 (2.80%) - BUILDING
+[2025-01-08 10:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 10:30:00] CE 23750: OI=5768550, Change=189300 (3.39%) - BUILDING
+[2025-01-08 11:00:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 11:00:00] CE 23750: OI=6390150, Change=103200 (1.64%) - BUILDING
+[2025-01-08 11:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 11:30:00] CE 23750: OI=6274425, Change=-237375 (-3.65%) - UNWINDING ✓
+[2025-01-08 11:30:00] CE 23750: Price=27.35, VWAP=44.66 - BELOW ✗
+[2025-01-08 12:00:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 12:00:00] CE 23750: OI=6517425, Change=30825 (0.48%) - BUILDING
+[2025-01-08 12:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 12:30:00] CE 23750: OI=6785850, Change=0 (0.00%) - BUILDING
+[2025-01-08 13:00:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 13:00:00] CE 23750: OI=6825975, Change=0 (0.00%) - BUILDING
+[2025-01-08 13:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 13:30:00] CE 23750: OI=6884025, Change=0 (0.00%) - BUILDING
+[2025-01-08 13:46:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 44.00, VWAP: 35.13, OI Change: -894375 (-13.45%)
+[2025-01-08 13:46:00] 📈 PLACING BUY ORDER: size=1, expected_price=44.00
+[2025-01-08 13:47:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹38.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 13:47:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹2.80, Stop: ₹91.84
+[2025-01-08 13:48:00] TRADE PROFIT: Gross -14.75, Net -38.39
+[2025-01-08 14:00:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 14:00:00] CE 23750: OI=6072450, Change=0 (0.00%) - BUILDING
+[2025-01-08 14:01:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 50.35, VWAP: 36.12, OI Change: -45150 (-0.74%)
+[2025-01-08 14:01:00] 📈 PLACING BUY ORDER: size=1, expected_price=50.35
+[2025-01-08 14:02:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹44.50 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:02:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹3.00, Stop: ₹91.84
+[2025-01-08 14:03:00] TRADE PROFIT: Gross -10.85, Net -34.50
+[2025-01-08 14:04:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 42.00, VWAP: 36.35, OI Change: -181200 (-3.01%)
+[2025-01-08 14:04:00] 📈 PLACING BUY ORDER: size=1, expected_price=42.00
+[2025-01-08 14:05:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹43.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:05:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹2.75, Stop: ₹91.84
+[2025-01-08 14:06:00] TRADE PROFIT: Gross 1.95, Net -21.69
+[2025-01-08 14:07:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 49.65, VWAP: 36.48, OI Change: -21150 (-0.36%)
+[2025-01-08 14:07:00] 📈 PLACING BUY ORDER: size=1, expected_price=49.65
+[2025-01-08 14:08:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹51.40 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:08:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹3.10, Stop: ₹91.84
+[2025-01-08 14:09:00] TRADE PROFIT: Gross 5.45, Net -18.21
+[2025-01-08 14:10:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 51.60, VWAP: 36.80, OI Change: -230850 (-3.96%)
+[2025-01-08 14:10:00] 📈 PLACING BUY ORDER: size=1, expected_price=51.60
+[2025-01-08 14:11:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹59.60 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:11:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹3.65, Stop: ₹91.84
+[2025-01-08 14:12:00] TRADE PROFIT: Gross 11.55, Net -12.13
+[2025-01-08 14:13:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 64.50, VWAP: 37.47, OI Change: -288525 (-5.16%)
+[2025-01-08 14:13:00] 📈 PLACING BUY ORDER: size=1, expected_price=64.50
+[2025-01-08 14:14:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹63.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:14:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹4.05, Stop: ₹91.84
+[2025-01-08 14:15:00] TRADE PROFIT: Gross -2.40, Net -26.10
+[2025-01-08 14:16:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 63.90, VWAP: 38.08, OI Change: -132450 (-2.50%)
+[2025-01-08 14:16:00] 📈 PLACING BUY ORDER: size=1, expected_price=63.90
+[2025-01-08 14:17:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹59.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:17:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹3.95, Stop: ₹91.84
+[2025-01-08 14:18:00] TRADE PROFIT: Gross -5.70, Net -29.39
+[2025-01-08 14:22:00] 🎯 ENTRY SIGNAL: CE 23750 - Price: 74.70, VWAP: 39.55, OI Change: -210975 (-3.98%)
+[2025-01-08 14:22:00] 📈 PLACING BUY ORDER: size=1, expected_price=74.70
+[2025-01-08 14:23:00] 🔵 BUY OPTION EXECUTED: CE 23750 @ ₹81.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-08 14:23:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹5.40, Stop: ₹91.84
+[2025-01-08 14:24:00] TRADE PROFIT: Gross 12.50, Net -11.22
+[2025-01-08 14:30:00] Checking entry: CE 23750, Expiry=2025-01-09
+[2025-01-08 14:30:00] CE 23750: OI=5288850, Change=0 (0.00%) - BUILDING
+[2025-01-09 09:15:00] Starting daily analysis - Spot: 23643.70
+[2025-01-09 09:15:00] Found expiry: 2025-01-16
+[2025-01-09 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-09 09:15:00] Max Call OI: 23700, Max Put OI: 23500
+[2025-01-09 09:15:00] Direction determined: CALL (Call dist: 56.30, Put dist: 143.70)
+[2025-01-09 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=23650, Expiry=2025-01-16, Spot=23643.70
+[2025-01-09 09:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 09:30:00] CE 23650: OI=367950, Change=0 (0.00%) - BUILDING
+[2025-01-09 10:00:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 10:00:00] CE 23650: OI=580500, Change=21000 (3.75%) - BUILDING
+[2025-01-09 10:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 10:30:00] CE 23650: OI=710925, Change=-30750 (-4.15%) - UNWINDING ✓
+[2025-01-09 10:30:00] CE 23650: Price=177.00, VWAP=181.20 - BELOW ✗
+[2025-01-09 11:00:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 11:00:00] CE 23650: OI=794400, Change=5475 (0.69%) - BUILDING
+[2025-01-09 11:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 11:30:00] CE 23650: OI=856725, Change=0 (0.00%) - BUILDING
+[2025-01-09 12:00:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 12:00:00] CE 23650: OI=891525, Change=0 (0.00%) - BUILDING
+[2025-01-09 12:19:00] 🎯 ENTRY SIGNAL: CE 23650 - Price: 180.95, VWAP: 171.70, OI Change: -53775 (-5.79%)
+[2025-01-09 12:19:00] 📈 PLACING BUY ORDER: size=1, expected_price=180.95
+[2025-01-09 12:20:00] 🔵 BUY OPTION EXECUTED: CE 23650 @ ₹177.20 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-09 12:20:00] 🛑 STOP LOSS HIT: CE 24200 - Current: ₹0.65, Stop: ₹91.84
+[2025-01-09 12:21:00] TRADE PROFIT: Gross -7.45, Net -31.05
+[2025-01-09 12:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 12:30:00] CE 23650: OI=901650, Change=0 (0.00%) - BUILDING
+[2025-01-09 13:00:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 13:00:00] CE 23650: OI=973500, Change=0 (0.00%) - BUILDING
+[2025-01-09 13:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 13:30:00] CE 23650: OI=975525, Change=0 (0.00%) - BUILDING
+[2025-01-09 14:00:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 14:00:00] CE 23650: OI=1023300, Change=0 (0.00%) - BUILDING
+[2025-01-09 14:30:00] Checking entry: CE 23650, Expiry=2025-01-16
+[2025-01-09 14:30:00] CE 23650: OI=1031700, Change=0 (0.00%) - BUILDING
+[2025-01-10 09:15:00] Starting daily analysis - Spot: 23572.05
+[2025-01-10 09:15:00] Found expiry: 2025-01-16
+[2025-01-10 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-10 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-10 09:15:00] Direction determined: PUT (Call dist: 227.95, Put dist: 72.05)
+[2025-01-10 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23550, Expiry=2025-01-16, Spot=23572.05
+[2025-01-10 09:30:00] Checking entry: PE 23550, Expiry=2025-01-16
+[2025-01-10 09:30:00] PE 23550: OI=2370225, Change=0 (0.00%) - BUILDING
+[2025-01-10 09:33:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 211.30, VWAP: 174.38, OI Change: -61050 (-2.58%)
+[2025-01-10 09:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=211.30
+[2025-01-10 09:34:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹216.85 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:34:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹114.10, Stop: ₹132.90
+[2025-01-10 09:35:00] TRADE PROFIT: Gross -11.50, Net -34.97
+[2025-01-10 09:36:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 226.70, VWAP: 181.12, OI Change: -361200 (-15.64%)
+[2025-01-10 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=226.70
+[2025-01-10 09:37:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹234.25 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:37:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹110.25, Stop: ₹132.90
+[2025-01-10 09:38:00] TRADE PROFIT: Gross -7.60, Net -31.05
+[2025-01-10 09:39:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 233.00, VWAP: 183.98, OI Change: -103950 (-5.34%)
+[2025-01-10 09:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=233.00
+[2025-01-10 09:40:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹221.95 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:40:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹113.75, Stop: ₹132.90
+[2025-01-10 09:41:00] TRADE PROFIT: Gross 25.95, Net 2.50
+[2025-01-10 09:42:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 218.80, VWAP: 185.95, OI Change: -57000 (-3.09%)
+[2025-01-10 09:42:00] 📈 PLACING BUY ORDER: size=1, expected_price=218.80
+[2025-01-10 09:43:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹216.70 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:43:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹115.20, Stop: ₹132.90
+[2025-01-10 09:44:00] TRADE PROFIT: Gross 12.35, Net -11.13
+[2025-01-10 09:48:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 231.50, VWAP: 188.66, OI Change: -33075 (-1.84%)
+[2025-01-10 09:48:00] 📈 PLACING BUY ORDER: size=1, expected_price=231.50
+[2025-01-10 09:49:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹241.80 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:49:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹101.35, Stop: ₹132.90
+[2025-01-10 09:50:00] TRADE PROFIT: Gross -13.25, Net -36.68
+[2025-01-10 09:51:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 245.50, VWAP: 190.36, OI Change: -55575 (-3.16%)
+[2025-01-10 09:51:00] 📈 PLACING BUY ORDER: size=1, expected_price=245.50
+[2025-01-10 09:52:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹242.20 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:52:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹98.80, Stop: ₹132.90
+[2025-01-10 09:53:00] TRADE PROFIT: Gross 3.15, Net -20.26
+[2025-01-10 09:57:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 244.60, VWAP: 192.07, OI Change: -25725 (-1.50%)
+[2025-01-10 09:57:00] 📈 PLACING BUY ORDER: size=1, expected_price=244.60
+[2025-01-10 09:58:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹267.50 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 09:58:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹90.95, Stop: ₹132.90
+[2025-01-10 09:59:00] TRADE PROFIT: Gross -35.05, Net -58.45
+[2025-01-10 10:00:00] Checking entry: PE 23550, Expiry=2025-01-16
+[2025-01-10 10:00:00] PE 23550: OI=1597050, Change=-89550 (-5.31%) - UNWINDING ✓
+[2025-01-10 10:00:00] PE 23550: Price=274.90, VWAP=194.45 - ABOVE ✓
+[2025-01-10 10:00:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 274.90, VWAP: 194.45, OI Change: -89550 (-5.31%)
+[2025-01-10 10:00:00] 📈 PLACING BUY ORDER: size=1, expected_price=274.90
+[2025-01-10 10:01:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹270.70 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 10:01:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹92.85, Stop: ₹132.90
+[2025-01-10 10:02:00] TRADE PROFIT: Gross 10.35, Net -13.02
+[2025-01-10 10:03:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 274.05, VWAP: 195.39, OI Change: -9525 (-0.60%)
+[2025-01-10 10:03:00] 📈 PLACING BUY ORDER: size=1, expected_price=274.05
+[2025-01-10 10:04:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹283.85 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 10:04:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹87.65, Stop: ₹132.90
+[2025-01-10 10:05:00] TRADE PROFIT: Gross -13.35, Net -36.71
+[2025-01-10 10:06:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 278.90, VWAP: 196.65, OI Change: -24825 (-1.56%)
+[2025-01-10 10:06:00] 📈 PLACING BUY ORDER: size=1, expected_price=278.90
+[2025-01-10 10:07:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹272.15 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 10:07:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹92.75, Stop: ₹132.90
+[2025-01-10 10:08:00] TRADE PROFIT: Gross 15.75, Net -7.62
+[2025-01-10 10:09:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 261.95, VWAP: 197.52, OI Change: -3375 (-0.22%)
+[2025-01-10 10:09:00] 📈 PLACING BUY ORDER: size=1, expected_price=261.95
+[2025-01-10 10:10:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹270.45 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 10:10:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹91.75, Stop: ₹132.90
+[2025-01-10 10:11:00] TRADE PROFIT: Gross -13.30, Net -36.69
+[2025-01-10 10:15:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 261.30, VWAP: 198.94, OI Change: -525 (-0.03%)
+[2025-01-10 10:15:00] 📈 PLACING BUY ORDER: size=1, expected_price=261.30
+[2025-01-10 10:16:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹264.90 (Expiry: 2025-01-16, Lot size: 1)
+[2025-01-10 10:16:00] 🛑 STOP LOSS HIT: CE 23650 - Current: ₹93.15, Stop: ₹132.90
+[2025-01-10 10:17:00] TRADE PROFIT: Gross -13.15, Net -36.54
+[2025-01-10 10:18:00] 🎯 ENTRY SIGNAL: PE 23550 - Price: 257.20, VWAP: 199.41, OI Change: -11250 (-0.71%)
+[2025-01-10 10:18:00] 📈 PLACING BUY ORDER: size=1, expected_price=257.20
+[2025-01-10 10:19:00] 🔵 BUY OPTION EXECUTED: PE 23550 @ ₹246.85 (Expiry: 2025-01-16, Lot size: 1)
