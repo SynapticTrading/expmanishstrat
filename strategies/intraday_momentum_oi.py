@@ -63,8 +63,9 @@ class IntradayMomentumOI(bt.Strategy):
         # Performance tracking
         self.trade_log = []
 
-        # Setup trade log file - write immediately to disk
-        self.trade_log_file = Path('reports') / 'trades.csv'
+        # Setup trade log file - write immediately to disk with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.trade_log_file = Path('reports') / f'trades_{timestamp}.csv'
         self.trade_log_file.parent.mkdir(parents=True, exist_ok=True)
 
         # Write CSV header
@@ -74,6 +75,8 @@ class IntradayMomentumOI(bt.Strategy):
                 'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct'
             ])
             writer.writeheader()
+
+        print(f"Trade log will be saved to: {self.trade_log_file}")
 
         # Setup signal handler for graceful shutdown
         def signal_handler(sig, frame):

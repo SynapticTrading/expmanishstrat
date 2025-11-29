@@ -7,12 +7,10 @@ mkdir -p reports
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 LOG_FILE="reports/backtest_log_${TIMESTAMP}.txt"
 
-# Clear old CSV to start fresh
-rm -f reports/trades.csv reports/trade_summary.txt reports/trade_summary.json
-
 echo "================================================================================================"
 echo "Starting Backtest at $(date)"
 echo "Log file: $LOG_FILE"
+echo "Trades will be saved to: reports/trades_${TIMESTAMP}.csv"
 echo "================================================================================================"
 echo ""
 
@@ -23,6 +21,5 @@ echo ""
 echo "================================================================================================"
 echo "Backtest completed at $(date)"
 echo "Log saved to: $LOG_FILE"
-echo "Trades saved to: reports/trades.csv"
-echo "Summary saved to: reports/trade_summary.txt"
+echo "Check reports/ folder for all timestamped output files"
 echo "================================================================================================"

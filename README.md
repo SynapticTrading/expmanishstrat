@@ -121,10 +121,13 @@ The backtest generates:
 
 1. **Console Output**: Real-time progress and summary metrics
 2. **Reports folder** (`reports/`):
-   - `backtest_metrics.json` - Performance metrics
-   - `trades.csv` - Detailed trade log
-   - `equity_curve.png` - Equity curve and drawdown chart
-   - `trade_analysis.png` - Trade distribution analysis
+   - `backtest_log_YYYYMMDD_HHMMSS.txt` - Complete terminal output log
+   - `trades_YYYYMMDD_HHMMSS.csv` - Detailed trade log (timestamped, preserved)
+   - `summary_YYYYMMDD_HHMMSS.json` - Performance metrics
+   - `monthly_YYYYMMDD_HHMMSS.csv` - Monthly statistics
+   - `report_YYYYMMDD_HHMMSS.html` - HTML report
+
+   Note: Each run creates new timestamped files - previous runs are preserved!
 
 ### Example Output
 

@@ -8,10 +8,11 @@
 ```
 
 This will:
-- ✅ Create a fresh `reports/trades.csv`
+- ✅ Create a timestamped `reports/trades_YYYYMMDD_HHMMSS.csv`
 - ✅ Save ALL terminal output to `reports/backtest_log_YYYYMMDD_HHMMSS.txt`
 - ✅ Show output on screen AND save to file simultaneously
 - ✅ Generate summary files when complete
+- ✅ Keep all previous run files (no deletion)
 
 ### Option 2: Run Directly (Manual)
 ```bash
@@ -19,7 +20,7 @@ python backtest_runner.py
 ```
 
 This will:
-- ✅ Create `reports/trades.csv` with immediate trade logging
+- ✅ Create timestamped `reports/trades_YYYYMMDD_HHMMSS.csv` with immediate trade logging
 - ✅ Show output on terminal only (not saved to file)
 - ✅ Generate summary files when complete
 
@@ -32,14 +33,16 @@ python backtest_runner.py 2>&1 | tee reports/backtest_log.txt
 
 After running the backtest, you'll find these files in `reports/`:
 
-### 1. `trades.csv` - All Completed Trades
+### 1. `trades_YYYYMMDD_HHMMSS.csv` - All Completed Trades
 ```csv
 entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct
 2025-01-01 09:37:00,2025-01-01 14:51:00,23600,PE,2025-01-02,103.4,238.8,1,135.4,130.89
 ...
 ```
 
-**Key Feature**: Trades are written IMMEDIATELY after each exit - no data loss!
+**Key Features**:
+- Trades are written IMMEDIATELY after each exit - no data loss!
+- Each run creates a NEW file with timestamp - previous runs are preserved!
 
 ### 2. `trade_summary.txt` - Human-Readable Summary
 ```
