@@ -36,11 +36,7 @@ ENV/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Reports and Logs (keep folder structure, ignore contents)
-reports/*.png
-reports/*.csv
-reports/*.json
-!reports/.gitkeep
+# Logs (keep folder structure, ignore contents)
 logs/*.log
 !logs/.gitkeep
 

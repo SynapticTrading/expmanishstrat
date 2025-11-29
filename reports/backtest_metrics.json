@@ -1,0 +1,19 @@
+{
+  "Initial Capital": 100000,
+  "Final Value": 99135.95760000002,
+  "Total Return": -864.0423999999766,
+  "Total Return %": -0.8640423999999758,
+  "Total Trades": 25,
+  "Winning Trades": 11,
+  "Losing Trades": 14,
+  "Win Rate %": 44.0,
+  "Total PnL": -213.05,
+  "Average PnL": -8.522,
+  "Average PnL %": 3.983858647321542,
+  "Best Trade": 100.69999999999999,
+  "Worst Trade": -235.25,
+  "Profit Factor": 0.7157438292194794,
+  "Sharpe Ratio": 1.4821982835693597,
+  "Max Drawdown": -363.85,
+  "Max Drawdown %": -0.36385
+}
