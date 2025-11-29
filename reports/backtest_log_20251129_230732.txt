@@ -1,0 +1,30 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 8625 spot price records from 2025-01-01 09:15:00 to 2025-01-31 15:29:00
+Loading options data (this may take a while for large files)...
+
+✗ Error running backtest: Can only use .dt accessor with datetimelike values
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 142, in main
+    metrics = run_backtest(args.config)
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 60, in run_backtest
+    spot_df, options_df = data_loader.prepare_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 154, in prepare_data
+    options_df = self.load_options_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 68, in load_options_data
+    if chunk['datetime'].dt.tz is None:
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/generic.py", line 5989, in __getattr__
+    return object.__getattribute__(self, name)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/accessor.py", line 224, in __get__
+    accessor_obj = self._accessor(obj)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/indexes/accessors.py", line 580, in __new__
+    raise AttributeError("Can only use .dt accessor with datetimelike values")
+AttributeError: Can only use .dt accessor with datetimelike values

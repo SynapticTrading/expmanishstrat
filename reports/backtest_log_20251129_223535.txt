@@ -1,0 +1,40 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 8625 spot price records from 2025-01-01 09:15:00 to 2025-01-31 15:29:00
+Loading options data (this may take a while for large files)...
+
+✗ Error running backtest: unconverted data remains when parsing with format "%Y-%m-%d %H:%M:%S": "+05:30", at position 1. You might want to try:
+    - passing `format` if your strings have a consistent format;
+    - passing `format='ISO8601'` if your strings are all ISO8601 but not necessarily in exactly the same format;
+    - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 142, in main
+    metrics = run_backtest(args.config)
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 60, in run_backtest
+    spot_df, options_df = data_loader.prepare_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 148, in prepare_data
+    options_df = self.load_options_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 65, in load_options_data
+    chunk['datetime'] = pd.to_datetime(chunk['timestamp'])
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/tools/datetimes.py", line 1046, in to_datetime
+    cache_array = _maybe_cache(arg, format, cache, convert_listlike)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/tools/datetimes.py", line 250, in _maybe_cache
+    cache_dates = convert_listlike(unique_dates, format)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/tools/datetimes.py", line 453, in _convert_listlike_datetimes
+    return _array_strptime_with_fallback(arg, name, utc, format, exact, errors)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/tools/datetimes.py", line 484, in _array_strptime_with_fallback
+    result, timezones = array_strptime(arg, fmt, exact=exact, errors=errors, utc=utc)
+  File "pandas/_libs/tslibs/strptime.pyx", line 530, in pandas._libs.tslibs.strptime.array_strptime
+  File "pandas/_libs/tslibs/strptime.pyx", line 355, in pandas._libs.tslibs.strptime.array_strptime
+ValueError: unconverted data remains when parsing with format "%Y-%m-%d %H:%M:%S": "+05:30", at position 1. You might want to try:
+    - passing `format` if your strings have a consistent format;
+    - passing `format='ISO8601'` if your strings are all ISO8601 but not necessarily in exactly the same format;
+    - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.

@@ -1,0 +1,34 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 8625 spot price records from 2025-01-01 09:15:00 to 2025-01-31 15:29:00
+Loading options data (this may take a while for large files)...
+
+✗ Error running backtest: [Errno 2] No such file or directory: 'DataDump/weekly_expiry.csv'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 142, in main
+    metrics = run_backtest(args.config)
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 60, in run_backtest
+    spot_df, options_df = data_loader.prepare_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 148, in prepare_data
+    options_df = self.load_options_data()
+  File "/Users/Algo_Trading/manishsir_options/src/data_loader.py", line 63, in load_options_data
+    for chunk in pd.read_csv(options_file, chunksize=chunk_size):
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 912, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 577, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1407, in __init__
+    self._engine = self._make_engine(f, self.engine)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/io/parsers/readers.py", line 1661, in _make_engine
+    self.handles = get_handle(
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/io/common.py", line 859, in get_handle
+    handle = open(
+FileNotFoundError: [Errno 2] No such file or directory: 'DataDump/weekly_expiry.csv'

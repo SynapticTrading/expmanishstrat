@@ -1,0 +1,1 @@
+./run_backtest.sh: line 18: python: command not found

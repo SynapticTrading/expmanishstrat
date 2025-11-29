@@ -1,0 +1,179 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 5625 spot price records from 2025-01-01 09:15:00 to 2025-01-21 15:29:00
+Loading options data (this may take a while for large files)...
+Loaded 1206944 options records
+Filtered to 773758 weekly expiry option records
+
+Data Summary:
+  Spot data: 5625 bars from 2025-01-01 09:15:00 to 2025-01-21 15:29:00
+  Options data: 773758 records
+  Timeframe: 1 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Trade log will be saved to: reports/trades_20251129_213455.csv
+Strategy initialized
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23649.55
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-01 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-01 09:15:00] Direction determined: PUT (Call dist: 150.45, Put dist: 149.55)
+[2025-01-01 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23600, Expiry=2025-01-02, Spot=23649.55
+[2025-01-01 09:30:00] Checking entry: PE 23600, Expiry=2025-01-02
+[2025-01-01 09:30:00] PE 23600: OI=7673325, Change=0 (0.00%) - BUILDING
+[2025-01-01 09:36:00] 🎯 ENTRY SIGNAL: PE 23600 - Price: 103.50, VWAP: 97.47, OI Change: -186975 (-2.41%)
+[2025-01-01 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=103.50
+[2025-01-01 09:37:00] 🔵 BUY OPTION EXECUTED: PE 23600 @ ₹103.40 (Expiry: 2025-01-02, Lot size: 1)
+[2025-01-01 10:00:00] ⚠️  Already in position: size=1
+[2025-01-01 10:30:00] ⚠️  Already in position: size=1
+[2025-01-01 11:00:00] ⚠️  Already in position: size=1
+[2025-01-01 11:30:00] ⚠️  Already in position: size=1
+[2025-01-01 12:00:00] ⚠️  Already in position: size=1
+[2025-01-01 12:30:00] ⚠️  Already in position: size=1
+[2025-01-01 13:00:00] ⚠️  Already in position: size=1
+[2025-01-01 13:30:00] ⚠️  Already in position: size=1
+[2025-01-01 14:00:00] ⚠️  Already in position: size=1
+[2025-01-01 14:30:00] ⚠️  Already in position: size=1
+[2025-01-01 14:50:00] END OF DAY - Closing all positions (size=1)
+[2025-01-01 14:51:00] 🔴 SELL OPTION EXECUTED: PE 23600 @ ₹52.25 | Entry: ₹103.40 | P&L: ₹51.15 (-49.47%)
+[2025-01-01 14:51:00] TRADE PROFIT: Gross 135.40, Net 111.71
+[2025-01-02 09:15:00] Starting daily analysis - Spot: 23787.60
+[2025-01-02 09:15:00] Found expiry: 2025-01-09
+[2025-01-02 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-02 09:15:00] Max Call OI: 23800, Max Put OI: 23700
+[2025-01-02 09:15:00] Direction determined: CALL (Call dist: 12.40, Put dist: 87.60)
+[2025-01-02 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=23800, Expiry=2025-01-09, Spot=23787.60
+[2025-01-02 09:30:00] Checking entry: CE 23800, Expiry=2025-01-09
+[2025-01-02 09:30:00] CE 23800: OI=2224350, Change=0 (0.00%) - BUILDING
+[2025-01-02 09:33:00] 🎯 ENTRY SIGNAL: CE 23800 - Price: 239.00, VWAP: 235.12, OI Change: -3375 (-0.15%)
+[2025-01-02 09:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=239.00
+[2025-01-02 09:34:00] 🔵 BUY OPTION EXECUTED: CE 23800 @ ₹237.95 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-02 10:00:00] ⚠️  Already in position: size=1
+[2025-01-02 10:30:00] ⚠️  Already in position: size=1
+[2025-01-02 11:00:00] ⚠️  Already in position: size=1
+[2025-01-02 11:30:00] ⚠️  Already in position: size=1
+[2025-01-02 12:00:00] ⚠️  Already in position: size=1
+[2025-01-02 12:30:00] ⚠️  Already in position: size=1
+[2025-01-02 13:00:00] ⚠️  Already in position: size=1
+[2025-01-02 13:30:00] ⚠️  Already in position: size=1
+[2025-01-02 14:00:00] ⚠️  Already in position: size=1
+[2025-01-02 14:30:00] ⚠️  Already in position: size=1
+[2025-01-02 14:50:00] END OF DAY - Closing all positions (size=1)
+[2025-01-02 14:51:00] 🔴 SELL OPTION EXECUTED: CE 23800 @ ₹473.20 | Entry: ₹237.95 | P&L: ₹-235.25 (+98.87%)
+[2025-01-02 14:51:00] TRADE PROFIT: Gross 416.50, Net 392.51
+[2025-01-03 09:15:00] Starting daily analysis - Spot: 24152.65
+[2025-01-03 09:15:00] Found expiry: 2025-01-09
+[2025-01-03 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-03 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-03 09:15:00] Direction determined: CALL (Call dist: 47.35, Put dist: 152.65)
+[2025-01-03 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=24200, Expiry=2025-01-09, Spot=24152.65
+[2025-01-03 09:30:00] 📍 STRIKE UPDATED: 24200 → 24150 (Spot: 24130.85)
+[2025-01-03 09:30:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 09:30:00] CE 24150: OI=2117625, Change=0 (0.00%) - BUILDING
+[2025-01-03 09:35:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24094.30)
+[2025-01-03 09:36:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24100.45)
+[2025-01-03 09:38:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24095.85)
+[2025-01-03 09:40:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24123.90)
+[2025-01-03 09:44:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24083.40)
+[2025-01-03 10:00:00] Checking entry: CE 24100, Expiry=2025-01-09
+[2025-01-03 10:00:00] CE 24100: OI=4462950, Change=167550 (3.90%) - BUILDING
+[2025-01-03 10:03:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24103.25)
+[2025-01-03 10:07:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24072.90)
+[2025-01-03 10:13:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24037.25)
+[2025-01-03 10:15:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24050.05)
+[2025-01-03 10:28:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24047.45)
+[2025-01-03 10:30:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 10:30:00] CE 24050: OI=2229600, Change=187875 (9.20%) - BUILDING
+[2025-01-03 11:00:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 11:00:00] CE 24050: OI=2610300, Change=52650 (2.06%) - BUILDING
+[2025-01-03 11:14:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24057.70)
+[2025-01-03 11:21:00] 🎯 ENTRY SIGNAL: CE 24100 - Price: 160.15, VWAP: 158.49, OI Change: -76650 (-1.27%)
+[2025-01-03 11:21:00] 📈 PLACING BUY ORDER: size=1, expected_price=160.15
+[2025-01-03 11:22:00] 🔵 BUY OPTION EXECUTED: CE 24100 @ ₹161.65 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-03 11:30:00] ⚠️  Already in position: size=1
+[2025-01-03 12:00:00] ⚠️  Already in position: size=1
+[2025-01-03 12:30:00] ⚠️  Already in position: size=1
+[2025-01-03 13:00:00] ⚠️  Already in position: size=1
+[2025-01-03 13:30:00] ⚠️  Already in position: size=1
+[2025-01-03 13:59:00] 🛑 STOP LOSS HIT: CE 24100 - Current: ₹120.15, Stop: ₹121.24
+[2025-01-03 14:00:00] 🔴 SELL OPTION EXECUTED: CE 24100 @ ₹122.95 | Entry: ₹161.65 | P&L: ₹38.70 (-23.94%)
+[2025-01-03 14:00:00] TRADE PROFIT: Gross -51.20, Net -75.27
+[2025-01-03 14:00:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24042.40)
+[2025-01-03 14:00:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 14:00:00] CE 24050: OI=2607600, Change=-243675 (-8.55%) - UNWINDING ✓
+[2025-01-03 14:00:00] CE 24050: Price=144.15, VWAP=173.99 - BELOW ✗
+[2025-01-03 14:30:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 14:30:00] CE 24050: OI=2964900, Change=0 (0.00%) - BUILDING
+[2025-01-06 09:15:00] Starting daily analysis - Spot: 24039.65
+[2025-01-06 09:15:00] Found expiry: 2025-01-09
+[2025-01-06 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-06 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-06 09:15:00] Direction determined: PUT (Call dist: 160.35, Put dist: 39.65)
+[2025-01-06 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=24000, Expiry=2025-01-09, Spot=24039.65
+[2025-01-06 09:30:00] 📍 STRIKE UPDATED: 24000 → 24050 (Spot: 24062.60)
+[2025-01-06 09:30:00] Checking entry: PE 24050, Expiry=2025-01-09
+[2025-01-06 09:30:00] PE 24050: OI=2489550, Change=0 (0.00%) - BUILDING
+[2025-01-06 09:33:00] 📍 STRIKE UPDATED: 24050 → 24000 (Spot: 24049.55)
+[2025-01-06 09:36:00] 📍 STRIKE UPDATED: 24000 → 23950 (Spot: 23988.75)
+[2025-01-06 09:39:00] 📍 STRIKE UPDATED: 23950 → 24000 (Spot: 24020.90)
+[2025-01-06 09:39:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 199.20, VWAP: 163.34, OI Change: -1024125 (-13.78%)
+[2025-01-06 09:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=199.20
+[2025-01-06 09:40:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹207.05 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:00:00] ⚠️  Already in position: size=1
+[2025-01-06 10:08:00] 🛑 STOP LOSS HIT: PE 24000 - Current: ₹151.85, Stop: ₹155.29
+[2025-01-06 10:09:00] 🔴 SELL OPTION EXECUTED: PE 24000 @ ₹151.30 | Entry: ₹207.05 | P&L: ₹55.75 (-26.93%)
+[2025-01-06 10:09:00] TRADE PROFIT: Gross 4.45, Net -19.57
+[2025-01-06 10:22:00] 📍 STRIKE UPDATED: 24000 → 23950 (Spot: 23993.30)
+[2025-01-06 10:30:00] Checking entry: PE 23950, Expiry=2025-01-09
+[2025-01-06 10:30:00] PE 23950: OI=2548575, Change=7425 (0.29%) - BUILDING
+[2025-01-06 10:32:00] 📍 STRIKE UPDATED: 23950 → 23900 (Spot: 23948.15)
+[2025-01-06 10:33:00] 🎯 ENTRY SIGNAL: PE 23900 - Price: 138.85, VWAP: 126.30, OI Change: -152850 (-3.45%)
+[2025-01-06 10:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=138.85
+[2025-01-06 10:34:00] 🔵 BUY OPTION EXECUTED: PE 23900 @ ₹140.15 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 11:00:00] ⚠️  Already in position: size=1
+[2025-01-06 11:30:00] ⚠️  Already in position: size=1
+[2025-01-06 11:31:00] 📉 TRAILING STOP HIT: PE 23900 - Current: ₹247.60, Trailing Stop: ₹251.46
+[2025-01-06 11:32:00] 🔴 SELL OPTION EXECUTED: PE 23900 @ ₹245.55 | Entry: ₹140.15 | P&L: ₹-105.40 (+75.21%)
+[2025-01-06 11:32:00] TRADE PROFIT: Gross -147.10, Net -170.97
+[2025-01-06 11:32:00] 📍 STRIKE UPDATED: 23900 → 23750 (Spot: 23795.55)
+[2025-01-06 11:39:00] 🎯 ENTRY SIGNAL: PE 23750 - Price: 181.40, VWAP: 115.40, OI Change: -46800 (-2.66%)
+[2025-01-06 11:39:00] 📈 PLACING BUY ORDER: size=1, expected_price=181.40
+[2025-01-06 11:40:00] 🔵 BUY OPTION EXECUTED: PE 23750 @ ₹186.85 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:00:00] ⚠️  Already in position: size=1
+[2025-01-06 12:02:00] 📉 TRAILING STOP HIT: PE 23750 - Current: ₹215.70, Trailing Stop: ₹238.50
+[2025-01-06 12:03:00] 🔴 SELL OPTION EXECUTED: PE 23750 @ ₹224.00 | Entry: ₹186.85 | P&L: ₹-37.15 (+19.88%)
+[2025-01-06 12:03:00] TRADE PROFIT: Gross -105.15, Net -128.87
+[2025-01-06 12:03:00] 📍 STRIKE UPDATED: 23750 → 23650 (Spot: 23661.40)
+[2025-01-06 12:07:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23706.85)
+[2025-01-06 12:08:00] 📍 STRIKE UPDATED: 23700 → 23650 (Spot: 23699.65)
+[2025-01-06 12:08:00] 🎯 ENTRY SIGNAL: PE 23650 - Price: 161.60, VWAP: 108.01, OI Change: -92850 (-5.11%)
+[2025-01-06 12:08:00] 📈 PLACING BUY ORDER: size=1, expected_price=161.60
+[2025-01-06 12:09:00] 🔵 BUY OPTION EXECUTED: PE 23650 @ ₹171.00 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:30:00] ⚠️  Already in position: size=1
+[2025-01-06 13:00:00] ⚠️  Already in position: size=1
+[2025-01-06 13:30:00] ⚠️  Already in position: size=1
+[2025-01-06 14:00:00] ⚠️  Already in position: size=1
+[2025-01-06 14:03:00] 📉 TRAILING STOP HIT: PE 23650 - Current: ₹203.85, Trailing Stop: ₹205.34
+[2025-01-06 14:04:00] 🔴 SELL OPTION EXECUTED: PE 23650 @ ₹207.45 | Entry: ₹171.00 | P&L: ₹-36.45 (+21.32%)
+[2025-01-06 14:04:00] TRADE PROFIT: Gross -52.00, Net -75.67
+[2025-01-06 14:04:00] 📍 STRIKE UPDATED: 23650 → 23600 (Spot: 23641.05)
+[2025-01-06 14:07:00] 📍 STRIKE UPDATED: 23600 → 23650 (Spot: 23651.65)
+[2025-01-06 14:07:00] 🎯 ENTRY SIGNAL: PE 23650 - Price: 198.60, VWAP: 136.37, OI Change: -271575 (-15.74%)
+[2025-01-06 14:07:00] 📈 PLACING BUY ORDER: size=1, expected_price=198.60
+[2025-01-06 14:08:00] 🔵 BUY OPTION EXECUTED: PE 23650 @ ₹195.65 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:30:00] ⚠️  Already in position: size=1

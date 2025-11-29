@@ -19,11 +19,11 @@ class OIAnalyzer:
         # Convert to pandas Timestamp if needed (timezone-naive)
         if not isinstance(timestamp, pd.Timestamp):
             timestamp = pd.Timestamp(timestamp)
-        
+
         # Remove timezone if present
         if hasattr(timestamp, 'tz') and timestamp.tz is not None:
             timestamp = timestamp.tz_localize(None)
-        
+
         # Filter options for this timestamp and expiry - find nearest timestamp (within same minute)
         mask = (
             (self.options_df['expiry'] == expiry_date) &
@@ -31,8 +31,17 @@ class OIAnalyzer:
             (self.options_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
         )
         options_at_time = self.options_df[mask].copy()
-        
+
+        # DEBUG: Print filtering details if no data found
         if len(options_at_time) == 0:
+            print(f"DEBUG get_strikes_near_spot:")
+            print(f"  Looking for expiry: {expiry_date} (type: {type(expiry_date)})")
+            print(f"  Timestamp: {timestamp}")
+            print(f"  Unique expiries in data: {self.options_df['expiry'].unique()[:5]}")
+            expiry_matches = self.options_df[self.options_df['expiry'] == expiry_date]
+            print(f"  Rows matching expiry: {len(expiry_matches)}")
+            if len(expiry_matches) > 0:
+                print(f"  Datetime range for this expiry: {expiry_matches['datetime'].min()} to {expiry_matches['datetime'].max()}")
             return None, None
         
         # Get the most recent timestamp

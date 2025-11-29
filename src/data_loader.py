@@ -60,22 +60,19 @@ class DataLoader:
         chunk_size = 1000000
         chunks = []
         
-        for chunk in pd.read_csv(options_file, chunksize=chunk_size):
-            # Parse datetime with timezone
-            chunk['datetime'] = pd.to_datetime(chunk['timestamp'])
-            
-            # Ensure timezone is set to IST
-            if chunk['datetime'].dt.tz is None:
-                chunk['datetime'] = chunk['datetime'].dt.tz_localize(self.timezone)
-            else:
-                chunk['datetime'] = chunk['datetime'].dt.tz_convert(self.timezone)
-            
-            # Parse expiry date and localize to IST timezone initially
-            chunk['expiry'] = pd.to_datetime(chunk['expiry'])
-            if chunk['expiry'].dt.tz is None:
-                chunk['expiry'] = chunk['expiry'].dt.tz_localize(self.timezone)
-            else:
-                chunk['expiry'] = chunk['expiry'].dt.tz_convert(self.timezone)
+        for chunk in pd.read_csv(options_file, chunksize=chunk_size, low_memory=False):
+            # Strip timezone info from timestamp strings and parse all as naive
+            # This treats all timestamps as IST (both with and without +05:30)
+            chunk['timestamp_clean'] = chunk['timestamp'].str.replace(r'\+05:30$', '', regex=True)
+            chunk['datetime'] = pd.to_datetime(chunk['timestamp_clean'])
+            chunk['datetime'] = chunk['datetime'].dt.tz_localize(self.timezone)
+            chunk.drop('timestamp_clean', axis=1, inplace=True)
+
+            # Same for expiry
+            chunk['expiry_clean'] = chunk['expiry'].str.replace(r'\+05:30$', '', regex=True)
+            chunk['expiry'] = pd.to_datetime(chunk['expiry_clean'])
+            chunk['expiry'] = chunk['expiry'].dt.tz_localize(self.timezone)
+            chunk.drop('expiry_clean', axis=1, inplace=True)
             
             # Filter by date range
             start_date = pd.to_datetime(self.config['data']['start_date']).tz_localize(self.timezone)
@@ -87,12 +84,15 @@ class DataLoader:
         
         df = pd.concat(chunks, ignore_index=True)
         df.drop('timestamp', axis=1, errors='ignore', inplace=True)
-        
+
         # Remove timezone from options data to match spot data (both in IST market time)
         # Use replace(tzinfo=None) to preserve wall-clock time and just remove timezone metadata
         df['datetime'] = pd.to_datetime(df['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S'))
-        df['expiry'] = pd.to_datetime(df['expiry'].dt.strftime('%Y-%m-%d %H:%M:%S'))
-        
+
+        # Normalize expiry to date only (remove time component for consistent comparison)
+        # Convert to date string and back to midnight timestamp
+        df['expiry'] = pd.to_datetime(df['expiry'].dt.strftime('%Y-%m-%d'))
+
         print(f"Loaded {len(df)} options records")
         return df
     
