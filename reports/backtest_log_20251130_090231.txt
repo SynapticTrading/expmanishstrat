@@ -1,0 +1,63 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 75060 spot price records from 2025-01-01 09:15:00 to 2025-10-27 15:29:00
+Loading options data (this may take a while for large files)...
+Loaded 29888974 options records
+Filtered to 11210595 weekly expiry option records
+
+Data Summary:
+  Spot data: 75060 bars from 2025-01-01 09:15:00 to 2025-10-27 15:29:00
+  Options data: 11210595 records
+  Timeframe: 1 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Trade log will be saved to: reports/trades_20251130_090752.csv
+Strategy initialized
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23649.55
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+
+✗ Error running backtest: reduction operation 'argmax' not allowed for this dtype
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 142, in main
+    metrics = run_backtest(args.config)
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 119, in run_backtest
+    results = cerebro.run()
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/backtrader/cerebro.py", line 1132, in run
+    runstrat = self.runstrategies(iterstrat)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/backtrader/cerebro.py", line 1298, in runstrategies
+    self._runonce(runstrats)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/backtrader/cerebro.py", line 1700, in _runonce
+    strat._oncepost(dt0)
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/backtrader/strategy.py", line 311, in _oncepost
+    self.nextstart()  # only called for the 1st value
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/backtrader/lineiterator.py", line 347, in nextstart
+    self.next()
+  File "/Users/Algo_Trading/manishsir_options/strategies/intraday_momentum_oi.py", line 509, in next
+    self.analyze_market(dt)
+  File "/Users/Algo_Trading/manishsir_options/strategies/intraday_momentum_oi.py", line 265, in analyze_market
+    self.params.oi_analyzer.calculate_max_oi_buildup(options_near_spot, spot_price)
+  File "/Users/Algo_Trading/manishsir_options/src/oi_analyzer.py", line 81, in calculate_max_oi_buildup
+    max_call_oi_idx = calls['OI'].idxmax()
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/series.py", line 2531, in idxmax
+    i = self.argmax(axis, skipna, *args, **kwargs)  # type: ignore[arg-type]
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/base.py", line 678, in argmax
+    return nanops.nanargmax(  # type: ignore[return-value]
+  File "/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/pandas/core/nanops.py", line 91, in _f
+    raise TypeError(
+TypeError: reduction operation 'argmax' not allowed for this dtype

@@ -73,6 +73,11 @@ class DataLoader:
             chunk['expiry'] = pd.to_datetime(chunk['expiry_clean'])
             chunk['expiry'] = chunk['expiry'].dt.tz_localize(self.timezone)
             chunk.drop('expiry_clean', axis=1, inplace=True)
+
+            # Convert numeric columns to proper types (fix mixed type warnings)
+            # OI and delta columns may have mixed types, convert to numeric
+            chunk['OI'] = pd.to_numeric(chunk['OI'], errors='coerce')
+            chunk['delta'] = pd.to_numeric(chunk['delta'], errors='coerce')
             
             # Filter by date range
             start_date = pd.to_datetime(self.config['data']['start_date']).tz_localize(self.timezone)
@@ -94,17 +99,26 @@ class DataLoader:
         df['expiry'] = pd.to_datetime(df['expiry'].dt.strftime('%Y-%m-%d'))
 
         print(f"Loaded {len(df)} options records")
+
+        # Sort by key columns for faster filtering (pandas uses sorted data more efficiently)
+        df.sort_values(['expiry', 'strike', 'option_type', 'datetime'], inplace=True)
+
+        # Reset index to default integer index
+        df.reset_index(drop=True, inplace=True)
+
+        print("✓ Sorted options data for fast lookups")
         return df
     
     def get_weekly_expiry_options(self, options_df):
         """Filter for weekly expiry options only"""
         # Calculate days to expiry (both are now timezone-naive)
         options_df['days_to_expiry'] = (options_df['expiry'] - options_df['datetime']).dt.total_seconds() / (24 * 3600)
-        
+
         # Weekly options typically expire within 7 days
-        # Keep options that are closest to expiry (weekly)
-        weekly_options = options_df[options_df['days_to_expiry'] <= 7].copy()
-        
+        # Use <= 10 days to ensure we have data available a few days before expiry
+        # (some weekly options data may start appearing 8-9 days before expiry)
+        weekly_options = options_df[options_df['days_to_expiry'] <= 10].copy()
+
         print(f"Filtered to {len(weekly_options)} weekly expiry option records")
         return weekly_options
     

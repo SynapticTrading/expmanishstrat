@@ -9,8 +9,8 @@ data:
   spot_price_file: "DataDump/spotprice_2025.csv"
   options_file: "DataDump/combined_weekly_monthly_options_2025.csv"
   timeframe: 1  # minutes - backtesting on 1-minute candles
-  start_date: "2025-01-01"
-  end_date: "2025-02-01"
+  start_date: "2025-08-01"
+  end_date: "2025-10-31"
   timezone: "Asia/Kolkata"  # IST timezone
 
 # Market Configuration

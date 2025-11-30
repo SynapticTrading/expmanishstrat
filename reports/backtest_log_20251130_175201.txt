@@ -1,0 +1,49 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 8625 spot price records from 2025-01-01 09:15:00 to 2025-01-31 15:29:00
+Loading options data (this may take a while for large files)...
+Loaded 3195409 options records
+✓ Sorted options data for fast lookups
+Filtered to 1720094 weekly expiry option records
+
+Data Summary:
+  Spot data: 8625 bars from 2025-01-01 09:15:00 to 2025-01-31 15:29:00
+  Options data: 1720094 records
+  Timeframe: 1 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Trade log will be saved to: reports/trades_20251130_175343.csv
+Strategy initialized
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23649.55
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-01 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-01 09:15:00] Direction determined: PUT (Call dist: 150.45, Put dist: 149.55)
+[2025-01-01 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23600, Expiry=2025-01-02, Spot=23649.55
+[2025-01-01 09:30:00] Checking entry: PE 23600, Expiry=2025-01-02
+[2025-01-01 09:30:00] PE 23600: OI=7673325, Change=0 (0.00%) - BUILDING
+[2025-01-01 09:36:00] 🎯 ENTRY SIGNAL: PE 23600 - Price: 103.50, VWAP: 97.47, OI Change: -186975 (-2.41%)
+[2025-01-01 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=103.50
+[2025-01-01 09:37:00] 🔵 BUY OPTION EXECUTED: PE 23600 @ ₹103.40 (Expiry: 2025-01-02, Lot size: 1)
+[2025-01-01 10:00:00] ⚠️  Already in position: size=1
+[2025-01-01 10:30:00] ⚠️  Already in position: size=1
+[2025-01-01 11:00:00] ⚠️  Already in position: size=1
+[2025-01-01 11:30:00] ⚠️  Already in position: size=1
+[2025-01-01 12:00:00] ⚠️  Already in position: size=1
+[2025-01-01 12:30:00] ⚠️  Already in position: size=1
+[2025-01-01 13:00:00] ⚠️  Already in position: size=1

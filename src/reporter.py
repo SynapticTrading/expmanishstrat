@@ -22,15 +22,23 @@ class Reporter:
     def calculate_metrics(self, cerebro, strategy):
         """Calculate performance metrics"""
         metrics = {}
-        
-        # Get final portfolio value
-        final_value = cerebro.broker.getvalue()
+
+        # Use option P&L instead of Backtrader broker (which tracks spot trades)
         initial_capital = self.config['position_sizing']['initial_capital']
-        
+
+        # Calculate final value from actual option trades
+        if hasattr(strategy, 'trade_log') and len(strategy.trade_log) > 0:
+            df_trades = pd.DataFrame(strategy.trade_log)
+            total_pnl = df_trades['pnl'].sum()
+            final_value = initial_capital + total_pnl
+        else:
+            final_value = initial_capital
+            total_pnl = 0
+
         metrics['Initial Capital'] = initial_capital
         metrics['Final Value'] = final_value
-        metrics['Total Return'] = final_value - initial_capital
-        metrics['Total Return %'] = ((final_value / initial_capital) - 1) * 100
+        metrics['Total Return'] = total_pnl
+        metrics['Total Return %'] = (total_pnl / initial_capital) * 100
         
         # Get trade log from strategy
         if hasattr(strategy, 'trade_log') and len(strategy.trade_log) > 0:

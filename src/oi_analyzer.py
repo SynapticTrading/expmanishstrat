@@ -73,16 +73,23 @@ class OIAnalyzer:
         # Separate calls and puts
         calls = options_df[options_df['option_type'] == 'CE'].copy()
         puts = options_df[options_df['option_type'] == 'PE'].copy()
-        
+
         if len(calls) == 0 or len(puts) == 0:
             return None, None, None, None
-        
+
+        # Drop rows with NaN OI values before finding max
+        calls_valid = calls.dropna(subset=['OI'])
+        puts_valid = puts.dropna(subset=['OI'])
+
+        if len(calls_valid) == 0 or len(puts_valid) == 0:
+            return None, None, None, None
+
         # Find strike with maximum OI for calls and puts
-        max_call_oi_idx = calls['OI'].idxmax()
-        max_put_oi_idx = puts['OI'].idxmax()
-        
-        max_call_strike = calls.loc[max_call_oi_idx, 'strike']
-        max_put_strike = puts.loc[max_put_oi_idx, 'strike']
+        max_call_oi_idx = calls_valid['OI'].idxmax()
+        max_put_oi_idx = puts_valid['OI'].idxmax()
+
+        max_call_strike = calls_valid.loc[max_call_oi_idx, 'strike']
+        max_put_strike = puts_valid.loc[max_put_oi_idx, 'strike']
         
         # Calculate distances
         call_distance = max_call_strike - spot_price
@@ -209,16 +216,21 @@ class OIAnalyzer:
         # Convert to pandas Timestamp if needed (timezone-naive)
         if not isinstance(timestamp, pd.Timestamp):
             timestamp = pd.Timestamp(timestamp)
-        
+
         # Remove timezone if present (we work with naive datetimes now)
         if hasattr(timestamp, 'tz') and timestamp.tz is not None:
             timestamp = timestamp.tz_localize(None)
-        
-        future_expiries = self.options_df[self.options_df['expiry'] > timestamp]['expiry'].unique()
-        
+
+        # Get the date part only (ignore time) for comparison
+        # This ensures same-day expiries are included even if timestamp is 9:15am
+        timestamp_date = pd.Timestamp(timestamp.date())
+
+        # Get expiries on or after today's date (>= instead of >)
+        future_expiries = self.options_df[self.options_df['expiry'] >= timestamp_date]['expiry'].unique()
+
         if len(future_expiries) == 0:
             return None
-        
+
         # Get the nearest expiry
         expiry_dates = sorted(future_expiries)
         return expiry_dates[0]

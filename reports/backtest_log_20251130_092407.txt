@@ -1,0 +1,55 @@
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 75060 spot price records from 2025-01-01 09:15:00 to 2025-10-27 15:29:00
+Loading options data (this may take a while for large files)...
+Loaded 29888974 options records
+Filtered to 11210595 weekly expiry option records
+
+Data Summary:
+  Spot data: 75060 bars from 2025-01-01 09:15:00 to 2025-10-27 15:29:00
+  Options data: 11210595 records
+  Timeframe: 1 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Trade log will be saved to: reports/trades_20251130_092933.csv
+Strategy initialized
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23649.55
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-01 09:15:00] Max Call OI: 23800, Max Put OI: 23500
+[2025-01-01 09:15:00] Direction determined: PUT (Call dist: 150.45, Put dist: 149.55)
+[2025-01-01 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23600, Expiry=2025-01-02, Spot=23649.55
+[2025-01-01 09:30:00] Checking entry: PE 23600, Expiry=2025-01-02
+[2025-01-01 09:30:00] PE 23600: OI=7673325, Change=0 (0.00%) - BUILDING
+[2025-01-01 09:36:00] 🎯 ENTRY SIGNAL: PE 23600 - Price: 103.50, VWAP: 97.47, OI Change: -186975 (-2.41%)
+[2025-01-01 09:36:00] 📈 PLACING BUY ORDER: size=1, expected_price=103.50
+[2025-01-01 09:37:00] 🔵 BUY OPTION EXECUTED: PE 23600 @ ₹103.40 (Expiry: 2025-01-02, Lot size: 1)
+[2025-01-01 14:50:00] END OF DAY - Closing all positions (size=1)
+[2025-01-01 14:51:00] 🔴 SELL OPTION EXECUTED: PE 23600 @ ₹52.25 | Entry: ₹103.40 | P&L: ₹51.15 (-49.47%)
+[2025-01-01 14:51:00] TRADE PROFIT: Gross 135.40, Net 111.71
+[2025-01-02 09:15:00] Starting daily analysis - Spot: 23787.60
+[2025-01-02 09:15:00] Found expiry: 2025-01-09
+[2025-01-02 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-02 09:15:00] Max Call OI: 23800, Max Put OI: 23700
+[2025-01-02 09:15:00] Direction determined: CALL (Call dist: 12.40, Put dist: 87.60)
+[2025-01-02 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=23800, Expiry=2025-01-09, Spot=23787.60
+[2025-01-02 09:30:00] Checking entry: CE 23800, Expiry=2025-01-09
+[2025-01-02 09:30:00] CE 23800: OI=2224350, Change=0 (0.00%) - BUILDING
+[2025-01-02 09:33:00] 🎯 ENTRY SIGNAL: CE 23800 - Price: 239.00, VWAP: 235.12, OI Change: -3375 (-0.15%)
+[2025-01-02 09:33:00] 📈 PLACING BUY ORDER: size=1, expected_price=239.00
+[2025-01-02 09:34:00] 🔵 BUY OPTION EXECUTED: CE 23800 @ ₹237.95 (Expiry: 2025-01-09, Lot size: 1)

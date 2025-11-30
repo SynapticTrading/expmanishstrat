@@ -60,6 +60,10 @@ class IntradayMomentumOI(bt.Strategy):
         self.daily_strike = None
         self.daily_expiry = None
 
+        # Performance optimization: cache filtered options data for current day
+        self.daily_options_cache = None
+        self.cache_date = None
+
         # Performance tracking
         self.trade_log = []
 
@@ -311,10 +315,7 @@ class IntradayMomentumOI(bt.Strategy):
         # Check if we have room for more positions (using Backtrader's built-in position tracking)
         has_position = self.position.size != 0
         if has_position or self.pending_entry:
-            if dt.minute % 30 == 0 and has_position:
-                self.log(f'⚠️  Already in position: size={self.position.size}')
-            if dt.minute % 30 == 0 and self.pending_entry:
-                self.log(f'⚠️  Entry order pending')
+            # Skip verbose logging - just return
             return None
 
         # ✅ DYNAMIC STRIKE UPDATE - As per PDF: "Keep on Updating CallStrike/PutStrike till entry is found"
@@ -397,16 +398,30 @@ class IntradayMomentumOI(bt.Strategy):
         # VWAP = Sum(Typical Price * Volume) / Sum(Volume) from market open to current time
         dt_ts = pd.Timestamp(dt)
         market_open_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=9, minutes=15)
-        
+
+        # PERFORMANCE OPTIMIZATION: Use cached daily data instead of full dataframe
+        # Check if we need to refresh the cache for a new day
+        current_trade_date = dt_ts.date()
+        if self.cache_date != current_trade_date:
+            # Cache one day's worth of data for this expiry
+            market_close_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=15, minutes=30)
+            cache_mask = (
+                (self.params.options_df['expiry'] == self.daily_expiry) &
+                (self.params.options_df['datetime'] >= market_open_today) &
+                (self.params.options_df['datetime'] <= market_close_today)
+            )
+            self.daily_options_cache = self.params.options_df[cache_mask].copy()
+            self.cache_date = current_trade_date
+            self.log(f"📦 Cached {len(self.daily_options_cache)} options records for {current_trade_date}")
+
+        # Now filter from the much smaller cached data
         mask = (
-            (self.params.options_df['strike'] == self.daily_strike) &
-            (self.params.options_df['option_type'] == option_type) &
-            (self.params.options_df['expiry'] == self.daily_expiry) &
-            (self.params.options_df['datetime'] >= market_open_today) &
-            (self.params.options_df['datetime'] <= dt_ts)
+            (self.daily_options_cache['strike'] == self.daily_strike) &
+            (self.daily_options_cache['option_type'] == option_type) &
+            (self.daily_options_cache['datetime'] <= dt_ts)
         )
-        
-        option_history_today = self.params.options_df[mask].copy()
+
+        option_history_today = self.daily_options_cache[mask].copy()
         
         if len(option_history_today) < 2:
             if dt.minute % 30 == 0:
