@@ -64,6 +64,11 @@ class IntradayMomentumOI(bt.Strategy):
         self.daily_options_cache = None
         self.cache_date = None
 
+        # Incremental VWAP optimization: running totals per strike
+        # Key: (strike, option_type, expiry), Value: {'tpv': float, 'volume': float, 'last_update': datetime}
+        self.vwap_running_totals = {}
+        self.vwap_cache_date = None
+
         # Performance tracking
         self.trade_log = []
 
@@ -393,51 +398,96 @@ class IntradayMomentumOI(bt.Strategy):
             return None
         
         option_price = option_data['close']
-        
-        # Calculate VWAP anchored to market opening (9:15 AM)
-        # VWAP = Sum(Typical Price * Volume) / Sum(Volume) from market open to current time
+
+        # ===== INCREMENTAL VWAP CALCULATION =====
+        # VWAP = Sum(Typical Price * Volume) / Sum(Volume) from market open (9:15 AM) to current time
+        # Instead of recalculating from scratch every minute, maintain running totals
+
         dt_ts = pd.Timestamp(dt)
-        market_open_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=9, minutes=15)
-
-        # PERFORMANCE OPTIMIZATION: Use cached daily data instead of full dataframe
-        # Check if we need to refresh the cache for a new day
         current_trade_date = dt_ts.date()
-        if self.cache_date != current_trade_date:
-            # Cache one day's worth of data for this expiry
-            market_close_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=15, minutes=30)
-            cache_mask = (
-                (self.params.options_df['expiry'] == self.daily_expiry) &
-                (self.params.options_df['datetime'] >= market_open_today) &
-                (self.params.options_df['datetime'] <= market_close_today)
+
+        # Reset running totals at start of new trading day
+        if self.vwap_cache_date != current_trade_date:
+            self.vwap_running_totals = {}  # Clear all running totals
+            self.vwap_cache_date = current_trade_date
+            self.log(f"🔄 Reset VWAP running totals for new day: {current_trade_date}")
+
+        # Create key for this specific option
+        vwap_key = (self.daily_strike, option_type, self.daily_expiry)
+
+        # Check if we need to update running totals for this option
+        if vwap_key not in self.vwap_running_totals:
+            # Initialize running totals - fetch ALL data from market open till now
+            # Cache should already exist from analyze_market(), but check to be safe
+            if self.daily_options_cache is None or self.cache_date != current_trade_date:
+                self.log(f"⚠️  WARNING: Daily cache not found, this should not happen!")
+                return None
+
+            # Get all history from market open to current time for this strike
+            mask = (
+                (self.daily_options_cache['strike'] == self.daily_strike) &
+                (self.daily_options_cache['option_type'] == option_type) &
+                (self.daily_options_cache['datetime'] <= dt_ts)
             )
-            self.daily_options_cache = self.params.options_df[cache_mask].copy()
-            self.cache_date = current_trade_date
-            self.log(f"📦 Cached {len(self.daily_options_cache)} options records for {current_trade_date}")
+            option_history = self.daily_options_cache[mask].copy()
 
-        # Now filter from the much smaller cached data
-        mask = (
-            (self.daily_options_cache['strike'] == self.daily_strike) &
-            (self.daily_options_cache['option_type'] == option_type) &
-            (self.daily_options_cache['datetime'] <= dt_ts)
-        )
+            if len(option_history) < 2:
+                if dt.minute % 30 == 0:
+                    self.log(f'⚠️  Insufficient history for VWAP: only {len(option_history)} records for {option_type} {self.daily_strike}')
+                return None
 
-        option_history_today = self.daily_options_cache[mask].copy()
-        
-        if len(option_history_today) < 2:
-            if dt.minute % 30 == 0:
-                self.log(f'⚠️  Insufficient history for VWAP: only {len(option_history_today)} records for {option_type} {self.daily_strike}')
-            return None
-        
-        # Calculate VWAP anchored to opening
-        option_history_today['typical_price'] = (
-            option_history_today['high'] + option_history_today['low'] + option_history_today['close']
-        ) / 3.0
-        option_history_today['volume_filled'] = option_history_today['volume'].replace(0, 1)
-        
-        total_tpv = (option_history_today['typical_price'] * option_history_today['volume_filled']).sum()
-        total_volume = option_history_today['volume_filled'].sum()
-        
-        vwap = total_tpv / total_volume if total_volume > 0 else option_history_today['typical_price'].mean()
+            # Calculate initial running totals from all available history
+            option_history['typical_price'] = (
+                option_history['high'] + option_history['low'] + option_history['close']
+            ) / 3.0
+            option_history['volume_filled'] = option_history['volume'].replace(0, 1)
+
+            total_tpv = (option_history['typical_price'] * option_history['volume_filled']).sum()
+            total_volume = option_history['volume_filled'].sum()
+
+            # Store running totals
+            self.vwap_running_totals[vwap_key] = {
+                'tpv': total_tpv,
+                'volume': total_volume,
+                'last_update': dt_ts
+            }
+
+            # Log initialization (only once per strike per day)
+            self.log(f"🎯 Initialized VWAP for {option_type} {self.daily_strike}: {len(option_history)} bars from 9:15 AM")
+
+        else:
+            # Incremental update: add only new bar(s) since last update
+            last_update = self.vwap_running_totals[vwap_key]['last_update']
+
+            # Check if there's a new bar to add (current time > last update)
+            if dt_ts > last_update:
+                # Get only the new bar(s) since last update
+                mask = (
+                    (self.daily_options_cache['strike'] == self.daily_strike) &
+                    (self.daily_options_cache['option_type'] == option_type) &
+                    (self.daily_options_cache['datetime'] > last_update) &
+                    (self.daily_options_cache['datetime'] <= dt_ts)
+                )
+                new_bars = self.daily_options_cache[mask].copy()
+
+                if len(new_bars) > 0:
+                    # Calculate contribution from new bar(s) only
+                    new_bars['typical_price'] = (
+                        new_bars['high'] + new_bars['low'] + new_bars['close']
+                    ) / 3.0
+                    new_bars['volume_filled'] = new_bars['volume'].replace(0, 1)
+
+                    new_tpv = (new_bars['typical_price'] * new_bars['volume_filled']).sum()
+                    new_volume = new_bars['volume_filled'].sum()
+
+                    # Update running totals (INCREMENTAL - just add new contribution)
+                    self.vwap_running_totals[vwap_key]['tpv'] += new_tpv
+                    self.vwap_running_totals[vwap_key]['volume'] += new_volume
+                    self.vwap_running_totals[vwap_key]['last_update'] = dt_ts
+
+        # Calculate VWAP from running totals (O(1) operation)
+        running_totals = self.vwap_running_totals[vwap_key]
+        vwap = running_totals['tpv'] / running_totals['volume'] if running_totals['volume'] > 0 else option_price
         
         # Log VWAP check every 30 minutes
         if dt.minute % 30 == 0:
@@ -514,14 +564,42 @@ class IntradayMomentumOI(bt.Strategy):
             self.daily_expiry = None
             self.pending_exit = False  # Reset pending exit for new day
             self.pending_entry = False  # Reset pending entry for new day
-            
+
+            # CRITICAL: Clear OI analyzer cache BEFORE analyze_market()
+            # analyze_market() needs to query full dataset to find new expiry
+            # After that, we'll cache data for the new expiry
+            if self.params.oi_analyzer is not None:
+                self.params.oi_analyzer.clear_working_data()
+                self.log(f'🔄 Cleared OI analyzer cache for new day: {current_date}')
+
             # Check if we should skip this day
             if self.should_skip_day(dt):
                 self.log(f'Skipping day: {current_date}')
                 return
-            
-            # Analyze market for the day
-            self.analyze_market(dt)
+
+            # Analyze market for the day (uses full dataset to find expiry)
+            analysis_success = self.analyze_market(dt)
+
+            # After successful analysis, cache today's data for the determined expiry
+            if analysis_success and self.daily_expiry is not None:
+                dt_ts = pd.Timestamp(dt)
+                market_open_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=9, minutes=15)
+                market_close_today = pd.Timestamp(dt_ts.date()) + pd.Timedelta(hours=15, minutes=30)
+
+                # Create cache for today's data with the newly determined expiry
+                cache_mask = (
+                    (self.params.options_df['expiry'] == self.daily_expiry) &
+                    (self.params.options_df['datetime'] >= market_open_today) &
+                    (self.params.options_df['datetime'] <= market_close_today)
+                )
+                self.daily_options_cache = self.params.options_df[cache_mask].copy()
+                self.cache_date = current_date
+                self.log(f"📦 Cached {len(self.daily_options_cache)} options records for {current_date} with expiry {self.daily_expiry.date()}")
+
+                # Set the cached data in OI analyzer
+                if self.params.oi_analyzer is not None:
+                    self.params.oi_analyzer.set_working_data(self.daily_options_cache)
+                    self.log(f"⚡ OI Analyzer now using cached data ({len(self.daily_options_cache)} rows instead of {len(self.params.options_df)})")
         
         # Force exit all positions near market close
         if self.is_exit_time(dt):

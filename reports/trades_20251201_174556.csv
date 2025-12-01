@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct
+2025-01-01 09:37:00,2025-01-01 14:51:00,23600,PE,2025-01-02 00:00:00,103.4,52.25,-1,51.150000000000006,-49.468085106382986

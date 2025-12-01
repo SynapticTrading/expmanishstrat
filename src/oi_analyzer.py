@@ -9,11 +9,28 @@ import numpy as np
 
 class OIAnalyzer:
     """Analyze Open Interest changes for options"""
-    
+
     def __init__(self, options_df):
-        self.options_df = options_df
+        self.options_df = options_df  # Full dataset (11M rows)
+        self.working_df = None  # Cached subset for performance (set via set_working_data)
         self.oi_history = {}
-        
+
+    def set_working_data(self, cached_df):
+        """
+        Set a cached subset of data for performance optimization.
+        When set, all queries will use this cached data instead of full dataset.
+        Strategy should call this once per day with ~10K rows instead of 11M.
+        """
+        self.working_df = cached_df
+
+    def clear_working_data(self):
+        """Clear cached working data and revert to full dataset"""
+        self.working_df = None
+
+    def _get_active_df(self):
+        """Get the dataframe to query - cached subset if available, else full dataset"""
+        return self.working_df if self.working_df is not None else self.options_df
+
     def get_strikes_near_spot(self, spot_price, timestamp, expiry_date, num_strikes_above=5, num_strikes_below=5):
         """Get strikes near spot price for given timestamp and expiry"""
         # Convert to pandas Timestamp if needed (timezone-naive)
@@ -24,21 +41,24 @@ class OIAnalyzer:
         if hasattr(timestamp, 'tz') and timestamp.tz is not None:
             timestamp = timestamp.tz_localize(None)
 
+        # Use cached working data if available, else full dataset
+        active_df = self._get_active_df()
+
         # Filter options for this timestamp and expiry - find nearest timestamp (within same minute)
         mask = (
-            (self.options_df['expiry'] == expiry_date) &
-            (self.options_df['datetime'] <= timestamp) &
-            (self.options_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
+            (active_df['expiry'] == expiry_date) &
+            (active_df['datetime'] <= timestamp) &
+            (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
         )
-        options_at_time = self.options_df[mask].copy()
+        options_at_time = active_df[mask].copy()
 
         # DEBUG: Print filtering details if no data found
         if len(options_at_time) == 0:
             print(f"DEBUG get_strikes_near_spot:")
             print(f"  Looking for expiry: {expiry_date} (type: {type(expiry_date)})")
             print(f"  Timestamp: {timestamp}")
-            print(f"  Unique expiries in data: {self.options_df['expiry'].unique()[:5]}")
-            expiry_matches = self.options_df[self.options_df['expiry'] == expiry_date]
+            print(f"  Unique expiries in data: {active_df['expiry'].unique()[:5]}")
+            expiry_matches = active_df[active_df['expiry'] == expiry_date]
             print(f"  Rows matching expiry: {len(expiry_matches)}")
             if len(expiry_matches) > 0:
                 print(f"  Datetime range for this expiry: {expiry_matches['datetime'].min()} to {expiry_matches['datetime'].max()}")
@@ -142,17 +162,20 @@ class OIAnalyzer:
         # Remove timezone if present
         if hasattr(timestamp, 'tz') and timestamp.tz is not None:
             timestamp = timestamp.tz_localize(None)
-        
+
+        # Use cached working data if available, else full dataset
+        active_df = self._get_active_df()
+
         # Get current OI - find nearest timestamp (within same minute)
         mask = (
-            (self.options_df['strike'] == strike) &
-            (self.options_df['option_type'] == option_type) &
-            (self.options_df['expiry'] == expiry_date) &
-            (self.options_df['datetime'] <= timestamp) &
-            (self.options_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
+            (active_df['strike'] == strike) &
+            (active_df['option_type'] == option_type) &
+            (active_df['expiry'] == expiry_date) &
+            (active_df['datetime'] <= timestamp) &
+            (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
         )
-        
-        current_data = self.options_df[mask]
+
+        current_data = active_df[mask]
         
         if len(current_data) == 0:
             return None, None, None
@@ -189,21 +212,24 @@ class OIAnalyzer:
         # Convert to pandas Timestamp if needed (timezone-naive)
         if not isinstance(timestamp, pd.Timestamp):
             timestamp = pd.Timestamp(timestamp)
-        
+
         # Remove timezone if present
         if hasattr(timestamp, 'tz') and timestamp.tz is not None:
             timestamp = timestamp.tz_localize(None)
-        
+
+        # Use cached working data if available, else full dataset
+        active_df = self._get_active_df()
+
         # Find nearest timestamp (within same minute)
         mask = (
-            (self.options_df['strike'] == strike) &
-            (self.options_df['option_type'] == option_type) &
-            (self.options_df['expiry'] == expiry_date) &
-            (self.options_df['datetime'] <= timestamp) &
-            (self.options_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
+            (active_df['strike'] == strike) &
+            (active_df['option_type'] == option_type) &
+            (active_df['expiry'] == expiry_date) &
+            (active_df['datetime'] <= timestamp) &
+            (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
         )
-        
-        option_data = self.options_df[mask]
+
+        option_data = active_df[mask]
         
         if len(option_data) == 0:
             return None
