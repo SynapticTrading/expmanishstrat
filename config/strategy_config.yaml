@@ -6,9 +6,9 @@ strategy:
   
 # Data Configuration
 data:
-  spot_price_file: "DataDump/spotprice_2025.csv"
-  options_file: "DataDump/combined_weekly_monthly_options_2025.csv"
-  timeframe: 1  # minutes - backtesting on 1-minute candles
+  spot_price_file: "DataDump/spotprice_2025_5min.csv"
+  options_file: "DataDump/all_options_5min_2025_with_delta.csv"
+  timeframe: 5  # minutes - backtesting on 5-minute candles
   start_date: "2025-01-01"
   end_date: "2025-10-31"
   timezone: "Asia/Kolkata"  # IST timezone
