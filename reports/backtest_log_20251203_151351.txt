@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/backtest_runner.py", line 18, in <module>
+    from src.reporter import Reporter
+  File "/Users/Algo_Trading/manishsir_options/src/reporter.py", line 7, in <module>
+    import matplotlib.pyplot as plt
+ModuleNotFoundError: No module named 'matplotlib'

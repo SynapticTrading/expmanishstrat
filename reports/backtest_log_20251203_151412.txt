@@ -1,0 +1,300 @@
+Matplotlib is building the font cache; this may take a moment.
+================================================================================
+                    INTRADAY MOMENTUM OI UNWINDING STRATEGY
+                              Backtest Runner
+================================================================================
+
+Loading configuration...
+Configuration loaded from: config/strategy_config.yaml
+
+Preparing data...
+Loading spot price data...
+Loaded 15237 spot price records from 2025-01-01 09:15:00 to 2025-10-30 15:25:00
+/Users/Algo_Trading/manishsir_options/src/data_loader.py:131: FutureWarning: 'T' is deprecated and will be removed in a future version, please use 'min' instead.
+  resampled = df.resample(f'{timeframe_minutes}T').agg({
+Loading options data (this may take a while for large files)...
+Loaded 7993573 options records
+✓ Sorted options data for fast lookups
+Filtered to 3476969 weekly expiry option records
+
+Data Summary:
+  Spot data: 15237 bars from 2025-01-01 09:15:00 to 2025-10-30 15:25:00
+  Options data: 3476969 records
+  Timeframe: 5 minute(s)
+
+Initializing OI Analyzer...
+Setting up Backtrader...
+Initial Portfolio Value: ₹100,000.00
+
+================================================================================
+Running backtest...
+================================================================================
+
+Trade log will be saved to: reports/trades_20251203_151553.csv
+Strategy initialized
+[2025-01-01 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-01
+[2025-01-01 09:15:00] Starting daily analysis - Spot: 23675.65
+[2025-01-01 09:15:00] Found expiry: 2025-01-02
+[2025-01-01 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-01 09:15:00] Max Call OI: 23900, Max Put OI: 23500
+[2025-01-01 09:15:00] Direction determined: PUT (Call dist: 224.35, Put dist: 175.65)
+[2025-01-01 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23650, Expiry=2025-01-02, Spot=23675.65
+[2025-01-01 09:15:00] 📦 Cached 10175 options records for 2025-01-01 with expiry 2025-01-02
+[2025-01-01 09:15:00] ⚡ OI Analyzer now using cached data (10175 rows instead of 3476969)
+[2025-01-01 09:30:00] 📍 STRIKE UPDATED: 23650 → 23600 (Spot: 23617.00)
+[2025-01-01 09:30:00] Checking entry: PE 23600, Expiry=2025-01-02
+[2025-01-01 09:30:00] PE 23600: OI=7772550, Change=0 (0.00%) - BUILDING
+[2025-01-01 09:35:00] 🔄 Reset VWAP running totals for new day: 2025-01-01
+[2025-01-01 09:35:00] 🎯 Initialized VWAP for PE 23600: 5 bars from 9:15 AM
+[2025-01-01 09:35:00] 🎯 ENTRY SIGNAL: PE 23600 - Price: 100.30, VWAP: 97.04, OI Change: -55650 (-0.72%)
+[2025-01-01 09:35:00] 📈 PLACING BUY ORDER: size=1, expected_price=100.30
+[2025-01-01 09:40:00] 🔵 BUY OPTION EXECUTED: PE 23600 @ ₹111.75 (Expiry: 2025-01-02, Lot size: 1)
+[2025-01-01 10:35:00] 🛑 STOP LOSS HIT: PE 23600 - Current: ₹80.20, Stop: ₹83.81
+[2025-01-01 10:40:00] 🔴 SELL OPTION EXECUTED: PE 23600 @ ₹83.81 | Entry: ₹111.75 | P&L: ₹-27.94 (-25.00%)
+[2025-01-01 10:40:00] TRADE PROFIT: Gross 34.80, Net 11.15
+[2025-01-01 10:40:00] 📍 STRIKE UPDATED: 23600 → 23650 (Spot: 23656.60)
+[2025-01-01 10:45:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23710.85)
+[2025-01-01 11:00:00] Checking entry: PE 23700, Expiry=2025-01-02
+[2025-01-01 11:00:00] PE 23700: OI=7219500, Change=417600 (6.14%) - BUILDING
+[2025-01-01 11:05:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23755.35)
+[2025-01-01 11:20:00] 🎯 Initialized VWAP for PE 23750: 26 bars from 9:15 AM
+[2025-01-01 11:25:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23742.90)
+[2025-01-01 11:25:00] 🎯 Initialized VWAP for PE 23700: 27 bars from 9:15 AM
+[2025-01-01 11:30:00] Checking entry: PE 23700, Expiry=2025-01-02
+[2025-01-01 11:30:00] PE 23700: OI=6848100, Change=-259575 (-3.65%) - UNWINDING ✓
+[2025-01-01 11:30:00] PE 23700: Price=125.55, VWAP=131.00 - BELOW ✗
+[2025-01-01 11:35:00] 📍 STRIKE UPDATED: 23700 → 23650 (Spot: 23699.15)
+[2025-01-01 11:35:00] 🎯 Initialized VWAP for PE 23650: 29 bars from 9:15 AM
+[2025-01-01 11:40:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23724.45)
+[2025-01-01 11:50:00] 📍 STRIKE UPDATED: 23700 → 23650 (Spot: 23688.25)
+[2025-01-01 12:00:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23706.45)
+[2025-01-01 12:00:00] Checking entry: PE 23700, Expiry=2025-01-02
+[2025-01-01 12:00:00] PE 23700: OI=7051575, Change=73575 (1.05%) - BUILDING
+[2025-01-01 12:20:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23753.45)
+[2025-01-01 12:25:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23748.90)
+[2025-01-01 12:30:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23762.00)
+[2025-01-01 12:30:00] Checking entry: PE 23750, Expiry=2025-01-02
+[2025-01-01 12:30:00] PE 23750: OI=4223100, Change=229275 (5.74%) - BUILDING
+[2025-01-01 12:55:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23733.85)
+[2025-01-01 13:00:00] Checking entry: PE 23700, Expiry=2025-01-02
+[2025-01-01 13:00:00] PE 23700: OI=8098725, Change=183600 (2.32%) - BUILDING
+[2025-01-01 13:30:00] Checking entry: PE 23700, Expiry=2025-01-02
+[2025-01-01 13:30:00] PE 23700: OI=8513325, Change=134100 (1.60%) - BUILDING
+[2025-01-01 13:45:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23755.30)
+[2025-01-01 14:00:00] 📍 STRIKE UPDATED: 23750 → 23800 (Spot: 23812.30)
+[2025-01-01 14:00:00] Checking entry: PE 23800, Expiry=2025-01-02
+[2025-01-01 14:00:00] PE 23800: OI=6469950, Change=0 (0.00%) - BUILDING
+[2025-01-01 14:10:00] 📍 STRIKE UPDATED: 23800 → 23750 (Spot: 23789.10)
+[2025-01-01 14:30:00] Checking entry: PE 23750, Expiry=2025-01-02
+[2025-01-01 14:30:00] PE 23750: OI=5109450, Change=111225 (2.23%) - BUILDING
+[2025-01-02 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-02
+[2025-01-02 09:15:00] Starting daily analysis - Spot: 23788.85
+[2025-01-02 09:15:00] Found expiry: 2025-01-02
+[2025-01-02 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-02 09:15:00] Max Call OI: 24000, Max Put OI: 23600
+[2025-01-02 09:15:00] Direction determined: PUT (Call dist: 211.15, Put dist: 188.85)
+[2025-01-02 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23750, Expiry=2025-01-02, Spot=23788.85
+[2025-01-02 09:15:00] 📦 Cached 10580 options records for 2025-01-02 with expiry 2025-01-02
+[2025-01-02 09:15:00] ⚡ OI Analyzer now using cached data (10580 rows instead of 3476969)
+[2025-01-02 09:30:00] Checking entry: PE 23750, Expiry=2025-01-02
+[2025-01-02 09:30:00] PE 23750: OI=5509425, Change=399975 (7.83%) - BUILDING
+[2025-01-02 09:35:00] 📍 STRIKE UPDATED: 23750 → 23800 (Spot: 23815.05)
+[2025-01-02 09:50:00] 🔄 Reset VWAP running totals for new day: 2025-01-02
+[2025-01-02 09:50:00] 🎯 Initialized VWAP for PE 23800: 8 bars from 9:15 AM
+[2025-01-02 10:00:00] Checking entry: PE 23800, Expiry=2025-01-02
+[2025-01-02 10:00:00] PE 23800: OI=9238425, Change=107250 (1.17%) - BUILDING
+[2025-01-02 10:15:00] 📍 STRIKE UPDATED: 23800 → 23850 (Spot: 23860.45)
+[2025-01-02 10:30:00] Checking entry: PE 23850, Expiry=2025-01-02
+[2025-01-02 10:30:00] PE 23850: OI=6571050, Change=199200 (3.13%) - BUILDING
+[2025-01-02 10:35:00] 🎯 Initialized VWAP for PE 23850: 17 bars from 9:15 AM
+[2025-01-02 10:45:00] 📍 STRIKE UPDATED: 23850 → 23900 (Spot: 23913.90)
+[2025-01-02 11:00:00] Checking entry: PE 23900, Expiry=2025-01-02
+[2025-01-02 11:00:00] PE 23900: OI=9727500, Change=572325 (6.25%) - BUILDING
+[2025-01-02 11:05:00] 🎯 Initialized VWAP for PE 23900: 23 bars from 9:15 AM
+[2025-01-02 11:20:00] 📍 STRIKE UPDATED: 23900 → 23950 (Spot: 23950.15)
+[2025-01-02 11:30:00] Checking entry: PE 23950, Expiry=2025-01-02
+[2025-01-02 11:30:00] PE 23950: OI=6047175, Change=343800 (6.03%) - BUILDING
+[2025-01-02 11:45:00] 📍 STRIKE UPDATED: 23950 → 23900 (Spot: 23936.50)
+[2025-01-02 12:00:00] 📍 STRIKE UPDATED: 23900 → 23950 (Spot: 23955.45)
+[2025-01-02 12:00:00] Checking entry: PE 23950, Expiry=2025-01-02
+[2025-01-02 12:00:00] PE 23950: OI=7228125, Change=746550 (11.52%) - BUILDING
+[2025-01-02 12:10:00] 📍 STRIKE UPDATED: 23950 → 23900 (Spot: 23940.45)
+[2025-01-02 12:20:00] 📍 STRIKE UPDATED: 23900 → 23950 (Spot: 23959.05)
+[2025-01-02 12:25:00] 📍 STRIKE UPDATED: 23950 → 24000 (Spot: 24015.60)
+[2025-01-02 12:30:00] Checking entry: PE 24000, Expiry=2025-01-02
+[2025-01-02 12:30:00] PE 24000: OI=8367300, Change=1568325 (23.07%) - BUILDING
+[2025-01-02 12:35:00] 📍 STRIKE UPDATED: 24000 → 24050 (Spot: 24052.10)
+[2025-01-02 12:45:00] 📍 STRIKE UPDATED: 24050 → 24000 (Spot: 24048.55)
+[2025-01-02 12:50:00] 📍 STRIKE UPDATED: 24000 → 24050 (Spot: 24065.05)
+[2025-01-02 13:00:00] Checking entry: PE 24050, Expiry=2025-01-02
+[2025-01-02 13:00:00] PE 24050: OI=5877600, Change=902175 (18.13%) - BUILDING
+[2025-01-02 13:15:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24106.60)
+[2025-01-02 13:25:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24099.85)
+[2025-01-02 13:30:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24109.40)
+[2025-01-02 13:30:00] Checking entry: PE 24100, Expiry=2025-01-02
+[2025-01-02 13:30:00] PE 24100: OI=13010850, Change=2816925 (27.63%) - BUILDING
+[2025-01-02 14:00:00] Checking entry: PE 24100, Expiry=2025-01-02
+[2025-01-02 14:00:00] PE 24100: OI=22002450, Change=1316250 (6.36%) - BUILDING
+[2025-01-02 14:10:00] 🎯 Initialized VWAP for PE 24100: 60 bars from 9:15 AM
+[2025-01-02 14:15:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24168.10)
+[2025-01-02 14:30:00] Checking entry: PE 24150, Expiry=2025-01-02
+[2025-01-02 14:30:00] PE 24150: OI=21278100, Change=2889150 (15.71%) - BUILDING
+[2025-01-03 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-03
+[2025-01-03 09:15:00] Starting daily analysis - Spot: 24175.55
+[2025-01-03 09:15:00] Found expiry: 2025-01-09
+[2025-01-03 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-03 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-03 09:15:00] Direction determined: CALL (Call dist: 24.45, Put dist: 175.55)
+[2025-01-03 09:15:00] ✓ Daily Analysis Complete: Direction=CALL, Strike=24200, Expiry=2025-01-09, Spot=24175.55
+[2025-01-03 09:15:00] 📦 Cached 9747 options records for 2025-01-03 with expiry 2025-01-09
+[2025-01-03 09:15:00] ⚡ OI Analyzer now using cached data (9747 rows instead of 3476969)
+[2025-01-03 09:30:00] 📍 STRIKE UPDATED: 24200 → 24150 (Spot: 24105.20)
+[2025-01-03 09:30:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 09:30:00] CE 24150: OI=2282100, Change=0 (0.00%) - BUILDING
+[2025-01-03 09:35:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24099.90)
+[2025-01-03 10:00:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24101.75)
+[2025-01-03 10:00:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 10:00:00] CE 24150: OI=2777025, Change=494925 (21.69%) - BUILDING
+[2025-01-03 10:05:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24063.10)
+[2025-01-03 10:10:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24042.20)
+[2025-01-03 10:15:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24054.20)
+[2025-01-03 10:25:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24047.00)
+[2025-01-03 10:30:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 10:30:00] CE 24050: OI=2367375, Change=325650 (15.95%) - BUILDING
+[2025-01-03 10:45:00] 🔄 Reset VWAP running totals for new day: 2025-01-03
+[2025-01-03 10:45:00] 🎯 Initialized VWAP for CE 24050: 19 bars from 9:15 AM
+[2025-01-03 11:00:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 11:00:00] CE 24050: OI=2641275, Change=83625 (3.27%) - BUILDING
+[2025-01-03 11:10:00] 📍 STRIKE UPDATED: 24050 → 24100 (Spot: 24057.70)
+[2025-01-03 11:20:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24132.55)
+[2025-01-03 11:30:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 11:30:00] CE 24150: OI=3058875, Change=38025 (1.26%) - BUILDING
+[2025-01-03 12:00:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 12:00:00] CE 24150: OI=3331725, Change=32550 (0.99%) - BUILDING
+[2025-01-03 12:05:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24096.80)
+[2025-01-03 12:10:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24114.40)
+[2025-01-03 12:10:00] 🎯 Initialized VWAP for CE 24150: 36 bars from 9:15 AM
+[2025-01-03 12:15:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24089.15)
+[2025-01-03 12:30:00] Checking entry: CE 24100, Expiry=2025-01-09
+[2025-01-03 12:30:00] CE 24100: OI=6384300, Change=96675 (1.54%) - BUILDING
+[2025-01-03 13:00:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24110.20)
+[2025-01-03 13:00:00] Checking entry: CE 24150, Expiry=2025-01-09
+[2025-01-03 13:00:00] CE 24150: OI=3335400, Change=21675 (0.65%) - BUILDING
+[2025-01-03 13:10:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24098.25)
+[2025-01-03 13:10:00] 🎯 Initialized VWAP for CE 24100: 48 bars from 9:15 AM
+[2025-01-03 13:15:00] 📍 STRIKE UPDATED: 24100 → 24150 (Spot: 24101.80)
+[2025-01-03 13:25:00] 📍 STRIKE UPDATED: 24150 → 24100 (Spot: 24099.05)
+[2025-01-03 13:30:00] Checking entry: CE 24100, Expiry=2025-01-09
+[2025-01-03 13:30:00] CE 24100: OI=6274950, Change=-20775 (-0.33%) - UNWINDING ✓
+[2025-01-03 13:30:00] CE 24100: Price=145.45, VWAP=156.90 - BELOW ✗
+[2025-01-03 13:55:00] 📍 STRIKE UPDATED: 24100 → 24050 (Spot: 24041.65)
+[2025-01-03 14:00:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 14:00:00] CE 24050: OI=2789250, Change=181650 (6.97%) - BUILDING
+[2025-01-03 14:30:00] Checking entry: CE 24050, Expiry=2025-01-09
+[2025-01-03 14:30:00] CE 24050: OI=2962500, Change=-2400 (-0.08%) - UNWINDING ✓
+[2025-01-03 14:30:00] CE 24050: Price=137.25, VWAP=169.79 - BELOW ✗
+[2025-01-06 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-06
+[2025-01-06 09:15:00] Starting daily analysis - Spot: 24034.05
+[2025-01-06 09:15:00] Found expiry: 2025-01-09
+[2025-01-06 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-06 09:15:00] Max Call OI: 24200, Max Put OI: 24000
+[2025-01-06 09:15:00] Direction determined: PUT (Call dist: 165.95, Put dist: 34.05)
+[2025-01-06 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=24000, Expiry=2025-01-09, Spot=24034.05
+[2025-01-06 09:15:00] 📦 Cached 9892 options records for 2025-01-06 with expiry 2025-01-09
+[2025-01-06 09:15:00] ⚡ OI Analyzer now using cached data (9892 rows instead of 3476969)
+[2025-01-06 09:30:00] Checking entry: PE 24000, Expiry=2025-01-09
+[2025-01-06 09:30:00] PE 24000: OI=7432950, Change=0 (0.00%) - BUILDING
+[2025-01-06 09:35:00] 🔄 Reset VWAP running totals for new day: 2025-01-06
+[2025-01-06 09:35:00] 🎯 Initialized VWAP for PE 24000: 5 bars from 9:15 AM
+[2025-01-06 09:35:00] 🎯 ENTRY SIGNAL: PE 24000 - Price: 199.20, VWAP: 162.94, OI Change: -1024125 (-13.78%)
+[2025-01-06 09:35:00] 📈 PLACING BUY ORDER: size=1, expected_price=199.20
+[2025-01-06 09:40:00] 🔵 BUY OPTION EXECUTED: PE 24000 @ ₹198.45 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 10:10:00] 🛑 STOP LOSS HIT: PE 24000 - Current: ₹145.05, Stop: ₹148.84
+[2025-01-06 10:15:00] 🔴 SELL OPTION EXECUTED: PE 24000 @ ₹148.84 | Entry: ₹198.45 | P&L: ₹-49.61 (-25.00%)
+[2025-01-06 10:15:00] TRADE PROFIT: Gross 4.40, Net -19.62
+[2025-01-06 10:20:00] 📍 STRIKE UPDATED: 24000 → 23950 (Spot: 23975.55)
+[2025-01-06 10:30:00] 📍 STRIKE UPDATED: 23950 → 23900 (Spot: 23938.60)
+[2025-01-06 10:30:00] Checking entry: PE 23900, Expiry=2025-01-09
+[2025-01-06 10:30:00] PE 23900: OI=4279275, Change=0 (0.00%) - BUILDING
+[2025-01-06 10:35:00] 🎯 Initialized VWAP for PE 23900: 17 bars from 9:15 AM
+[2025-01-06 10:35:00] 🎯 ENTRY SIGNAL: PE 23900 - Price: 148.75, VWAP: 127.47, OI Change: -21750 (-0.51%)
+[2025-01-06 10:35:00] 📈 PLACING BUY ORDER: size=1, expected_price=148.75
+[2025-01-06 10:40:00] 🔵 BUY OPTION EXECUTED: PE 23900 @ ₹179.55 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 12:00:00] 📉 TRAILING STOP HIT: PE 23900 - Current: ₹314.65, Trailing Stop: ₹329.40
+[2025-01-06 12:05:00] 🔴 SELL OPTION EXECUTED: PE 23900 @ ₹329.40 | Entry: ₹179.55 | P&L: ₹149.85 (+83.46%)
+[2025-01-06 12:05:00] TRADE PROFIT: Gross -257.95, Net -281.74
+[2025-01-06 12:05:00] 📍 STRIKE UPDATED: 23900 → 23650 (Spot: 23683.45)
+[2025-01-06 12:10:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23719.80)
+[2025-01-06 12:15:00] 📍 STRIKE UPDATED: 23700 → 23650 (Spot: 23691.05)
+[2025-01-06 12:15:00] 🎯 Initialized VWAP for PE 23650: 37 bars from 9:15 AM
+[2025-01-06 12:15:00] 🎯 ENTRY SIGNAL: PE 23650 - Price: 175.90, VWAP: 112.31, OI Change: -7800 (-0.45%)
+[2025-01-06 12:15:00] 📈 PLACING BUY ORDER: size=1, expected_price=175.90
+[2025-01-06 12:20:00] 🔵 BUY OPTION EXECUTED: PE 23650 @ ₹170.80 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:05:00] 📉 TRAILING STOP HIT: PE 23650 - Current: ₹191.25, Trailing Stop: ₹205.34
+[2025-01-06 14:10:00] 🔴 SELL OPTION EXECUTED: PE 23650 @ ₹205.34 | Entry: ₹170.80 | P&L: ₹34.53 (+20.22%)
+[2025-01-06 14:10:00] TRADE PROFIT: Gross -25.75, Net -49.43
+[2025-01-06 14:10:00] 📍 STRIKE UPDATED: 23650 → 23600 (Spot: 23623.85)
+[2025-01-06 14:15:00] 📍 STRIKE UPDATED: 23600 → 23650 (Spot: 23651.05)
+[2025-01-06 14:15:00] 🎯 ENTRY SIGNAL: PE 23650 - Price: 200.80, VWAP: 139.59, OI Change: -243825 (-14.20%)
+[2025-01-06 14:15:00] 📈 PLACING BUY ORDER: size=1, expected_price=200.80
+[2025-01-06 14:20:00] 🔵 BUY OPTION EXECUTED: PE 23650 @ ₹208.90 (Expiry: 2025-01-09, Lot size: 1)
+[2025-01-06 14:50:00] END OF DAY - Closing all positions
+[2025-01-06 14:55:00] 🔴 SELL OPTION EXECUTED: PE 23650 @ ₹200.35 | Entry: ₹208.90 | P&L: ₹-8.55 (-4.09%)
+[2025-01-06 14:55:00] TRADE PROFIT: Gross -22.10, Net -45.74
+[2025-01-07 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-07
+[2025-01-07 09:15:00] Starting daily analysis - Spot: 23754.00
+[2025-01-07 09:15:00] Found expiry: 2025-01-09
+[2025-01-07 09:15:00] Found 20 options near spot, 10 strikes
+[2025-01-07 09:15:00] Max Call OI: 24000, Max Put OI: 23600
+[2025-01-07 09:15:00] Direction determined: PUT (Call dist: 246.00, Put dist: 154.00)
+[2025-01-07 09:15:00] ✓ Daily Analysis Complete: Direction=PUT, Strike=23750, Expiry=2025-01-09, Spot=23754.00
+[2025-01-07 09:15:00] 📦 Cached 9638 options records for 2025-01-07 with expiry 2025-01-09
+[2025-01-07 09:15:00] ⚡ OI Analyzer now using cached data (9638 rows instead of 3476969)
+[2025-01-07 09:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 09:30:00] PE 23750: OI=3534600, Change=0 (0.00%) - BUILDING
+[2025-01-07 09:45:00] 📍 STRIKE UPDATED: 23750 → 23650 (Spot: 23675.65)
+[2025-01-07 10:00:00] Checking entry: PE 23650, Expiry=2025-01-09
+[2025-01-07 10:00:00] PE 23650: OI=2596725, Change=114150 (4.60%) - BUILDING
+[2025-01-07 10:05:00] 📍 STRIKE UPDATED: 23650 → 23600 (Spot: 23638.00)
+[2025-01-07 10:10:00] 📍 STRIKE UPDATED: 23600 → 23700 (Spot: 23745.90)
+[2025-01-07 10:15:00] 🔄 Reset VWAP running totals for new day: 2025-01-07
+[2025-01-07 10:15:00] 🎯 Initialized VWAP for PE 23700: 13 bars from 9:15 AM
+[2025-01-07 10:25:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23758.85)
+[2025-01-07 10:25:00] 🎯 Initialized VWAP for PE 23750: 15 bars from 9:15 AM
+[2025-01-07 10:30:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23740.45)
+[2025-01-07 10:30:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 10:30:00] PE 23700: OI=5416500, Change=122775 (2.32%) - BUILDING
+[2025-01-07 10:45:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23754.60)
+[2025-01-07 10:50:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23710.60)
+[2025-01-07 11:00:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 11:00:00] PE 23700: OI=5670525, Change=-40875 (-0.72%) - UNWINDING ✓
+[2025-01-07 11:00:00] PE 23700: Price=113.55, VWAP=140.61 - BELOW ✗
+[2025-01-07 11:30:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23760.35)
+[2025-01-07 11:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 11:30:00] PE 23750: OI=3738600, Change=114375 (3.16%) - BUILDING
+[2025-01-07 11:40:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23744.45)
+[2025-01-07 11:50:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23757.70)
+[2025-01-07 11:55:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23738.30)
+[2025-01-07 12:00:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 12:00:00] PE 23700: OI=6006750, Change=80700 (1.36%) - BUILDING
+[2025-01-07 12:30:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 12:30:00] PE 23700: OI=5989200, Change=6900 (0.12%) - BUILDING
+[2025-01-07 13:00:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 13:00:00] PE 23700: OI=6312225, Change=159450 (2.59%) - BUILDING
+[2025-01-07 13:30:00] 📍 STRIKE UPDATED: 23700 → 23750 (Spot: 23759.70)
+[2025-01-07 13:30:00] Checking entry: PE 23750, Expiry=2025-01-09
+[2025-01-07 13:30:00] PE 23750: OI=3385650, Change=-346425 (-9.28%) - UNWINDING ✓
+[2025-01-07 13:30:00] PE 23750: Price=115.70, VWAP=151.60 - BELOW ✗
+[2025-01-07 13:35:00] 📍 STRIKE UPDATED: 23750 → 23700 (Spot: 23742.95)
+[2025-01-07 13:50:00] 📍 STRIKE UPDATED: 23700 → 23650 (Spot: 23699.15)
+[2025-01-07 13:50:00] 🎯 Initialized VWAP for PE 23650: 56 bars from 9:15 AM
+[2025-01-07 14:00:00] Checking entry: PE 23650, Expiry=2025-01-09
+[2025-01-07 14:00:00] PE 23650: OI=2618700, Change=-23700 (-0.90%) - UNWINDING ✓
+[2025-01-07 14:00:00] PE 23650: Price=103.20, VWAP=111.55 - BELOW ✗
+[2025-01-07 14:05:00] 📍 STRIKE UPDATED: 23650 → 23700 (Spot: 23714.55)
+[2025-01-07 14:30:00] Checking entry: PE 23700, Expiry=2025-01-09
+[2025-01-07 14:30:00] PE 23700: OI=6295200, Change=-163800 (-2.54%) - UNWINDING ✓
+[2025-01-07 14:30:00] PE 23700: Price=113.45, VWAP=127.44 - BELOW ✗
+[2025-01-08 09:15:00] 🔄 Cleared OI analyzer cache for new day: 2025-01-08
+[2025-01-08 09:15:00] Starting daily analysis - Spot: 23680.10
+[2025-01-08 09:15:00] Found expiry: 2025-01-09
