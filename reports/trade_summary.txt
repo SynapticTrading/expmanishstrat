@@ -1,14 +1,14 @@
 ================================================================================
 TRADE SUMMARY
 ================================================================================
-Final Portfolio Value: ₹93,630.98
-Total Trades: 312
-Winning Trades: 174
-Losing Trades: 138
-Win Rate: 55.77%
-Total PnL: ₹1,686.95
-Average PnL: ₹5.41
-Average PnL %: 6.69%
-Best Trade: ₹107.25
-Worst Trade: ₹-68.69
+Final Portfolio Value: ₹94,674.37
+Total Trades: 275
+Winning Trades: 122
+Losing Trades: 153
+Win Rate: 44.36%
+Total PnL: ₹903.14
+Average PnL: ₹3.28
+Average PnL %: 6.41%
+Best Trade: ₹263.99
+Worst Trade: ₹-84.95
 ================================================================================

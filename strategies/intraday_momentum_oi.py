@@ -140,9 +140,9 @@ class IntradayMomentumOI(bt.Strategy):
                         'strike': self.daily_strike,
                         'option_type': option_type,
                         'expiry': self.daily_expiry,
-                        'stop_loss': option_entry_price * (1 + self.params.initial_stop_loss_pct),  # ABOVE entry for shorts
+                        'stop_loss': option_entry_price * (1 - self.params.initial_stop_loss_pct),  # BELOW entry for longs
                         'trailing_stop': None,
-                        'lowest_price': option_entry_price,  # Track lowest for shorts
+                        'highest_price': option_entry_price,  # Track highest for longs
                     }
                     self.positions_dict[order.ref] = self.current_position
                 else:
@@ -173,9 +173,9 @@ class IntradayMomentumOI(bt.Strategy):
                             option_exit_price = option_data['close']
 
                         # Calculate P&L based on OPTION prices
-                        # For short positions: profit when price goes down, loss when price goes up
-                        pnl = (pos_info['entry_price'] - option_exit_price) * abs(order.executed.size)
-                        pnl_pct = ((pos_info['entry_price'] - option_exit_price) / pos_info['entry_price']) * 100
+                        # For long positions: profit when price goes up, loss when price goes down
+                        pnl = (option_exit_price - pos_info['entry_price']) * abs(order.executed.size)
+                        pnl_pct = ((option_exit_price - pos_info['entry_price']) / pos_info['entry_price']) * 100
                         
                         self.log(f'🔴 SELL OPTION EXECUTED: {pos_info["option_type"]} {pos_info["strike"]} @ ₹{option_exit_price:.2f} '
                                 f'| Entry: ₹{pos_info["entry_price"]:.2f} | P&L: ₹{pnl:.2f} ({pnl_pct:+.2f}%)')
@@ -533,8 +533,8 @@ class IntradayMomentumOI(bt.Strategy):
         current_price = option_data['close']
         entry_price = pos_info['entry_price']
 
-        # ALWAYS check initial stop loss first (for short positions, trigger when price goes UP)
-        if current_price >= pos_info['stop_loss']:
+        # ALWAYS check initial stop loss first (for long positions, trigger when price goes DOWN)
+        if current_price <= pos_info['stop_loss']:
             self.log(f'🛑 STOP LOSS HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
                     f'Current: ₹{current_price:.2f}, Stop: ₹{pos_info["stop_loss"]:.2f}')
             # Store the theoretical exit price (stop loss price) for accurate P&L calculation
@@ -543,19 +543,19 @@ class IntradayMomentumOI(bt.Strategy):
             self.pending_exit = True  # Mark that we have a pending exit
             return  # Exit immediately, don't process more positions
 
-        # Update lowest price (for short positions, profit increases as price decreases)
-        if current_price < pos_info['lowest_price']:
-            pos_info['lowest_price'] = current_price
+        # Update highest price (for long positions, profit increases as price increases)
+        if current_price > pos_info['highest_price']:
+            pos_info['highest_price'] = current_price
 
-        # Check if profit threshold reached (for shorts: profit when price drops)
-        profit_pct = (entry_price - current_price) / entry_price
+        # Check if profit threshold reached (for longs: profit when price rises)
+        profit_pct = (current_price - entry_price) / entry_price
         if profit_pct >= (self.params.profit_threshold - 1):
-            # Activate trailing stop (for shorts: lock in profit as price goes down)
-            trailing_stop = pos_info['lowest_price'] * (1 + self.params.trailing_stop_pct)
+            # Activate trailing stop (for longs: lock in profit as price goes up)
+            trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
             pos_info['trailing_stop'] = trailing_stop
 
-            # Check trailing stop (for shorts: exit if price rises back up)
-            if current_price >= trailing_stop:
+            # Check trailing stop (for longs: exit if price drops back down)
+            if current_price <= trailing_stop:
                 self.log(f'📉 TRAILING STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
                         f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{trailing_stop:.2f}')
                 # Store the theoretical exit price for accurate P&L calculation
