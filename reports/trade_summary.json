@@ -1,12 +1,12 @@
 {
-  "final_portfolio_value": 94592.82735000004,
-  "total_trades": 266,
-  "winning_trades": 142,
-  "losing_trades": 124,
-  "win_rate": 53.383458646616546,
-  "total_pnl": -155.2,
-  "average_pnl": -0.5834586466165413,
-  "average_pnl_pct": 2.37137328378069,
-  "best_trade": 99.65,
-  "worst_trade": -266.75
+  "final_portfolio_value": 94674.36677500026,
+  "total_trades": 275,
+  "winning_trades": 120,
+  "losing_trades": 155,
+  "win_rate": 43.63636363636363,
+  "total_pnl": 100.79999999999994,
+  "average_pnl": 0.36654545454545434,
+  "average_pnl_pct": 2.46553305848541,
+  "best_trade": 266.75,
+  "worst_trade": -91.35
 }

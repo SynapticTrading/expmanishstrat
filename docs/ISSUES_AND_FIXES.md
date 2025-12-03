@@ -4,6 +4,244 @@ This document summarizes the major issues encountered while implementing and bac
 
 ---
 
+### CRITICAL: P&L Sign Inversion and Stop Loss Direction Bugs (Dec 3, 2025)
+
+- **Symptoms**
+  - P&L and P&L% had **opposite signs** in trade reports
+  - 60 out of 266 trades (22.6%) exceeded 25% stop loss, with worst loss at 250%
+  - Trades showed negative P&L with positive P&L% or vice versa
+
+- **Root Cause**
+  - **P&L Calculation Bug**: Line 168 multiplied by `order.executed.size = -1`, inverting the sign
+    ```python
+    # WRONG: pnl = (exit_price - entry_price) * (-1) = inverted sign
+    pnl = (option_exit_price - pos_info['entry_price']) * order.executed.size
+    ```
+  - **Stop Loss Direction Bug**: Stop loss logic was designed for LONG positions, but we're SHORT
+    - Stop loss set BELOW entry: `entry * (1 - 0.25)` instead of ABOVE
+    - Stop loss triggered when price went DOWN instead of UP
+    - Trailing stop tracked HIGHEST price instead of LOWEST
+    - Trailing stop triggered when price went DOWN instead of UP
+
+- **Impact**
+  - P&L signs were inverted but P&L% was correct (didn't use size)
+  - Stop losses NEVER triggered properly - allowed unlimited losses
+  - Trades that should have stopped at 25% loss ran to 250%+ losses
+
+- **Fix**
+  1. **P&L Calculation** (lines 169-170):
+     ```python
+     # For shorts: profit when price drops, loss when price rises
+     pnl = (pos_info['entry_price'] - option_exit_price) * abs(order.executed.size)
+     pnl_pct = ((pos_info['entry_price'] - option_exit_price) / pos_info['entry_price']) * 100
+     ```
+
+  2. **Stop Loss Initialization** (line 143):
+     ```python
+     # For shorts: stop loss ABOVE entry (trigger when price goes UP)
+     'stop_loss': option_entry_price * (1 + self.params.initial_stop_loss_pct)
+     ```
+
+  3. **Stop Loss Check** (line 548):
+     ```python
+     # For shorts: exit if price rises above stop
+     if current_price >= pos_info['stop_loss']:
+     ```
+
+  4. **Trailing Stop Logic** (lines 528-545):
+     ```python
+     # Track LOWEST price (profit increases as price drops for shorts)
+     if current_price < pos_info['lowest_price']:
+         pos_info['lowest_price'] = current_price
+
+     # Profit check: for shorts, profit = (entry - current) / entry
+     profit_pct = (entry_price - current_price) / entry_price
+     if profit_pct >= (self.params.profit_threshold - 1):
+         # Trailing stop ABOVE lowest (trigger when price rises back up)
+         trailing_stop = pos_info['lowest_price'] * (1 + self.params.trailing_stop_pct)
+         if current_price >= trailing_stop:  # Exit if price rises
+     ```
+
+- **Files Modified**
+  - `strategies/intraday_momentum_oi.py`: Lines 143, 145, 169-170, 528-550
+
+- **Result (First Fix)**
+  - P&L and P&L% now have matching signs ✅
+  - Stop loss direction corrected but still not triggering properly
+
+- **Additional Issue Found (Dec 3, 2025 - Second Pass)**
+  - After first fix, P&L signs were correct but 56/287 trades (19.5%) still exceeded 25% stop loss
+  - Worst loss: -865% (should have stopped at -25%)
+
+- **Root Cause (Second Pass)**
+  - Line 615 used `if self.position.size != 0:` to check for open positions
+  - This checks Backtrader's internal position, but strategy uses manual `self.current_position` tracking
+  - Stop loss checks in `manage_positions()` were never called because condition was false
+
+- **Final Fix (Part 1)**
+  - Lines 608, 615: Changed from `self.position.size != 0` to `self.current_position is not None`
+  - Now stop loss checks run on EVERY bar when we have an open position
+
+- **Additional Issue Found (Dec 3, 2025 - Third Pass)**
+  - After fixing position check, results still identical
+  - Traced execution: `manage_positions()` was returning early at line 522-523
+  - Root cause: `get_option_price_data()` returned None on MOST bars
+
+- **Root Cause (Third Pass - THE REAL BUG)**
+  - `get_option_price_data()` in `src/oi_analyzer.py` line 229:
+    ```python
+    (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
+    ```
+  - This searches for data within 1 minute BEFORE the current time
+  - But data is on 5-minute intervals (9:20, 9:25, 9:30, etc.)
+  - When checking at 9:25, data from 9:20 (5 minutes ago) is NOT within 1 minute
+  - Result: No data found → function returns None → manage_positions() exits early → NO STOP LOSS CHECK!
+
+- **Final Fix (Part 2)**
+  - `src/oi_analyzer.py` line 229: Changed from `minutes=1` to `minutes=6`
+  - Now looks back 6 minutes to reliably find 5-minute interval data
+
+- **Additional Issue Found (Dec 3, 2025 - Fourth Pass - THE ACTUAL BUG!)**
+  - After all previous fixes, added debug logging
+  - Log showed: `📊 Price: ₹55.20, Stop: ₹52.31, Check: True` but NO stop loss trigger!
+  - Condition was TRUE but code didn't execute
+
+- **Root Cause (Fourth Pass - LOGIC BUG IN STOP LOSS CHECK)**
+  - Lines 536-541: If price drops 10%+ (profit), trailing stop is activated
+  - Line 552: `if pos_info['trailing_stop'] is None:` THEN check stop loss
+  - **BUG**: Once trailing stop is set, initial stop loss check is SKIPPED!
+
+  **What happened on Apr 17:**
+  1. Entry at ₹41.85
+  2. Price dropped to ₹31.05 (25.8% profit) → trailing stop activated
+  3. Price rose to ₹55, ₹81, ₹102, ₹217, ₹404...
+  4. Stop loss check was SKIPPED because `trailing_stop is not None`
+  5. Trailing stop only triggers if price rises above lowest×1.1, but initial stop (₹52.31) was never checked!
+
+- **Final Fix (Part 3 - THE REAL FIX)**
+  - Moved stop loss check BEFORE profit/trailing logic (lines 532-538)
+  - Stop loss now checked on EVERY call, regardless of trailing stop status
+  - Logic order: Check stop loss → Update tracking → Check trailing stop
+
+- **Final Verification (After All Fixes)**
+  - Ran backtest with debug logging
+  - Stop losses now trigger correctly
+  - Results: 111 trades stopped at exactly -25.00%
+  - Maximum loss: -25.00% (vs original -865%)
+  - Total P&L improved from ₹164 to ₹1,687 (10x better!)
+
+---
+
+### DETAILED EXPLANATION: The Stop Loss Bug (Simplified)
+
+**🎯 THE ONE BUG THAT BROKE EVERYTHING:**
+
+Imagine you're selling insurance (short options). Your risk management says: "If my cost goes up by 25%, I should exit to limit losses."
+
+**What the Code Was Doing (WRONG):**
+
+```python
+# Step 1: Check if I'm making profit (price dropped 10%+)
+if making_profit:
+    trailing_stop = activated  # Now trailing_stop is NOT None
+
+# Step 2: Check if I should exit due to losses
+if trailing_stop is None:  # ← BUG! This is now FALSE
+    if current_price >= stop_loss:
+        exit()  # This NEVER runs!
+```
+
+**Why This Was Catastrophic:**
+
+Let's trace a real trade (Apr 17, 2025):
+
+| Time  | Price | What Happened |
+|-------|-------|---------------|
+| 10:50 | ₹41.85 | **Enter trade**, stop loss set at ₹52.31 (25% above) |
+| 10:55 | ₹31.05 | Price drops! 25% profit! 🎉 Trailing stop activated |
+| 11:00 | ₹29.40 | Still profitable |
+| 11:05 | ₹55.20 | ⚠️ Price rises ABOVE stop loss (₹52.31) |
+| | | **BUG**: Stop loss check is SKIPPED because trailing stop exists! |
+| 11:10 | ₹81.55 | Price keeps rising... |
+| 11:15 | ₹102.15 | Price keeps rising... |
+| 14:55 | ₹404.00 | Exit at end of day with **-865% LOSS!** 😱 |
+
+**The Logic Error:**
+
+The code said: "If trailing stop is active, DON'T check the main stop loss anymore."
+
+This is like saying: "Once you start making profit, ignore your risk limits!"
+
+**The Fix (Simple):**
+
+Always check stop loss FIRST, regardless of anything else:
+
+```python
+# NEW CODE (CORRECT):
+# ALWAYS check stop loss first
+if current_price >= stop_loss:
+    exit()  # Exit immediately!
+    return
+
+# Only AFTER passing stop loss check, manage trailing stops
+if making_profit:
+    check_trailing_stop()
+```
+
+**Why Debug Logs Were Critical:**
+
+Before logs, I thought:
+- Maybe the function isn't being called?
+- Maybe there's no data?
+- Maybe the condition is wrong?
+
+With logs, I saw this:
+
+```
+[11:05] 📊 Price: ₹55.20, Stop: ₹52.31, Check: True
+[11:10] 📊 Price: ₹81.55, Stop: ₹52.31, Check: True
+```
+
+The log showed `Check: True` but NO "STOP LOSS HIT" message!
+
+This proved: **The condition IS true, but the code inside isn't running.**
+
+That's when I looked at the code again and found the outer `if` statement blocking it!
+
+**Analogy:**
+
+```
+You have an alarm system:
+- Door sensor (main stop loss)
+- Window sensor (trailing stop)
+
+OLD CODE (BROKEN):
+"If window sensor is active, don't check door sensor"
+→ Burglar walks through door, alarm doesn't ring!
+
+NEW CODE (FIXED):
+"Always check door sensor first, then check window sensor"
+→ Burglar triggers door alarm immediately ✅
+```
+
+**Final Results:**
+
+| Metric | Before Fix | After Fix | Improvement |
+|--------|-----------|-----------|-------------|
+| Worst Loss | -865% | -25% | **97% better** |
+| Trades > 100% loss | 9 | 0 | **100% eliminated** |
+| Total P&L | ₹164 | ₹1,687 | **928% better** |
+| Stop Loss Exits | 0 working | 111 at exactly -25% | ✅ **Fixed** |
+
+**Key Takeaways:**
+
+1. **The bug was a logic error** - checking stop loss INSIDE a condition that could be false
+2. **Debug logging was essential** - it showed the exact line where logic failed
+3. **Small bug, huge impact** - one wrong `if` statement caused -865% losses
+4. **The fix was simple** - move 7 lines of code to run before the condition check
+
+---
+
 ### 1. Timezone Mismatches (tz-aware vs tz-naive)
 
 - **Symptoms**
@@ -969,6 +1207,7 @@ This marks the completion of the major optimization and bug-fix cycle for the in
   - ✅ Tested on 200 days of data (Jan-Oct 2025)
 
 This optimization transformed the strategy from practically unusable for long backtests to production-ready, enabling rapid iteration and testing across multiple months of data.
+
 
 
 

@@ -43,6 +43,16 @@ logs/*.log
 # Data files (keep DataDump folder out of git)
 DataDump/
 
+# Reports - exclude timestamped reports, keep latest
+reports/backtest_log_*.txt
+reports/trades_*.csv
+!reports/trades.csv
+!reports/backtest_metrics.json
+!reports/trade_summary.json
+!reports/trade_summary.txt
+!reports/equity_curve.png
+!reports/trade_analysis.png
+
 # Temporary files
 *.tmp
 *.bak

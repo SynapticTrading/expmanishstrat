@@ -220,13 +220,13 @@ class OIAnalyzer:
         # Use cached working data if available, else full dataset
         active_df = self._get_active_df()
 
-        # Find nearest timestamp (within same minute)
+        # Find nearest timestamp (within last 6 minutes to handle 5-min data)
         mask = (
             (active_df['strike'] == strike) &
             (active_df['option_type'] == option_type) &
             (active_df['expiry'] == expiry_date) &
             (active_df['datetime'] <= timestamp) &
-            (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=1))
+            (active_df['datetime'] >= timestamp - pd.Timedelta(minutes=6))
         )
 
         option_data = active_df[mask]
