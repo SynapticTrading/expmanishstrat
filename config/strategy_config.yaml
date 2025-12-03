@@ -48,7 +48,7 @@ risk_management:
 # Backtesting Configuration
 backtest:
   commission: 0.0005  # 0.05% commission per trade
-  slippage: 0.001  # 0.1% slippage - realistic execution
+  slippage: 0.0  # 0% slippage - removed to test strict 25% stop loss
   
 # Reporting
 reporting:
