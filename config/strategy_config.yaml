@@ -6,11 +6,11 @@ strategy:
   
 # Data Configuration
 data:
-  spot_price_file: "DataDump/spotprice_2025_5min.csv"
-  options_file: "DataDump/all_options_5min_2025_with_delta.csv"
+  spot_price_file: "DataDump/nifty_5min_2024.csv"
+  options_file: "DataDump/combined_options_5min_2024_with_delta.csv"
   timeframe: 5  # minutes - backtesting on 5-minute candles
-  start_date: "2025-01-01"
-  end_date: "2025-10-31"
+  start_date: "2024-01-01"
+  end_date: "2024-12-31"
   timezone: "Asia/Kolkata"  # IST timezone
 
 # Market Configuration
@@ -36,9 +36,9 @@ exit:
   
 # Position Sizing
 position_sizing:
-  initial_capital: 100000  # 1L starting capital
+  initial_capital: 100000  # 25K starting capital (Backtrader simulation capital)
   risk_per_trade_pct: 0.01  # Risk 1% of capital per trade
-  position_size: 1  # Start with 1 lot for evaluation
+  position_size: 1  # 1 unit in Backtrader (represents 1 lot in real trading)
   
 # Risk Management
 risk_management:

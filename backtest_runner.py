@@ -92,6 +92,7 @@ def run_backtest(config_path='config/strategy_config.yaml'):
         position_size=config['position_sizing']['position_size'],
         max_positions=config['risk_management']['max_positions'],
         avoid_monday_tuesday=config['risk_management']['avoid_monday_tuesday'],
+        lot_size=config['market']['option_lot_size'],
         options_df=options_df,
         oi_analyzer=oi_analyzer,
     )

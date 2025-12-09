@@ -27,21 +27,22 @@ class IntradayMomentumOI(bt.Strategy):
         ('entry_end_time', time(14, 30)),
         ('strikes_above_spot', 5),
         ('strikes_below_spot', 5),
-        
+
         # Exit parameters
         ('exit_start_time', time(14, 50)),
         ('exit_end_time', time(15, 0)),
         ('initial_stop_loss_pct', 0.25),
         ('profit_threshold', 1.10),
         ('trailing_stop_pct', 0.10),
-        
+
         # Position sizing
         ('position_size', 1),
         ('max_positions', 3),
-        
+        ('lot_size', 75),  # NIFTY lot size
+
         # Risk management
         ('avoid_monday_tuesday', False),
-        
+
         # Options data and analyzer
         ('options_df', None),
         ('oi_analyzer', None),
@@ -59,6 +60,7 @@ class IntradayMomentumOI(bt.Strategy):
         self.daily_direction = None  # 'CALL' or 'PUT'
         self.daily_strike = None
         self.daily_expiry = None
+        self.daily_trade_taken = False  # Flag to restrict to 1 trade per day
 
         # Performance optimization: cache filtered options data for current day
         self.daily_options_cache = None
@@ -81,7 +83,8 @@ class IntradayMomentumOI(bt.Strategy):
         with open(self.trade_log_file, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=[
                 'entry_time', 'exit_time', 'strike', 'option_type', 'expiry',
-                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct'
+                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct',
+                'vwap_at_entry', 'vwap_at_exit', 'oi_at_entry', 'oi_change_at_entry', 'oi_at_exit'
             ])
             writer.writeheader()
 
@@ -121,16 +124,42 @@ class IntradayMomentumOI(bt.Strategy):
                     timestamp=pd.Timestamp(dt),
                     expiry_date=self.daily_expiry
                 )
-                
+
                 if option_data is not None:
                     option_entry_price = option_data['close']
-                    
+
+                    # Calculate VWAP at entry
+                    vwap_at_entry = self.calculate_vwap_for_option(
+                        strike=self.daily_strike,
+                        option_type=option_type,
+                        timestamp=dt,
+                        expiry_date=self.daily_expiry
+                    )
+
+                    # Get OI and OI change at entry
+                    current_oi, oi_change, oi_change_pct = self.params.oi_analyzer.calculate_oi_change(
+                        strike=self.daily_strike,
+                        option_type=option_type,
+                        timestamp=pd.Timestamp(dt),
+                        expiry_date=self.daily_expiry
+                    )
+
                     self.log(f'🔵 BUY OPTION EXECUTED: {option_type} {self.daily_strike} @ ₹{option_entry_price:.2f} '
-                            f'(Expiry: {self.daily_expiry.date()}, Lot size: {order.executed.size})')
+                            f'(Expiry: {self.daily_expiry.date()}, 1 lot = {self.params.lot_size} qty)')
+
+                    # Log entry data for verification
+                    vwap_str = f'{vwap_at_entry:.2f}' if vwap_at_entry is not None else 'N/A'
+                    oi_str = f'{current_oi:.0f}' if current_oi is not None else 'N/A'
+                    oi_chg_str = f'{oi_change:.0f}' if oi_change is not None else 'N/A'
+                    oi_pct_str = f'{oi_change_pct:.2f}%' if oi_change_pct is not None else 'N/A'
+                    self.log(f'   📊 ENTRY DATA: VWAP={vwap_str}, OI={oi_str}, OI Change={oi_chg_str} ({oi_pct_str})')
 
                     # Reset pending flags
                     self.pending_exit = False
                     self.pending_entry = False
+
+                    # Mark that we took a trade today (1 trade per day limit)
+                    self.daily_trade_taken = True
 
                     # Store position info with OPTION details - use current_position for easy access
                     self.current_position = {
@@ -143,6 +172,9 @@ class IntradayMomentumOI(bt.Strategy):
                         'stop_loss': option_entry_price * (1 - self.params.initial_stop_loss_pct),  # BELOW entry for longs
                         'trailing_stop': None,
                         'highest_price': option_entry_price,  # Track highest for longs
+                        'vwap_at_entry': vwap_at_entry,
+                        'oi_at_entry': current_oi,
+                        'oi_change_at_entry': oi_change,
                     }
                     self.positions_dict[order.ref] = self.current_position
                 else:
@@ -172,13 +204,35 @@ class IntradayMomentumOI(bt.Strategy):
                         else:
                             option_exit_price = option_data['close']
 
+                        # Calculate VWAP at exit
+                        vwap_at_exit = self.calculate_vwap_for_option(
+                            strike=pos_info['strike'],
+                            option_type=pos_info['option_type'],
+                            timestamp=dt,
+                            expiry_date=pos_info['expiry']
+                        )
+
+                        # Get OI at exit
+                        current_oi_exit, _, _ = self.params.oi_analyzer.calculate_oi_change(
+                            strike=pos_info['strike'],
+                            option_type=pos_info['option_type'],
+                            timestamp=pd.Timestamp(dt),
+                            expiry_date=pos_info['expiry']
+                        )
+
                         # Calculate P&L based on OPTION prices
                         # For long positions: profit when price goes up, loss when price goes down
-                        pnl = (option_exit_price - pos_info['entry_price']) * abs(order.executed.size)
+                        # Multiply by lot_size for REALISTIC P&L (what you'd actually make/lose in real trading)
+                        pnl = (option_exit_price - pos_info['entry_price']) * abs(order.executed.size) * self.params.lot_size
                         pnl_pct = ((option_exit_price - pos_info['entry_price']) / pos_info['entry_price']) * 100
-                        
+
                         self.log(f'🔴 SELL OPTION EXECUTED: {pos_info["option_type"]} {pos_info["strike"]} @ ₹{option_exit_price:.2f} '
                                 f'| Entry: ₹{pos_info["entry_price"]:.2f} | P&L: ₹{pnl:.2f} ({pnl_pct:+.2f}%)')
+
+                        # Log exit data for verification
+                        vwap_exit_str = f'{vwap_at_exit:.2f}' if vwap_at_exit is not None else 'N/A'
+                        oi_exit_str = f'{current_oi_exit:.0f}' if current_oi_exit is not None else 'N/A'
+                        self.log(f'   📊 EXIT DATA: VWAP={vwap_exit_str}, OI={oi_exit_str}')
 
                         trade_record = {
                             'entry_time': pos_info['entry_time'],
@@ -191,6 +245,11 @@ class IntradayMomentumOI(bt.Strategy):
                             'size': order.executed.size,
                             'pnl': pnl,
                             'pnl_pct': pnl_pct,
+                            'vwap_at_entry': pos_info.get('vwap_at_entry'),
+                            'vwap_at_exit': vwap_at_exit,
+                            'oi_at_entry': pos_info.get('oi_at_entry'),
+                            'oi_change_at_entry': pos_info.get('oi_change_at_entry'),
+                            'oi_at_exit': current_oi_exit,
                         }
                         self.trade_log.append(trade_record)
 
@@ -198,7 +257,8 @@ class IntradayMomentumOI(bt.Strategy):
                         with open(self.trade_log_file, 'a', newline='') as f:
                             writer = csv.DictWriter(f, fieldnames=[
                                 'entry_time', 'exit_time', 'strike', 'option_type', 'expiry',
-                                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct'
+                                'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct',
+                                'vwap_at_entry', 'vwap_at_exit', 'oi_at_entry', 'oi_change_at_entry', 'oi_at_exit'
                             ])
                             writer.writerow(trade_record)
 
@@ -240,6 +300,41 @@ class IntradayMomentumOI(bt.Strategy):
     def get_spot_price(self):
         """Get current spot price from data feed"""
         return self.datas[0].close[0]
+
+    def calculate_vwap_for_option(self, strike, option_type, timestamp, expiry_date):
+        """
+        Calculate VWAP for a specific option at a given timestamp
+        Returns VWAP value or None if insufficient data
+        """
+        dt_ts = pd.Timestamp(timestamp)
+        current_trade_date = dt_ts.date()
+
+        # Check if we have cached data for today
+        if self.daily_options_cache is None or self.cache_date != current_trade_date:
+            return None
+
+        # Get all history from market open to current time for this strike
+        mask = (
+            (self.daily_options_cache['strike'] == strike) &
+            (self.daily_options_cache['option_type'] == option_type) &
+            (self.daily_options_cache['datetime'] <= dt_ts)
+        )
+        option_history = self.daily_options_cache[mask].copy()
+
+        if len(option_history) < 2:
+            return None
+
+        # Calculate VWAP
+        option_history['typical_price'] = (
+            option_history['high'] + option_history['low'] + option_history['close']
+        ) / 3.0
+        option_history['volume_filled'] = option_history['volume'].replace(0, 1)
+
+        total_tpv = (option_history['typical_price'] * option_history['volume_filled']).sum()
+        total_volume = option_history['volume_filled'].sum()
+
+        vwap = total_tpv / total_volume if total_volume > 0 else None
+        return vwap
     
     def analyze_market(self, dt):
         """
@@ -324,6 +419,10 @@ class IntradayMomentumOI(bt.Strategy):
             # Only log once per minute to avoid spam
             if dt.minute % 10 == 0:
                 self.log(f'No daily analysis available yet (Dir={self.daily_direction}, Expiry={self.daily_expiry})')
+            return None
+
+        # Check if we already took a trade today (1 trade per day limit)
+        if self.daily_trade_taken:
             return None
 
         # Check if we have room for more positions (using Backtrader's built-in position tracking)
@@ -577,6 +676,7 @@ class IntradayMomentumOI(bt.Strategy):
             self.daily_expiry = None
             self.pending_exit = False  # Reset pending exit for new day
             self.pending_entry = False  # Reset pending entry for new day
+            self.daily_trade_taken = False  # Reset trade counter for new day
 
             # CRITICAL: Clear OI analyzer cache BEFORE analyze_market()
             # analyze_market() needs to query full dataset to find new expiry
@@ -630,7 +730,7 @@ class IntradayMomentumOI(bt.Strategy):
         if self.is_trading_time(dt):
             entry_price = self.check_entry_conditions(dt)
             if entry_price is not None:
-                # Place buy order
+                # Place buy order - 1 unit in Backtrader represents 1 lot (75 qty) in real trading
                 self.log(f'📈 PLACING BUY ORDER: size={self.params.position_size}, expected_price={entry_price:.2f}')
                 self.buy(size=self.params.position_size)
                 self.pending_entry = True  # Mark that we have a pending entry order
