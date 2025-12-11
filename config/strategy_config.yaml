@@ -33,6 +33,8 @@ exit:
   initial_stop_loss_pct: 0.25  # 25% stop loss initially
   profit_threshold: 1.10  # 110% of buy price (10% profit)
   trailing_stop_pct: 0.10  # Trail by 10% after profit threshold reached
+  vwap_stop_pct: 0.05  # Exit if price is >5% below VWAP (ONLY when trade is in loss)
+  oi_increase_stop_pct: 0.10  # Exit if OI increases >10% from entry (ONLY when trade is in loss)
   
 # Position Sizing
 position_sizing:
