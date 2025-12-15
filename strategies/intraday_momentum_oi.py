@@ -708,17 +708,31 @@ class IntradayMomentumOI(bt.Strategy):
         if current_price > pos_info['highest_price']:
             pos_info['highest_price'] = current_price
 
-        # Check if profit threshold reached (for longs: profit when price rises)
+        # Calculate current profit percentage
         profit_pct = (current_price - entry_price) / entry_price
-        if profit_pct >= (self.params.profit_threshold - 1):
+
+        # Activate trailing stop if profit threshold reached AND not already active
+        if pos_info['trailing_stop'] is None and profit_pct >= (self.params.profit_threshold - 1):
             # Activate trailing stop (for longs: lock in profit as price goes up)
             trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
             pos_info['trailing_stop'] = trailing_stop
+            self.log(f'✅ TRAILING STOP ACTIVATED: {pos_info["option_type"]} {pos_info["strike"]} - '
+                    f'Stop: ₹{trailing_stop:.2f}, Highest: ₹{pos_info["highest_price"]:.2f}')
 
-            # Check trailing stop (for longs: exit if price drops back down)
-            if current_price <= trailing_stop:
+        # If trailing stop is active, update it based on new highest price
+        if pos_info['trailing_stop'] is not None:
+            # Update trailing stop to new highest price (moves up only, never down)
+            new_trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
+            if new_trailing_stop > pos_info['trailing_stop']:
+                old_stop = pos_info['trailing_stop']
+                pos_info['trailing_stop'] = new_trailing_stop
+                self.log(f'⬆️  TRAILING STOP UPDATED: ₹{old_stop:.2f} → ₹{new_trailing_stop:.2f}')
+
+            # Check if trailing stop was hit (independently of profit percentage)
+            if current_price <= pos_info['trailing_stop']:
                 self.log(f'📉 TRAILING STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
-                        f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{trailing_stop:.2f}')
+                        f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{pos_info["trailing_stop"]:.2f}, '
+                        f'Peak: ₹{pos_info["highest_price"]:.2f}')
                 # Store the theoretical exit price for accurate P&L calculation
                 pos_info['trailing_stop_triggered_price'] = current_price
                 self.close()
