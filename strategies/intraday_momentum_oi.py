@@ -34,6 +34,8 @@ class IntradayMomentumOI(bt.Strategy):
         ('initial_stop_loss_pct', 0.25),
         ('profit_threshold', 1.10),
         ('trailing_stop_pct', 0.10),
+        ('vwap_stop_pct', 0.05),  # Exit if price is more than 5% below VWAP
+        ('oi_increase_stop_pct', 0.10),  # Exit if OI increases more than 10% from entry
 
         # Position sizing
         ('position_size', 1),
@@ -54,6 +56,13 @@ class IntradayMomentumOI(bt.Strategy):
         self.current_position = None  # Current open position info
         self.pending_exit = False  # Flag to prevent repeated exit signals
         self.pending_entry = False  # Flag to prevent multiple entry orders
+
+        # Store entry signal data for immediate execution (not next candle)
+        self.pending_entry_price = None
+        self.pending_entry_timestamp = None
+        self.pending_entry_vwap = None
+        self.pending_entry_oi = None
+        self.pending_entry_oi_change = None
 
         # Track daily state
         self.current_date = None
@@ -116,33 +125,19 @@ class IntradayMomentumOI(bt.Strategy):
             dt = self.datas[0].datetime.datetime(0)
             
             if order.isbuy():
-                # Get actual option price at entry
+                # Use saved entry price from signal time (for immediate execution)
+                # This ensures entry happens at the price when conditions were met, not next candle
                 option_type = 'CE' if self.daily_direction == 'CALL' else 'PE'
-                option_data = self.params.oi_analyzer.get_option_price_data(
-                    strike=self.daily_strike,
-                    option_type=option_type,
-                    timestamp=pd.Timestamp(dt),
-                    expiry_date=self.daily_expiry
-                )
 
-                if option_data is not None:
-                    option_entry_price = option_data['close']
+                if self.pending_entry_price is not None:
+                    # Use saved data from signal time (for immediate execution, not next candle)
+                    option_entry_price = self.pending_entry_price
+                    vwap_at_entry = self.pending_entry_vwap
+                    current_oi = self.pending_entry_oi
+                    oi_change = self.pending_entry_oi_change
 
-                    # Calculate VWAP at entry
-                    vwap_at_entry = self.calculate_vwap_for_option(
-                        strike=self.daily_strike,
-                        option_type=option_type,
-                        timestamp=dt,
-                        expiry_date=self.daily_expiry
-                    )
-
-                    # Get OI and OI change at entry
-                    current_oi, oi_change, oi_change_pct = self.params.oi_analyzer.calculate_oi_change(
-                        strike=self.daily_strike,
-                        option_type=option_type,
-                        timestamp=pd.Timestamp(dt),
-                        expiry_date=self.daily_expiry
-                    )
+                    # Calculate OI change percentage for logging
+                    oi_change_pct = (oi_change / current_oi) * 100 if current_oi and current_oi > 0 else 0
 
                     self.log(f'🔵 BUY OPTION EXECUTED: {option_type} {self.daily_strike} @ ₹{option_entry_price:.2f} '
                             f'(Expiry: {self.daily_expiry.date()}, 1 lot = {self.params.lot_size} qty)')
@@ -154,9 +149,14 @@ class IntradayMomentumOI(bt.Strategy):
                     oi_pct_str = f'{oi_change_pct:.2f}%' if oi_change_pct is not None else 'N/A'
                     self.log(f'   📊 ENTRY DATA: VWAP={vwap_str}, OI={oi_str}, OI Change={oi_chg_str} ({oi_pct_str})')
 
-                    # Reset pending flags
+                    # Reset pending flags and clear all saved entry data
                     self.pending_exit = False
                     self.pending_entry = False
+                    self.pending_entry_price = None
+                    self.pending_entry_timestamp = None
+                    self.pending_entry_vwap = None
+                    self.pending_entry_oi = None
+                    self.pending_entry_oi_change = None
 
                     # Mark that we took a trade today (1 trade per day limit)
                     self.daily_trade_taken = True
@@ -178,7 +178,7 @@ class IntradayMomentumOI(bt.Strategy):
                     }
                     self.positions_dict[order.ref] = self.current_position
                 else:
-                    self.log(f'⚠️  ERROR: Could not get option price at entry!')
+                    self.log(f'⚠️  ERROR: No saved entry price found!')
                     
             else:
                 # Get actual option price at exit
@@ -201,6 +201,12 @@ class IntradayMomentumOI(bt.Strategy):
                         elif 'trailing_stop_triggered_price' in pos_info:
                             # Use trailing stop price
                             option_exit_price = pos_info['trailing_stop']
+                        elif 'vwap_stop_triggered_price' in pos_info:
+                            # Use actual price when VWAP stop was triggered
+                            option_exit_price = pos_info['vwap_stop_triggered_price']
+                        elif 'oi_stop_triggered_price' in pos_info:
+                            # Use actual price when OI stop was triggered
+                            option_exit_price = pos_info['oi_stop_triggered_price']
                         else:
                             option_exit_price = option_data['close']
 
@@ -276,8 +282,11 @@ class IntradayMomentumOI(bt.Strategy):
         """Handle trade notifications"""
         if not trade.isclosed:
             return
-        
-        self.log(f'TRADE PROFIT: Gross {trade.pnl:.2f}, Net {trade.pnlcomm:.2f}')
+
+        # NOTE: trade.pnl is based on SPOT prices (data feed), NOT option prices
+        # We calculate actual option P&L in notify_order() and log it there
+        # This notify_trade callback is kept for compatibility but not used for logging
+        pass
     
     def should_skip_day(self, dt):
         """Check if we should skip trading on this day"""
@@ -606,8 +615,16 @@ class IntradayMomentumOI(bt.Strategy):
         if option_price > vwap:
             self.log(f'🎯 ENTRY SIGNAL: {option_type} {self.daily_strike} - Price: {option_price:.2f}, '
                     f'VWAP: {vwap:.2f}, OI Change: {oi_change:.0f} ({oi_change_pct:.2f}%)')
+
+            # Save all signal data for immediate execution (not next candle)
+            self.pending_entry_price = option_price
+            self.pending_entry_timestamp = dt
+            self.pending_entry_vwap = vwap
+            self.pending_entry_oi = current_oi
+            self.pending_entry_oi_change = oi_change
+
             return option_price
-        
+
         return None
     
     def manage_positions(self, dt):
@@ -642,21 +659,80 @@ class IntradayMomentumOI(bt.Strategy):
             self.pending_exit = True  # Mark that we have a pending exit
             return  # Exit immediately, don't process more positions
 
+        # Calculate current P&L to check if we're in a losing position
+        pnl = current_price - entry_price
+        is_losing = pnl < 0
+
+        # Check VWAP-based stop (ONLY when PnL is negative - trade is in a loss)
+        if is_losing:
+            current_vwap = self.calculate_vwap_for_option(
+                strike=pos_info['strike'],
+                option_type=pos_info['option_type'],
+                timestamp=dt,
+                expiry_date=pos_info['expiry']
+            )
+
+            if current_vwap is not None:
+                vwap_threshold = current_vwap * (1 - self.params.vwap_stop_pct)
+                if current_price < vwap_threshold:
+                    vwap_diff_pct = ((current_price - current_vwap) / current_vwap) * 100
+                    pnl_pct = (pnl / entry_price) * 100
+                    self.log(f'📊 VWAP STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
+                            f'Price: ₹{current_price:.2f}, VWAP: ₹{current_vwap:.2f} ({vwap_diff_pct:.1f}% below), P&L: {pnl_pct:.1f}%')
+                    pos_info['vwap_stop_triggered_price'] = current_price
+                    self.close()
+                    self.pending_exit = True
+                    return
+
+        # Check OI-based stop (ONLY when PnL is negative - trade is in a loss)
+        if is_losing:
+            current_oi, oi_change, oi_change_pct = self.params.oi_analyzer.calculate_oi_change(
+                strike=pos_info['strike'],
+                option_type=pos_info['option_type'],
+                timestamp=pd.Timestamp(dt),
+                expiry_date=pos_info['expiry']
+            )
+
+            if current_oi is not None and pos_info.get('oi_at_entry') is not None:
+                oi_increase_pct = ((current_oi - pos_info['oi_at_entry']) / pos_info['oi_at_entry']) * 100
+                if oi_increase_pct > (self.params.oi_increase_stop_pct * 100):
+                    pnl_pct = (pnl / entry_price) * 100
+                    self.log(f'📈 OI INCREASE STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
+                            f'Entry OI: {pos_info["oi_at_entry"]:.0f}, Current OI: {current_oi:.0f} (+{oi_increase_pct:.1f}%), P&L: {pnl_pct:.1f}%')
+                    pos_info['oi_stop_triggered_price'] = current_price
+                    self.close()
+                    self.pending_exit = True
+                    return
+
         # Update highest price (for long positions, profit increases as price increases)
         if current_price > pos_info['highest_price']:
             pos_info['highest_price'] = current_price
 
-        # Check if profit threshold reached (for longs: profit when price rises)
+        # Calculate current profit percentage
         profit_pct = (current_price - entry_price) / entry_price
-        if profit_pct >= (self.params.profit_threshold - 1):
+
+        # Activate trailing stop if profit threshold reached AND not already active
+        if pos_info['trailing_stop'] is None and profit_pct >= (self.params.profit_threshold - 1):
             # Activate trailing stop (for longs: lock in profit as price goes up)
             trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
             pos_info['trailing_stop'] = trailing_stop
+            self.log(f'✅ TRAILING STOP ACTIVATED: {pos_info["option_type"]} {pos_info["strike"]} - '
+                    f'Stop: ₹{trailing_stop:.2f}, Highest: ₹{pos_info["highest_price"]:.2f}')
 
-            # Check trailing stop (for longs: exit if price drops back down)
-            if current_price <= trailing_stop:
+        # If trailing stop is active, update it based on new highest price
+        if pos_info['trailing_stop'] is not None:
+            # Update trailing stop to new highest price (moves up only, never down)
+            new_trailing_stop = pos_info['highest_price'] * (1 - self.params.trailing_stop_pct)
+            if new_trailing_stop > pos_info['trailing_stop']:
+                old_stop = pos_info['trailing_stop']
+                pos_info['trailing_stop'] = new_trailing_stop
+                self.log(f'⬆️  TRAILING STOP UPDATED: ₹{old_stop:.2f} → ₹{new_trailing_stop:.2f}')
+
+            # Check if trailing stop was hit (independently of profit percentage)
+            if current_price <= pos_info['trailing_stop']:
                 self.log(f'📉 TRAILING STOP HIT: {pos_info["option_type"]} {pos_info["strike"]} - '
-                        f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{trailing_stop:.2f}')
+                        f'Current: ₹{current_price:.2f}, Trailing Stop: ₹{pos_info["trailing_stop"]:.2f}, '
+                        f'Peak: ₹{pos_info["highest_price"]:.2f}')
                 # Store the theoretical exit price for accurate P&L calculation
                 pos_info['trailing_stop_triggered_price'] = current_price
                 self.close()
@@ -677,6 +753,13 @@ class IntradayMomentumOI(bt.Strategy):
             self.pending_exit = False  # Reset pending exit for new day
             self.pending_entry = False  # Reset pending entry for new day
             self.daily_trade_taken = False  # Reset trade counter for new day
+
+            # Clear any pending entry signal data from previous day
+            self.pending_entry_price = None
+            self.pending_entry_timestamp = None
+            self.pending_entry_vwap = None
+            self.pending_entry_oi = None
+            self.pending_entry_oi_change = None
 
             # CRITICAL: Clear OI analyzer cache BEFORE analyze_market()
             # analyze_market() needs to query full dataset to find new expiry
@@ -731,6 +814,7 @@ class IntradayMomentumOI(bt.Strategy):
             entry_price = self.check_entry_conditions(dt)
             if entry_price is not None:
                 # Place buy order - 1 unit in Backtrader represents 1 lot (75 qty) in real trading
+                # Note: check_entry_conditions() already saved all signal data for immediate execution
                 self.log(f'📈 PLACING BUY ORDER: size={self.params.position_size}, expected_price={entry_price:.2f}')
                 self.buy(size=self.params.position_size)
                 self.pending_entry = True  # Mark that we have a pending entry order

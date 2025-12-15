@@ -89,6 +89,8 @@ def run_backtest(config_path='config/strategy_config.yaml'):
         initial_stop_loss_pct=config['exit']['initial_stop_loss_pct'],
         profit_threshold=config['exit']['profit_threshold'],
         trailing_stop_pct=config['exit']['trailing_stop_pct'],
+        vwap_stop_pct=config['exit']['vwap_stop_pct'],
+        oi_increase_stop_pct=config['exit']['oi_increase_stop_pct'],
         position_size=config['position_sizing']['position_size'],
         max_positions=config['risk_management']['max_positions'],
         avoid_monday_tuesday=config['risk_management']['avoid_monday_tuesday'],
@@ -100,7 +102,7 @@ def run_backtest(config_path='config/strategy_config.yaml'):
     # Set broker parameters
     initial_capital = config['position_sizing']['initial_capital']
     cerebro.broker.setcash(initial_capital)
-    
+
     # Set commission
     cerebro.broker.setcommission(commission=config['backtest']['commission'])
     
