@@ -1,0 +1,37 @@
+# Credentials and sensitive data
+credentials.json
+credentials.txt
+config/credentials_zerodha.txt
+config/credentials_angelone.txt
+config/config.yaml
+*.env
+.env
+
+# State and runtime data
+state/
+*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

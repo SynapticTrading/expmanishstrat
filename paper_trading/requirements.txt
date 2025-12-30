@@ -1,0 +1,21 @@
+# Paper Trading Dependencies
+
+# Zerodha Kite Connect API (Primary)
+kiteconnect
+
+# AngelOne SmartAPI (Alternative - if using AngelOne)
+smartapi-python
+
+# TOTP for 2-factor authentication
+pyotp
+
+# Timezone support
+pytz
+
+# Dependencies
+logzero
+websocket-client
+requests
+pandas
+numpy
+pyyaml
