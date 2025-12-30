@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2025-12-29 14:55:27,2025-12-29 14:55:27,25900.0,PUT,2025-12-30,33.35,33.35,75,0.0,0.0,31.456639769091268,32.09463765983895,15052500,-4.218764913620311,15052500,EOD Exit

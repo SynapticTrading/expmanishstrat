@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-12-29T15:30:05.009435+05:30",
+  "date": "2025-12-29",
+  "session_id": "SESSION_20251229_0930",
+  "mode": "paper",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "PAPER_20251229_001",
+      "entry_time": "2025-12-29T10:45:00.123456+05:30",
+      "exit_time": "2025-12-29T14:25:30.987654+05:30",
+      "entry_price": 18.5,
+      "exit_price": 23.2,
+      "pnl": 352.5,
+      "exit_reason": "Trailing Stop (10%)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 23850.75,
+    "trading_strike": 23900.0,
+    "direction": "PE",
+    "max_call_oi_strike": 24000.0,
+    "max_put_oi_strike": 23900.0,
+    "last_oi_check": "2025-12-29T14:25:00.000000+05:30",
+    "vwap_tracking": {
+      "23900.0PE": {
+        "sum_typical_price_volume": 125000.5,
+        "sum_volume": 6250,
+        "current_vwap": 20.0,
+        "last_update": "2025-12-29T14:25:00.000000+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 352.5,
+    "win_count": 1,
+    "loss_count": 0,
+    "win_rate": 100.0
+  },
+  "portfolio": {
+    "initial_capital": 100000,
+    "current_cash": 100352.5,
+    "positions_value": 0.0,
+    "total_value": 100352.5,
+    "total_return_pct": 0.3525
+  },
+  "api_stats": {
+    "calls_5min_loop": 65,
+    "calls_1min_ltp": 28,
+    "total_calls_today": 93,
+    "last_api_call": "2025-12-29T15:30:00.000000+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2025-12-29T15:30:05.009405+05:30",
+    "broker_connected": true,
+    "data_feed_status": "STOPPED",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false
+  }
+}

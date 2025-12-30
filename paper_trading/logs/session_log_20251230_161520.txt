@@ -1,0 +1,84 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2025-12-30 16:15:21.064975+05:30] Checking for previous session...
+[2025-12-30 16:15:21.065391+05:30] ✓ State loaded from paper_trading/state/trading_state_20251230.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2025-12-30T15:30:00.000000+05:30
+Downtime: ~45 minutes
+Active Positions: 0
+Daily P&L: ₹127.50
+================================================================================
+
+Resume from crash? (y/n): 
+[2025-12-30 16:15:30.225002+05:30] Resuming session...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2025-12-30T15:30:00.000000+05:30
+Recovery Time: 2025-12-30 16:15:30.225222+05:30
+Downtime: 45 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+
+[2025-12-30 16:15:30.226308+05:30] Connecting to Zerodha...
+[2025-12-30 16:15:30.226374] Connecting to Zerodha...
+[2025-12-30 16:15:30.424811] Generated TOTP: 406649
+[2025-12-30 16:15:30.536454] ✓ Request token extracted from redirect
+[2025-12-30 16:15:30.536485] Request token obtained: XpF6syQLxCpchCZSaNi1...
+[2025-12-30 16:15:30.606016] ✓ Connection successful!
+[2025-12-30 16:15:30.606036] Access Token: 6ssZDoJd7jc5ifGPAK3N...
+[2025-12-30 16:15:30.606062] Zerodha data feed initialized
+[2025-12-30 16:15:30.606070+05:30] ✓ Connected to Zerodha
+
+[2025-12-30 16:15:30.606092+05:30] Resuming from previous session...
+[2025-12-30 16:15:30.606121+05:30] Loading instruments...
+[2025-12-30 16:15:30.606131] Loading instruments...
+[2025-12-30 16:15:30.606136] Fetching instruments for NFO...
+[2025-12-30 16:15:31.725949] ✓ Retrieved 38222 instruments
+[2025-12-30 16:15:31.731789] Fetching instruments for NSE...
+[2025-12-30 16:15:31.830894] ✓ Retrieved 9057 instruments
+[2025-12-30 16:15:31.833176] ✓ Nifty 50 token: 256265
+[2025-12-30 16:15:31.833193] ✓ Instruments loaded
+[2025-12-30 16:15:31.833201+05:30] Initializing paper broker...
+[2025-12-30 16:15:31.833677] Paper Broker initialized with capital: ₹100,127.50
+[2025-12-30 16:15:31.833689] Daily trade log: paper_trading/logs/trades_20251230_161531.csv
+[2025-12-30 16:15:31.833693] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2025-12-30 16:15:31.833701+05:30] Initializing OI analyzer...
+[2025-12-30 16:15:31.834004+05:30] Initializing strategy...
+[2025-12-30 16:15:31.834031] Strategy initialized
+  Entry: 09:30:00 - 15:29:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2025-12-30 16:15:31.834058+05:30] Restoring strategy state...
+  Restored direction: PUT
+  Restored strike: 25900.0
+[2025-12-30 16:15:31.834376+05:30] ✓ All components initialized
+
+================================================================================
+[2025-12-30 16:15:31.834390+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2025-12-30 16:15:31.834412+05:30] Market closed, waiting...

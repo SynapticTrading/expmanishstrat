@@ -1,0 +1,683 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2025-12-29 13:34:23.104140+05:30] Checking for previous session...
+[2025-12-29 13:34:23.104302+05:30] ✓ State loaded from paper_trading/state/trading_state_20251229.json
+[2025-12-29 13:34:23.104328+05:30] Previous state found but no active positions - starting fresh
+
+[2025-12-29 13:34:23.104341+05:30] Connecting to Zerodha...
+[2025-12-29 13:34:23.104357] Connecting to Zerodha...
+[2025-12-29 13:34:23.293818] Generated TOTP: 387435
+[2025-12-29 13:34:23.383640] ✓ Request token extracted from redirect
+[2025-12-29 13:34:23.383712] Request token obtained: H10vHuspILhJB0Ye3jL3...
+[2025-12-29 13:34:23.444391] ✓ Connection successful!
+[2025-12-29 13:34:23.444471] Access Token: Fyj6Os3a0vHmvzsHAJa1...
+[2025-12-29 13:34:23.444533] Zerodha data feed initialized
+[2025-12-29 13:34:23.444561+05:30] ✓ Connected to Zerodha
+
+[2025-12-29 13:34:23.444614+05:30] Initializing new session...
+[2025-12-29 13:34:23.445274+05:30] Session initialized: SESSION_20251229_1334
+[2025-12-29 13:34:23.445299+05:30] State file: paper_trading/state/trading_state_20251229.json
+[2025-12-29 13:34:23.445344+05:30] Loading instruments...
+[2025-12-29 13:34:23.445366] Loading instruments...
+[2025-12-29 13:34:23.445383] Fetching instruments for NFO...
+[2025-12-29 13:34:24.537748] ✓ Retrieved 38153 instruments
+[2025-12-29 13:34:24.543482] Fetching instruments for NSE...
+[2025-12-29 13:34:24.641126] ✓ Retrieved 9078 instruments
+[2025-12-29 13:34:24.643904] ✓ Nifty 50 token: 256265
+[2025-12-29 13:34:24.643949] ✓ Instruments loaded
+[2025-12-29 13:34:24.643965+05:30] Initializing paper broker...
+[2025-12-29 13:34:24.644437] Paper Broker initialized with capital: ₹100,000.00
+[2025-12-29 13:34:24.644458] Trade log: paper_trading/logs/trades_20251229_133424.csv
+[2025-12-29 13:34:24.644474+05:30] Initializing OI analyzer...
+[2025-12-29 13:34:24.644818+05:30] Initializing strategy...
+[2025-12-29 13:34:24.644853] Strategy initialized
+  Entry: 09:30:00 - 14:30:00
+  Exit: 14:50:00 - 15:00:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2025-12-29 13:34:24.645147+05:30] ✓ All components initialized
+
+================================================================================
+[2025-12-29 13:34:24.645173+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+
+[2025-12-29 13:34:24.645317+05:30] ✓ Exit monitor loop started (1-min LTP)[2025-12-29 13:34:24.645342+05:30] ✓ Exit monitor loop started
+
+[2025-12-29 13:34:24.645538+05:30] ✓ Strategy loop started
+
+================================================================================
+[2025-12-29 13:34:24.645551+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:34:24.645551+05:30] Nifty Spot: 25946.95
+[2025-12-29 13:34:24.739771] Fetching quotes for 22 options...
+[2025-12-29 13:34:24.789523] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2025-12-29 13:34:24.645551+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2025-12-29 13:34:24.645551+05:30] Determining direction using CURRENT OI data...
+[2025-12-29 13:34:24.645551+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+
+================================================================================
+[2025-12-29 13:34:24.645551+05:30] NEW TRADING DAY: 2025-12-29
+================================================================================
+[2025-12-29 13:34:24.645551+05:30] Max Call OI: 35,123,625 @ 26000.0, Max Put OI: 17,592,275 @ 26000.0
+[2025-12-29 13:34:24.645551+05:30] Direction determined: PUT (Call dist: 53.05, Put dist: -53.05)
+[2025-12-29 13:34:24.645551+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25900.0, Expiry=2025-12-30, Spot=25946.95
+[2025-12-29 13:34:24.645551+05:30] 🔄 Reset VWAP running totals for new day: 2025-12-29
+[2025-12-29 13:34:24.645551+05:30] 🎯 Initialized VWAP for PUT 25900.0: 52 bars from 9:15 AM
+[2025-12-29 13:34:24.645551+05:30] Checking entry: PUT 25900.0, Expiry=2025-12-30
+[2025-12-29 13:34:24.645551+05:30] PUT 25900.0: OI=15,704,925, Change=0 (+0.00%) - BUILDING
+[2025-12-29 13:34:24.645551+05:30] PUT 25900.0: Price=₹25.05, VWAP=₹25.05 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[13:34:24] Waiting 35s for next candle at 13:35:00
+
+================================================================================
+[2025-12-29 13:35:00.005001+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:35:00.005001+05:30] Nifty Spot: 25945.90
+[2025-12-29 13:35:00.052501] Fetching quotes for 22 options...
+[2025-12-29 13:35:00.089771] ✓ Retrieved 22 option quotes
+[2025-12-29 13:35:00.005001+05:30] Checking entry: PUT 25900.0, Expiry=2025-12-30
+[2025-12-29 13:35:00.005001+05:30] PUT 25900.0: OI=15,704,925, Change=0 (+0.00%) - BUILDING
+[2025-12-29 13:35:00.005001+05:30] PUT 25900.0: Price=₹25.10, VWAP=₹25.08 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[13:35:00] Waiting 300s for next candle at 13:40:00
+
+================================================================================
+[2025-12-29 13:40:00.004468+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:40:30.012268] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 13:40:30.012411] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 13:40:00.004468+05:30] Nifty Spot: 25935.55
+[2025-12-29 13:40:31.113186] Fetching quotes for 22 options...
+[2025-12-29 13:40:31.155522] ✓ Retrieved 22 option quotes
+[2025-12-29 13:40:00.004468+05:30] Checking entry: PUT 25900.0, Expiry=2025-12-30
+[2025-12-29 13:40:00.004468+05:30] PUT 25900.0: OI=14,440,350, Change=-1,264,575 (-8.05%) - UNWINDING ✓
+[2025-12-29 13:40:00.004468+05:30] PUT 25900.0: Price=₹36.80, VWAP=₹29.19 - ABOVE ✓
+[2025-12-29 13:40:00.004468+05:30] 🎯 ENTRY SIGNAL: PUT 25900.0 - Price: 36.80, VWAP: 29.19, OI Change: -1,264,575 (-8.05%)
+[2025-12-29 13:40:00.004468+05:30] 📈 PLACING BUY ORDER: size=1, expected_price=36.80
+[2025-12-29 13:40:31.156663] ✓ BUY ORDER EXECUTED
+  Strike: 25900.0 PUT
+  Expiry: 2025-12-30
+  Entry Price: ₹36.80
+  Size: 75
+  Cost: ₹2,760.00
+  VWAP: ₹29.19
+  OI: 14,440,350 (Change: -805.21%)
+  Remaining Cash: ₹97,240.00
+[2025-12-29 13:40:00.004468+05:30] 🔵 BUY OPTION EXECUTED: PUT 25900.0 @ ₹36.80 (Expiry: 2025-12-30, 1 lot = 75 qty)
+[2025-12-29 13:40:00.004468+05:30]    📊 ENTRY DATA: VWAP=29.19, OI=14,440,350, OI Change=-1,264,575 (-8.05%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[13:40:31] Waiting 269s for next candle at 13:45:00
+
+================================================================================
+[2025-12-29 13:45:00.005923+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:45:29.173304] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 13:45:29.173428] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 13:45:00.005923+05:30] Nifty Spot: 25939.40
+[2025-12-29 13:45:30.287773] Fetching quotes for 22 options...
+[2025-12-29 13:45:30.332529] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[13:45:30] Waiting 270s for next candle at 13:50:00
+
+================================================================================
+[2025-12-29 13:50:00.006036+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:50:25.506121] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 13:50:25.506270] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 13:50:00.006036+05:30] Nifty Spot: 25948.75
+[2025-12-29 13:50:26.639295] Fetching quotes for 22 options...
+[2025-12-29 13:50:26.673054] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[13:50:26] Waiting 273s for next candle at 13:55:00
+
+================================================================================
+[2025-12-29 13:55:00.004878+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 13:55:30.015537] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 13:55:30.015646] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 13:55:00.004878+05:30] Nifty Spot: 25953.70
+[2025-12-29 13:55:31.091914] Fetching quotes for 22 options...
+[2025-12-29 13:55:31.125745] ✓ Retrieved 22 option quotes
+[2025-12-29 13:55:00.004878+05:30] EXIT SIGNAL: Stop Loss (25%)
+[2025-12-29 13:55:31.129098] ✓ SELL ORDER EXECUTED
+  Strike: 25900.0 PUT
+  Exit Price: ₹26.40
+  P&L: ₹-780.00 (-28.26%)
+  Exit Reason: Stop Loss (25%)
+  Cash: ₹99,220.00
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹-780.00
+ROI: -0.78%
+--------------------------------------------------------------------------------
+
+[13:55:31] Waiting 269s for next candle at 14:00:00
+
+================================================================================
+[2025-12-29 14:00:00.004411+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:00:23.449350] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:00:23.449507] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:00:00.004411+05:30] Nifty Spot: 25949.60
+[2025-12-29 14:00:24.527082] Fetching quotes for 22 options...
+[2025-12-29 14:00:24.558435] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹-780.00
+ROI: -0.78%
+--------------------------------------------------------------------------------
+
+[14:00:24] Waiting 275s for next candle at 14:05:00
+
+================================================================================
+[2025-12-29 14:05:00.032792+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:05:20.905140] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:05:20.905255] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:05:00.032792+05:30] Nifty Spot: 25951.00
+[2025-12-29 14:05:21.996239] Fetching quotes for 22 options...
+[2025-12-29 14:05:22.033434] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹-780.00
+ROI: -0.78%
+--------------------------------------------------------------------------------
+
+[14:05:22] Waiting 278s for next candle at 14:10:00
+
+================================================================================
+[2025-12-29 14:10:00.006591+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:10:22.951936] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:10:22.952038] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:10:00.006591+05:30] Nifty Spot: 25957.20
+[2025-12-29 14:10:24.073149] Fetching quotes for 22 options...
+[2025-12-29 14:10:24.107526] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹-780.00
+ROI: -0.78%
+--------------------------------------------------------------------------------
+
+[14:10:24] Waiting 276s for next candle at 14:15:00
+
+================================================================================
+[2025-12-29 14:15:00.008586+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:15:25.477606] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:15:25.477759] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:15:00.008586+05:30] Nifty Spot: 25944.25
+[2025-12-29 14:15:26.575631] Fetching quotes for 22 options...
+[2025-12-29 14:15:26.610518] ✓ Retrieved 22 option quotes
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-29
+Broker: Zerodha
+Daily Direction: PUT @ 25900.0
+Open Positions: 0
+Total P&L: ₹-780.00
+ROI: -0.78%
+--------------------------------------------------------------------------------
+
+[14:15:26] Waiting 273s for next candle at 14:20:00
+
+================================================================================
+[2025-12-29 14:19:59.971030+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:20:27.146191] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:20:27.146342] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:20:28.222871] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:28.222957] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:20:30.270453] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:30.270622] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:20:31.330214] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:31.330331] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:20:32.367743] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:32.367840] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:20:34.401570] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:34.401698] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:20:36.439754] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:36.439885] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:20:37.475825] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:20:37.475942] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:20:39.507467] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:19:59.971030+05:30] ✗ Failed to get spot price, skipping...
+[14:20:39] Waiting 260s for next candle at 14:25:00
+
+================================================================================
+[2025-12-29 14:25:00.001864+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:25:22.715376] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:25:22.718439] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:25:23.844520] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:23.844644] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:25:25.877581] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:25.877697] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:25:26.923829] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:26.923955] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:25:27.967631] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:27.967759] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:25:30.002030] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:30.002206] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:25:32.053394] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:32.053477] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:25:33.093687] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:33.093843] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:25:35.227809] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:25:00.001864+05:30] ✗ Failed to get spot price, skipping...
+[14:25:35] Waiting 265s for next candle at 14:30:00
+
+================================================================================
+[2025-12-29 14:30:00.004085+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:30:30.011031] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 14:30:30.011077] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:30:31.082726] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:31.082810] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:30:33.119175] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:33.119266] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:30:34.146826] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:34.146932] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:30:35.178501] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:35.178589] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:30:37.217021] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:37.217187] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:30:39.249201] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:39.249286] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:30:40.287021] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:40.287145] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:30:42.328107] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:30:00.004085+05:30] ✗ Failed to get spot price, skipping...
+[14:30:42] Waiting 258s for next candle at 14:35:00
+
+================================================================================
+[2025-12-29 14:35:00.003010+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:35:00.053621] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:00.053676] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:35:01.085704] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:01.085733] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:35:03.117856] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:03.118008] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:35:04.158528] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:04.158605] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:35:05.192099] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:05.192163] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:35:07.229852] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:07.229923] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:35:09.312522] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:09.312627] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:35:10.348126] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:10.348207] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:35:12.396750] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:35:00.003010+05:30] ✗ Failed to get spot price, skipping...
+[14:35:12] Waiting 288s for next candle at 14:40:00
+
+================================================================================
+[2025-12-29 14:40:00.000860+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:40:30.011786] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 14:40:30.011915] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:40:31.104255] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:31.104350] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:40:33.136970] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:33.137062] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:40:34.175928] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:34.175973] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:40:35.213463] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:35.213544] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:40:37.257866] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:37.257942] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:40:39.297480] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:39.297546] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:40:40.330200] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:40.331615] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:40:42.375126] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:40:00.000860+05:30] ✗ Failed to get spot price, skipping...
+[14:40:42] Waiting 258s for next candle at 14:45:00
+
+================================================================================
+[2025-12-29 14:45:00.028572+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:45:30.036210] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 14:45:30.036342] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:45:31.092011] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:31.092056] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:45:33.130768] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:33.130930] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:45:34.159728] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:34.159832] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:45:35.198843] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:35.198954] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:45:37.233789] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:37.233934] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:45:39.263710] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:39.263809] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:45:40.299569] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:40.299677] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:45:42.334623] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:45:00.028572+05:30] ✗ Failed to get spot price, skipping...
+[14:45:42] Waiting 258s for next candle at 14:50:00
+
+================================================================================
+[2025-12-29 14:50:00.000949+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:50:25.671779] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:50:25.671866] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:50:26.735042] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:26.735139] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:50:28.767555] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:28.767690] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:50:29.805555] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:29.805681] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:50:30.845266] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:30.845397] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:50:32.878423] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:32.878610] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:50:34.908575] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:34.908707] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:50:35.942579] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:35.942703] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:50:37.971002] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:50:00.000949+05:30] ✗ Failed to get spot price, skipping...
+[14:50:37] Waiting 262s for next candle at 14:55:00
+
+================================================================================
+[2025-12-29 14:55:00.002864+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 14:55:21.044790] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 14:55:21.044942] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:55:22.124209] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:22.124335] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:55:24.154275] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:24.154355] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 14:55:25.186762] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:25.189463] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:55:26.222581] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:26.222649] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:55:28.254010] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:28.254149] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 14:55:30.285404] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:30.285510] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 14:55:31.321794] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:31.321921] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 14:55:33.352276] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 14:55:00.002864+05:30] ✗ Failed to get spot price, skipping...
+[14:55:33] Waiting 267s for next candle at 15:00:00
+
+================================================================================
+[2025-12-29 15:00:00.005703+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:00:21.621231] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 15:00:21.621352] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:00:22.688391] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:22.688515] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:00:24.721312] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:24.721419] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:00:25.757167] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:25.757280] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:00:26.803061] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:26.803149] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:00:28.834971] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:28.835111] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:00:30.873599] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:30.873721] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:00:31.907121] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:31.907231] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:00:33.940887] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:00:00.005703+05:30] ✗ Failed to get spot price, skipping...
+[15:00:33] Waiting 266s for next candle at 15:05:00
+
+================================================================================
+[2025-12-29 15:05:00.016919+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:05:24.164979] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 15:05:24.165121] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:05:25.222437] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:25.222490] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:05:27.264362] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:27.264442] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:05:28.305694] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:28.305797] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:05:29.339029] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:29.339172] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:05:31.370921] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:31.371025] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:05:33.404914] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:33.405082] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:05:34.438343] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:34.438489] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:05:36.474335] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:05:00.016919+05:30] ✗ Failed to get spot price, skipping...
+[15:05:36] Waiting 264s for next candle at 15:10:00
+
+================================================================================
+[2025-12-29 15:10:00.004538+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:10:25.712910] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 15:10:25.712994] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:10:26.787052] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:26.787180] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:10:28.818326] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:28.818448] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:10:29.866205] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:29.866296] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:10:30.914844] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:30.914975] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:10:32.950925] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:32.951077] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:10:34.979517] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:34.979617] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:10:36.044648] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:36.044726] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:10:38.087135] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:10:00.004538+05:30] ✗ Failed to get spot price, skipping...
+[15:10:38] Waiting 262s for next candle at 15:15:00
+
+================================================================================
+[2025-12-29 15:15:00.002903+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:15:30.020744] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 15:15:30.020864] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:15:31.092596] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:31.092722] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:15:33.133028] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:33.133159] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:15:34.161654] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:34.161755] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:15:35.194320] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:35.194451] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:15:37.227402] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:37.227540] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:15:39.257536] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:39.257650] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:15:40.293134] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:40.293237] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:15:42.330493] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:15:00.002903+05:30] ✗ Failed to get spot price, skipping...
+[15:15:42] Waiting 258s for next candle at 15:20:00
+
+================================================================================
+[2025-12-29 15:20:00.002506+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:20:24.655629] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2025-12-29 15:20:24.655712] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:20:25.726161] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:25.726229] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:20:27.758437] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:27.758541] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:20:28.787083] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:28.787154] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:20:29.818161] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:29.818247] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:20:31.853432] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:31.853516] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:20:33.891256] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:33.891299] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:20:34.926730] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:34.926849] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:20:36.976068] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:20:00.002506+05:30] ✗ Failed to get spot price, skipping...
+[15:20:36] Waiting 263s for next candle at 15:25:00
+
+================================================================================
+[2025-12-29 15:24:59.971741+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-29 15:25:29.975199] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2025-12-29 15:25:29.975260] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:25:31.036149] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:31.036209] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:25:33.064028] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:33.064107] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2025-12-29 15:25:34.104833] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:34.104895] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:25:35.136396] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:35.136461] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:25:37.164347] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:37.164417] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2025-12-29 15:25:39.192228] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:39.192296] ⚠️  Retrying in 1s... (attempt 1/3)
+[2025-12-29 15:25:40.218938] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:25:40.219001] ⚠️  Retrying in 2s... (attempt 2/3)
+[2025-12-29 15:25:42.249662] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2025-12-29 15:24:59.971741+05:30] ✗ Failed to get spot price, skipping...
+[15:25:42] Waiting 258s for next candle at 15:30:00
+[2025-12-29 15:30:00.004140+05:30] Market closed, stopping...
+
+================================================================================
+[2025-12-29 15:30:00.004304+05:30] Shutting down...
+================================================================================
+
+Final Statistics:
+  Total Trades: 1
+  Win Rate: 0.0%
+  Total P&L: ₹-780.00
+  ROI: -0.78%
+[2025-12-29 15:30:05.009809] Logging out...
+[2025-12-29 15:30:23.465725] ✗ Error during logout: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+
+[2025-12-29 15:30:23.465828+05:30] ✓ Shutdown complete

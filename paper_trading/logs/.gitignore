@@ -1,0 +1,7 @@
+# Ignore all log files
+*.txt
+*.csv
+
+# Keep README and .gitignore
+!README.md
+!.gitignore

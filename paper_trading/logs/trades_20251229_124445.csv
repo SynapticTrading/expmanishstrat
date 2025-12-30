@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2025-12-29 13:15:25,2025-12-29 13:50:29,25950.0,PUT,2025-12-30,40.85,50.5,75,723.75,23.623011015911864,37.101220850727906,43.12783920302084,12178950,-3.6565034500353013,10500975,Trailing Stop (10%)
