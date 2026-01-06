@@ -82,14 +82,14 @@ class OIAnalyzer:
         
         return options_filtered, selected_strikes
     
-    def calculate_max_oi_buildup(self, options_df, spot_price):
+    def calculate_max_oi_buildup(self, options_df, spot_price, debug=False):
         """
         Calculate strike with maximum Call and Put OI buildup
         Returns: (max_call_strike, max_put_strike, call_distance, put_distance)
         """
         if options_df is None or len(options_df) == 0:
             return None, None, None, None
-        
+
         # Separate calls and puts
         calls = options_df[options_df['option_type'] == 'CE'].copy()
         puts = options_df[options_df['option_type'] == 'PE'].copy()
@@ -104,17 +104,44 @@ class OIAnalyzer:
         if len(calls_valid) == 0 or len(puts_valid) == 0:
             return None, None, None, None
 
+        # DEBUG: Print all OI values
+        if debug:
+            print(f"\n{'='*80}")
+            print(f"OI DISTRIBUTION DEBUG (Spot: {spot_price:.2f})")
+            print(f"{'='*80}")
+
+            # Sort by strike for readability
+            calls_sorted = calls_valid.sort_values('strike')
+            puts_sorted = puts_valid.sort_values('strike')
+
+            print(f"\nCALL OI by Strike:")
+            print(f"{'Strike':<10} {'OI':>15} {'Distance from Spot':>20}")
+            print(f"{'-'*50}")
+            for _, row in calls_sorted.iterrows():
+                distance = row['strike'] - spot_price
+                marker = " 👈 MAX" if row['OI'] == calls_valid['OI'].max() else ""
+                print(f"{row['strike']:<10.1f} {row['OI']:>15,.0f} {distance:>18.2f}{marker}")
+
+            print(f"\nPUT OI by Strike:")
+            print(f"{'Strike':<10} {'OI':>15} {'Distance from Spot':>20}")
+            print(f"{'-'*50}")
+            for _, row in puts_sorted.iterrows():
+                distance = spot_price - row['strike']
+                marker = " 👈 MAX" if row['OI'] == puts_valid['OI'].max() else ""
+                print(f"{row['strike']:<10.1f} {row['OI']:>15,.0f} {distance:>18.2f}{marker}")
+            print(f"{'='*80}\n")
+
         # Find strike with maximum OI for calls and puts
         max_call_oi_idx = calls_valid['OI'].idxmax()
         max_put_oi_idx = puts_valid['OI'].idxmax()
 
         max_call_strike = calls_valid.loc[max_call_oi_idx, 'strike']
         max_put_strike = puts_valid.loc[max_put_oi_idx, 'strike']
-        
+
         # Calculate distances
         call_distance = max_call_strike - spot_price
         put_distance = spot_price - max_put_strike
-        
+
         return max_call_strike, max_put_strike, call_distance, put_distance
     
     def determine_direction(self, call_distance, put_distance):

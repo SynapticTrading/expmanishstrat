@@ -203,6 +203,19 @@ class UniversalPaperTrader:
         print(f"[{self._get_ist_now()}] Initializing paper broker...")
         self.paper_broker = PaperBroker(initial_capital, state_manager=self.state_manager)
 
+        # Restore positions if recovering from crash
+        if self.recovery_mode and self.recovery_info:
+            saved_positions_dict = self.recovery_info.get('active_positions', {})
+            if saved_positions_dict:
+                # Convert dict to list of position objects
+                saved_positions = list(saved_positions_dict.values())
+                self.paper_broker.restore_positions(saved_positions)
+
+            # Restore closed trades (trade history)
+            closed_positions = self.recovery_info.get('closed_positions', [])
+            if closed_positions:
+                self.paper_broker.restore_trade_history(closed_positions)
+
         # Update portfolio state
         if not self.recovery_mode:
             self.state_manager.state["portfolio"]["initial_capital"] = initial_capital
@@ -237,13 +250,56 @@ class UniversalPaperTrader:
         """Restore strategy state from saved data"""
         self.strategy.daily_direction = strategy_state.get('direction')
         self.strategy.daily_strike = strategy_state.get('trading_strike')
-        self.strategy.daily_expiry = strategy_state.get('max_call_oi_strike')  # Placeholder
+
+        # Restore current_date to prevent on_new_day() from resetting flags
+        if self.state_manager.state and 'date' in self.state_manager.state:
+            from datetime import datetime
+            date_str = self.state_manager.state['date']
+            self.strategy.current_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            print(f"  Restored current_date: {self.strategy.current_date}")
+
+        # Restore expiry from positions (active or closed)
+        expiry_restored = False
+
+        # Try active positions first
+        if self.recovery_info.get('active_positions'):
+            active_positions_dict = self.recovery_info.get('active_positions', {})
+            if active_positions_dict:
+                first_position = list(active_positions_dict.values())[0]
+                self.strategy.daily_expiry = first_position.get('expiry')
+                expiry_restored = True
+
+        # If no active positions, try closed positions
+        if not expiry_restored and self.recovery_info.get('closed_positions'):
+            closed_positions = self.recovery_info.get('closed_positions', [])
+            if closed_positions:
+                first_closed = closed_positions[0]
+                self.strategy.daily_expiry = first_closed.get('expiry')
+                expiry_restored = True
+                print(f"  Restored expiry from closed position: {self.strategy.daily_expiry}")
+
+        # Restore daily_trade_taken flag - if there are open positions OR closed trades, trade was taken
+        has_open_positions = self.recovery_info.get('active_positions_count', 0) > 0
+        has_closed_trades = len(self.recovery_info.get('closed_positions', [])) > 0
+        trades_today = self.recovery_info.get('daily_stats', {}).get('trades_today', 0)
+
+        if has_open_positions or has_closed_trades or trades_today > 0:
+            self.strategy.daily_trade_taken = True
+            reason = []
+            if has_open_positions:
+                reason.append("has open positions")
+            if has_closed_trades:
+                reason.append("has closed trades")
+            if trades_today > 0:
+                reason.append(f"trades_today={trades_today}")
+            print(f"  Restored daily_trade_taken: True ({', '.join(reason)})")
 
         # Restore VWAP tracking
         # Note: This is simplified - you may need to reconstruct full VWAP state
 
         print(f"  Restored direction: {self.strategy.daily_direction}")
         print(f"  Restored strike: {self.strategy.daily_strike}")
+        print(f"  Restored expiry: {self.strategy.daily_expiry}")
 
     def run(self):
         """Main trading loop"""
@@ -298,6 +354,13 @@ class UniversalPaperTrader:
                     print(f"[{current_time}] Market closed, stopping...")
                     break
 
+                # Check if past EOD exit time
+                current_time_only = current_time.time()
+                exit_end = self.strategy.exit_end_time
+                if current_time_only > exit_end:
+                    print(f"[{current_time}] Past EOD exit time ({exit_end}), stopping...")
+                    break
+
                 print(f"\n{'='*80}")
                 print(f"[{current_time}] STRATEGY LOOP - Processing 5-min candle...")
                 print(f"{'='*80}\n")
@@ -310,6 +373,11 @@ class UniversalPaperTrader:
                     continue
 
                 print(f"[{current_time}] Nifty Spot: {spot_price:.2f}")
+
+                # Check if in monitoring-only mode (trade already taken)
+                if self.strategy.daily_trade_taken and len(self.paper_broker.get_open_positions()) == 0:
+                    print(f"[{current_time}] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)")
+                    print(f"[{current_time}] System will continue monitoring but will NOT enter new trades")
 
                 # Get options data
                 options_data = self._get_options_data(current_time, spot_price)
@@ -354,14 +422,22 @@ class UniversalPaperTrader:
                     time_module.sleep(60)
                     continue
 
+                # Get current time
+                current_time = self._get_ist_now()
+
+                # Check if past EOD exit time
+                current_time_only = current_time.time()
+                exit_end = self.strategy.exit_end_time
+                if current_time_only > exit_end:
+                    print(f"[{current_time}] Exit Monitor: Past EOD exit time ({exit_end}), stopping...")
+                    break
+
                 positions = self.paper_broker.get_open_positions()
 
                 if not positions:
+                    # No positions to monitor, just wait
                     time_module.sleep(60)
                     continue
-
-                # Get current time
-                current_time = self._get_ist_now()
 
                 # Fetch FRESH real-time LTP data (not 5-min cached data)
                 spot_price = self.broker_api.get_spot_price()

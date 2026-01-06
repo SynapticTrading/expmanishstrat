@@ -103,7 +103,20 @@ class IntradayMomentumOIPaper:
             print(f"{'='*80}")
 
             self.current_date = current_date
-            self.daily_trade_taken = False
+
+            # Only reset daily_trade_taken if there are NO open positions AND no closed trades
+            # (During recovery, we may have restored positions/trades from a crash)
+            has_open_positions = len(self.broker.get_open_positions()) > 0
+            has_closed_trades = len(self.broker.trade_history) > 0
+
+            if has_open_positions:
+                print(f"[{current_time}] ⚠️  Open positions detected - keeping daily_trade_taken = True")
+            elif has_closed_trades:
+                self.daily_trade_taken = True
+                print(f"[{current_time}] ⚠️  Closed trades detected ({len(self.broker.trade_history)} trades) - setting daily_trade_taken = True")
+            else:
+                self.daily_trade_taken = False
+
             self.vwap_running_totals = {}  # Reset VWAP for new day
 
             # Determine direction based on max OI buildup
@@ -116,9 +129,9 @@ class IntradayMomentumOIPaper:
                     self.daily_direction = None
                     return
 
-                # Calculate max OI buildup from current options data
+                # Calculate max OI buildup from current options data (with debug logging)
                 max_call_strike, max_put_strike, call_distance, put_distance = \
-                    self.oi_analyzer.calculate_max_oi_buildup(options_data, spot_price)
+                    self.oi_analyzer.calculate_max_oi_buildup(options_data, spot_price, debug=True)
 
                 # Store for state tracking
                 self.max_call_oi_strike = max_call_strike
@@ -233,12 +246,8 @@ class IntradayMomentumOIPaper:
     def _check_entry(self, current_time, spot_price, options_data):
         """Check if entry conditions are met"""
 
-        # Skip if already have max positions
-        if len(self.broker.get_open_positions()) >= self.max_positions:
-            return
-
-        # Skip if already took trade today
-        if self.daily_trade_taken:
+        # Skip if already have any open positions (only check entries when flat)
+        if len(self.broker.get_open_positions()) > 0:
             return
 
         # Skip if no direction determined
@@ -271,6 +280,7 @@ class IntradayMomentumOIPaper:
         )
 
         if option_data is None:
+            print(f"[{current_time}] ⚠️  Could not find option data for {self.daily_direction} {self.daily_strike} expiry={self.daily_expiry}")
             return
 
         # Extract data
@@ -351,6 +361,12 @@ class IntradayMomentumOIPaper:
         # Enter trade if conditions met
         if is_unwinding and price_above_vwap:
             print(f"[{current_time}] 🎯 ENTRY SIGNAL: {display_type} {self.daily_strike} - Price: {option_price:.2f}, VWAP: {vwap:.2f}, OI Change: {oi_change:,.0f} ({oi_change_pct:.2f}%)")
+
+            # Check if already took trade today
+            if self.daily_trade_taken:
+                print(f"[{current_time}] ⛔ Entry blocked: Daily trade limit reached (1 trade/day)")
+                return
+
             print(f"[{current_time}] 📈 PLACING BUY ORDER: size=1, expected_price={option_price:.2f}")
 
             # Execute buy order
@@ -375,6 +391,9 @@ class IntradayMomentumOIPaper:
 
         positions = self.broker.get_open_positions()
 
+        if not positions:
+            return
+
         for position in positions.copy():  # Use copy to avoid modification during iteration
             # Get current option data
             option_data = self._get_option_data(
@@ -385,6 +404,7 @@ class IntradayMomentumOIPaper:
             )
 
             if option_data is None:
+                print(f"[{current_time}] ⚠️  Could not find option data for {position.strike} {position.option_type}")
                 continue
 
             # Extract data
@@ -401,6 +421,13 @@ class IntradayMomentumOIPaper:
                 current_volume
             )
 
+            # Check for EOD exit FIRST (priority exit)
+            current_time_only = current_time.time()
+            if self.exit_start_time <= current_time_only <= self.exit_end_time:
+                print(f"[{current_time}] 🔔 END OF DAY EXIT TIME - Forcing exit")
+                self.broker.sell(position, current_price, vwap, current_oi, "EOD Exit")
+                continue  # Skip to next position
+
             # Calculate P&L
             pnl_pct = (current_price / position.entry_price - 1)
 
@@ -413,6 +440,17 @@ class IntradayMomentumOIPaper:
                 if not position.trailing_stop_active:
                     position.trailing_stop_active = True
                     print(f"[{current_time}] 🎯 Trailing stop ACTIVATED for {position.strike} {position.option_type}")
+
+            # Update state file with current position data
+            if self.state_manager and hasattr(position, 'order_id'):
+                self.state_manager.update_position_price(
+                    order_id=position.order_id,
+                    current_price=current_price,
+                    vwap=vwap,
+                    oi=current_oi,
+                    peak_price=position.peak_price,
+                    trailing_stop_active=position.trailing_stop_active
+                )
 
             # Calculate all stop loss levels
             stop_loss_price = position.entry_price * (1 - self.initial_stop_loss_pct)
@@ -512,10 +550,35 @@ class IntradayMomentumOIPaper:
             else:
                 option_type_filter = option_type  # Already CE/PE
 
+            # Convert expiry to comparable format (handle string vs date object)
+            import pandas as pd
+            from datetime import date
+
+            # Normalize expiry to date object
+            if isinstance(expiry, str):
+                expiry_date = pd.to_datetime(expiry).date()
+            elif isinstance(expiry, pd.Timestamp):
+                expiry_date = expiry.date()
+            elif isinstance(expiry, date):
+                expiry_date = expiry
+            else:
+                expiry_date = expiry
+
+            # Normalize options_data expiry column
+            options_expiry = options_data['expiry']
+            if len(options_expiry) > 0:
+                first_val = options_expiry.iloc[0]
+                if isinstance(first_val, pd.Timestamp):
+                    options_data_expiry = options_expiry.dt.date
+                elif isinstance(first_val, date):
+                    options_data_expiry = options_expiry
+                else:
+                    options_data_expiry = pd.to_datetime(options_expiry).dt.date
+
             mask = (
                 (options_data['strike'] == strike) &
                 (options_data['option_type'] == option_type_filter) &
-                (options_data['expiry'] == expiry)
+                (options_data_expiry == expiry_date)
             )
             data = options_data[mask]
 
@@ -526,6 +589,8 @@ class IntradayMomentumOIPaper:
 
         except Exception as e:
             print(f"Error getting option data: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
     def _calculate_vwap(self, strike, option_type, expiry, price, volume):

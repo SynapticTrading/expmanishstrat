@@ -234,11 +234,21 @@ class StateManager:
         # Move to closed positions
         closed_summary = {
             "order_id": order_id,
+            "strike": pos_data["strike"],
+            "option_type": pos_data["option_type"],
+            "expiry": pos_data["expiry"],
             "entry_time": pos_data["entry"]["time"],
             "exit_time": exit_time.isoformat(),
             "entry_price": pos_data["entry"]["price"],
             "exit_price": position.exit_price,
+            "size": pos_data["entry"]["quantity"],
             "pnl": position.pnl,
+            "pnl_pct": position.pnl_pct,
+            "vwap_at_entry": pos_data["market_data"]["entry_vwap"],
+            "vwap_at_exit": pos_data["market_data"].get("current_vwap", 0),
+            "oi_at_entry": pos_data["market_data"]["entry_oi"],
+            "oi_change_at_entry": pos_data["market_data"]["oi_change_pct"],
+            "oi_at_exit": pos_data["market_data"].get("current_oi", 0),
             "exit_reason": position.exit_reason
         }
         self.state["closed_positions"].append(closed_summary)
@@ -266,7 +276,7 @@ class StateManager:
 
         self.save()
 
-    def update_position_price(self, order_id, current_price, vwap, oi):
+    def update_position_price(self, order_id, current_price, vwap, oi, peak_price=None, trailing_stop_active=None):
         """
         Update position price tracking
 
@@ -275,6 +285,8 @@ class StateManager:
             current_price: Current option price
             vwap: Current VWAP
             oi: Current OI
+            peak_price: Peak price (optional, will be calculated if not provided)
+            trailing_stop_active: Whether trailing stop is active (optional)
         """
         if order_id not in self.state["active_positions"]:
             return
@@ -291,10 +303,23 @@ class StateManager:
             (current_price / entry_price - 1) * 100
         )
 
-        # Update peak if needed
-        if current_price > pos_data["price_tracking"]["peak_price"]:
+        # Update peak if provided or if current price is higher
+        if peak_price is not None:
+            pos_data["price_tracking"]["peak_price"] = peak_price
+            pos_data["price_tracking"]["peak_time"] = self.get_ist_timestamp()
+        elif current_price > pos_data["price_tracking"]["peak_price"]:
             pos_data["price_tracking"]["peak_price"] = current_price
             pos_data["price_tracking"]["peak_time"] = self.get_ist_timestamp()
+
+        # Update trailing stop status if provided
+        if trailing_stop_active is not None:
+            pos_data["stop_losses"]["trailing_active"] = trailing_stop_active
+
+            # Update trailing stop price when trailing is active
+            if trailing_stop_active:
+                current_peak = pos_data["price_tracking"]["peak_price"]
+                trailing_pct = pos_data["stop_losses"]["trailing_stop_pct"] / 100
+                pos_data["stop_losses"]["trailing_stop"] = current_peak * (1 - trailing_pct)
 
         # Update market data
         pos_data["market_data"]["current_oi"] = oi
@@ -305,8 +330,32 @@ class StateManager:
 
         self.state["timestamp"] = self.get_ist_timestamp()
 
+        # Update portfolio value based on current price
+        self._update_portfolio_with_current_prices()
+
         # Save every minute (not every price update)
         # Will be called from 1-min loop
+
+    def _update_portfolio_with_current_prices(self):
+        """Update portfolio values based on current position prices"""
+        # Calculate current position value
+        positions_value = 0
+        for order_id, pos_data in self.state["active_positions"].items():
+            current_price = pos_data.get("price_tracking", {}).get("current_price", 0)
+            quantity = pos_data.get("entry", {}).get("quantity", 0)
+            positions_value += current_price * quantity
+
+        # Calculate total value
+        current_cash = self.state["portfolio"]["current_cash"]
+        total_value = current_cash + positions_value
+        initial_capital = self.state["portfolio"]["initial_capital"]
+
+        # Update portfolio
+        self.state["portfolio"]["positions_value"] = positions_value
+        self.state["portfolio"]["total_value"] = total_value
+        self.state["portfolio"]["total_return_pct"] = (
+            (total_value / initial_capital - 1) * 100 if initial_capital > 0 else 0
+        )
 
     def update_strategy_state(self, spot, strike, direction, call_strike, put_strike, vwap_tracking):
         """
@@ -479,6 +528,11 @@ class StateManager:
         if self.state.get("active_positions"):
             return True
 
+        # Can recover if there are closed trades today (important for 1-trade-per-day limit)
+        closed_positions = self.state.get("closed_positions", [])
+        if closed_positions and len(closed_positions) > 0:
+            return True
+
         # Can recover if strategy state exists (VWAP tracking, direction, etc.)
         strategy_state = self.state.get("strategy_state", {})
         if strategy_state.get("trading_strike") is not None:
@@ -508,6 +562,7 @@ class StateManager:
 
             "active_positions": self.state.get("active_positions", {}),
             "active_positions_count": len(self.state.get("active_positions", {})),
+            "closed_positions": self.state.get("closed_positions", []),
 
             "strategy_state": self.state.get("strategy_state", {}),
             "daily_stats": self.state.get("daily_stats", {}),

@@ -76,6 +76,96 @@ class PaperBroker:
         print(f"[{datetime.now()}] Daily trade log: {self.daily_trade_log}")
         print(f"[{datetime.now()}] Cumulative trade log: {self.cumulative_trade_log}")
 
+    def restore_trade_history(self, closed_positions):
+        """
+        Restore closed trades from saved state during crash recovery
+
+        Args:
+            closed_positions: List of closed trade dictionaries from state file
+        """
+        if not closed_positions:
+            return
+
+        print(f"[{datetime.now()}] Restoring {len(closed_positions)} closed trade(s)...")
+
+        for trade_data in closed_positions:
+            # Create a minimal position object for trade history
+            position = PaperPosition(
+                strike=trade_data.get('strike', 0),
+                option_type=trade_data.get('option_type', 'CALL'),
+                expiry=trade_data.get('expiry', ''),
+                entry_price=trade_data.get('entry_price', 0),
+                size=trade_data.get('size', 75),
+                entry_time=datetime.fromisoformat(trade_data['entry_time']) if isinstance(trade_data.get('entry_time'), str) else trade_data.get('entry_time', datetime.now()),
+                vwap_at_entry=trade_data.get('vwap_at_entry', 0),
+                oi_at_entry=trade_data.get('oi_at_entry', 0),
+                oi_change_at_entry=trade_data.get('oi_change_at_entry', 0)
+            )
+
+            # Set exit data
+            position.exit_price = trade_data.get('exit_price', 0)
+            position.exit_time = datetime.fromisoformat(trade_data['exit_time']) if isinstance(trade_data.get('exit_time'), str) else trade_data.get('exit_time', datetime.now())
+            position.exit_reason = trade_data.get('exit_reason', 'Unknown')
+            position.pnl = trade_data.get('pnl', 0)
+            position.pnl_pct = trade_data.get('pnl_pct', 0)
+
+            self.trade_history.append(position)
+
+            print(f"  ✓ Restored trade: {position.option_type} {position.strike} | P&L: ₹{position.pnl:+,.2f}")
+
+        print(f"[{datetime.now()}] ✓ Restored {len(closed_positions)} closed trade(s)")
+
+    def restore_positions(self, saved_positions):
+        """
+        Restore positions from saved state during crash recovery
+
+        Args:
+            saved_positions: List of position dictionaries from state file
+        """
+        if not saved_positions:
+            return
+
+        print(f"[{datetime.now()}] Restoring {len(saved_positions)} position(s)...")
+
+        for pos_data in saved_positions:
+            # Extract nested fields from state file structure
+            entry = pos_data.get('entry', {})
+            price_tracking = pos_data.get('price_tracking', {})
+            market_data = pos_data.get('market_data', {})
+            stop_losses = pos_data.get('stop_losses', {})
+
+            # Reconstruct PaperPosition object
+            position = PaperPosition(
+                strike=pos_data['strike'],
+                option_type=pos_data['option_type'],
+                expiry=pos_data['expiry'],
+                entry_price=entry.get('price', 0),
+                size=entry.get('quantity', 0),
+                entry_time=datetime.fromisoformat(entry['time']) if isinstance(entry.get('time'), str) else entry.get('time', datetime.now()),
+                vwap_at_entry=market_data.get('entry_vwap', 0),
+                oi_at_entry=market_data.get('entry_oi', 0),
+                oi_change_at_entry=market_data.get('oi_change_pct', 0)
+            )
+
+            # Restore peak price and trailing stop state
+            position.peak_price = price_tracking.get('peak_price', position.entry_price)
+            position.trailing_stop_active = stop_losses.get('trailing_active', False)
+
+            # Restore order_id if available
+            if 'order_id' in pos_data:
+                position.order_id = pos_data['order_id']
+
+            self.positions.append(position)
+
+            # NOTE: Do NOT deduct cash again - the state file's current_cash already has position costs deducted
+            # The initial_capital we received already accounts for open positions
+
+            print(f"  ✓ Restored: {position.option_type} {position.strike} @ ₹{position.entry_price:.2f}")
+            print(f"     Size: {position.size}, Peak: ₹{position.peak_price:.2f}, Trailing: {position.trailing_stop_active}")
+
+        print(f"[{datetime.now()}] ✓ Restored {len(saved_positions)} position(s)")
+        print(f"[{datetime.now()}] Available cash: ₹{self.cash:,.2f}")
+
     def buy(self, strike, option_type, expiry, price, size, vwap, oi, oi_change):
         """Execute a buy order (paper trading)"""
 
@@ -225,7 +315,8 @@ class PaperBroker:
         return self.cash + positions_value
 
     def get_statistics(self):
-        """Get trading statistics"""
+        """Get trading statistics (ONLY realized P&L from closed trades)"""
+        # Calculate realized P&L from closed trades ONLY
         if not self.trade_history:
             return {
                 'total_trades': 0,
@@ -245,8 +336,9 @@ class PaperBroker:
         losing_trades = sum(1 for t in self.trade_history if t.pnl <= 0)
         win_rate = winning_trades / total_trades * 100 if total_trades > 0 else 0
 
-        total_pnl = sum(t.pnl for t in self.trade_history)
-        avg_pnl = total_pnl / total_trades
+        # Only count realized P&L from closed trades
+        realized_pnl = sum(t.pnl for t in self.trade_history)
+        avg_pnl = realized_pnl / total_trades
 
         max_win = max((t.pnl for t in self.trade_history), default=0)
         max_loss = min((t.pnl for t in self.trade_history), default=0)
@@ -256,10 +348,10 @@ class PaperBroker:
             'winning_trades': winning_trades,
             'losing_trades': losing_trades,
             'win_rate': win_rate,
-            'total_pnl': total_pnl,
+            'total_pnl': realized_pnl,
             'avg_pnl': avg_pnl,
             'max_win': max_win,
             'max_loss': max_loss,
             'current_cash': self.cash,
-            'roi': (self.cash - self.initial_capital) / self.initial_capital * 100
+            'roi': (realized_pnl / self.initial_capital * 100) if self.initial_capital > 0 else 0
         }
