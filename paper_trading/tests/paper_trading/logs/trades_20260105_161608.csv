@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-05 16:16:08,2026-01-05 16:16:08,24450,PUT,2026-01-09,64.0,36.0,75,-2100.0,-43.75,61.0,50.285714285714285,2700000.0,-10.0,2520000.0,Stop Loss (25%)
