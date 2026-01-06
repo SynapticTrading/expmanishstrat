@@ -1,0 +1,74 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2025-12-31 12:59:05.131484+05:30] Checking for previous session...
+[2025-12-31 12:59:05.131837+05:30] ✓ State loaded from paper_trading/state/trading_state_20251231.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2025-12-31T12:54:23.962790+05:30
+Downtime: ~4 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2025-12-31T12:54:23.962790+05:30
+Recovery Time: 2025-12-31 12:59:05.131939+05:30
+Downtime: 4 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+
+
+[2025-12-31 12:59:05.132352+05:30] Connecting to Zerodha...
+[2025-12-31 12:59:05.132368] Connecting to Zerodha...
+[2025-12-31 12:59:05.326134] Generated TOTP: 742356
+[2025-12-31 12:59:05.425195] ✓ Request token extracted from redirect
+[2025-12-31 12:59:05.425217] Request token obtained: sgTz77nZfhj5IBrXxCky...
+[2025-12-31 12:59:05.480626] ✓ Connection successful!
+[2025-12-31 12:59:05.480643] Access Token: M2c5aDKqTGSN0RkAThrk...
+[2025-12-31 12:59:05.480664] Zerodha data feed initialized
+[2025-12-31 12:59:05.480670+05:30] ✓ Connected to Zerodha
+
+[2025-12-31 12:59:05.480687+05:30] Resuming from previous session...
+[2025-12-31 12:59:05.480709+05:30] Loading instruments...
+[2025-12-31 12:59:05.480718] Loading instruments...
+[2025-12-31 12:59:05.480725] Fetching instruments for NFO...
+[2025-12-31 12:59:06.550304] ✓ Retrieved 37220 instruments
+[2025-12-31 12:59:06.557227] Fetching instruments for NSE...
+[2025-12-31 12:59:06.679421] ✓ Retrieved 9058 instruments
+[2025-12-31 12:59:06.682702] ✓ Nifty 50 token: 256265
+[2025-12-31 12:59:06.682728] ✓ Instruments loaded
+[2025-12-31 12:59:06.682748+05:30] Initializing paper broker...
+[2025-12-31 12:59:06.683380] Paper Broker initialized with capital: ₹92,072.50
+[2025-12-31 12:59:06.683395] Daily trade log: paper_trading/logs/trades_20251231_125906.csv
+[2025-12-31 12:59:06.683400] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2025-12-31 12:59:06.683410] Restoring 1 position(s)...
+
+✗ Fatal error: string indices must be integers
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 512, in main
+    trader.initialize()
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 210, in initialize
+    self.paper_broker.restore_positions(saved_positions)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/broker.py", line 94, in restore_positions
+    strike=pos_data['strike'],
+TypeError: string indices must be integers

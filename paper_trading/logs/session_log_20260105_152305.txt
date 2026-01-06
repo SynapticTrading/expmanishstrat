@@ -1,0 +1,196 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-05 15:23:06.107972+05:30] Checking for previous session...
+[2026-01-05 15:23:06.108345+05:30] ✓ State loaded from paper_trading/state/trading_state_20260105.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-05T15:19:11.202842+05:30
+Downtime: ~3 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-05T15:19:11.202842+05:30
+Recovery Time: 2026-01-05 15:23:06.108424+05:30
+Downtime: 3 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+
+
+[2026-01-05 15:23:06.108828+05:30] Connecting to Zerodha...
+[2026-01-05 15:23:06.108840] Connecting to Zerodha...
+[2026-01-05 15:23:06.275463] Generated TOTP: 156472
+[2026-01-05 15:23:06.362012] ✓ Request token extracted from redirect
+[2026-01-05 15:23:06.362044] Request token obtained: dogYSCaz8MaLHBX89cgv...
+[2026-01-05 15:23:06.418095] ✓ Connection successful!
+[2026-01-05 15:23:06.418116] Access Token: RdeeUH04AOYW5SIxyMAY...
+[2026-01-05 15:23:06.418159] Zerodha data feed initialized
+[2026-01-05 15:23:06.418175+05:30] ✓ Connected to Zerodha
+
+[2026-01-05 15:23:06.418202+05:30] Resuming from previous session...
+[2026-01-05 15:23:06.418227+05:30] Loading instruments...
+[2026-01-05 15:23:06.418244] Loading instruments...
+[2026-01-05 15:23:06.418250] Fetching instruments for NFO...
+[2026-01-05 15:23:07.464565] ✓ Retrieved 37479 instruments
+[2026-01-05 15:23:07.469708] Fetching instruments for NSE...
+[2026-01-05 15:23:07.584708] ✓ Retrieved 9107 instruments
+[2026-01-05 15:23:07.587880] ✓ Nifty 50 token: 256265
+[2026-01-05 15:23:07.587899] ✓ Instruments loaded
+[2026-01-05 15:23:07.587911+05:30] Initializing paper broker...
+[2026-01-05 15:23:07.588544] Paper Broker initialized with capital: ₹101,267.50
+[2026-01-05 15:23:07.588560] Daily trade log: paper_trading/logs/trades_20260105_152307.csv
+[2026-01-05 15:23:07.588564] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-05 15:23:07.588579] Restoring 1 position(s)...
+  ✓ Restored: PUT 26250.0 @ ₹65.25
+     Size: 75, Peak: ₹65.55, Trailing: False
+[2026-01-05 15:23:07.588608] ✓ Restored 1 position(s)
+[2026-01-05 15:23:07.588612] Available cash: ₹101,267.50
+[2026-01-05 15:23:07.588617+05:30] Initializing OI analyzer...
+[2026-01-05 15:23:07.588999+05:30] Initializing strategy...
+[2026-01-05 15:23:07.589029] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-05 15:23:07.589050+05:30] Restoring strategy state...
+  Restored current_date: 2026-01-05
+  Restored daily_trade_taken: True (has open positions)
+  Restored direction: PUT
+  Restored strike: 26200.0
+  Restored expiry: 2026-01-06
+[2026-01-05 15:23:07.589801+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-05 15:23:07.589815+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2026-01-05 15:23:07.589966+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-05 15:23:07.590202+05:30] ✓ Exit monitor loop started
+[2026-01-05 15:23:07.591380+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-05 15:23:07.591405+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-05 15:23:07.591405+05:30] Nifty Spot: 26237.00
+[2026-01-05 15:23:07.634170] Fetching quotes for 22 options...
+[2026-01-05 15:23:07.665038] ✓ Retrieved 22 option quotes
+[2026-01-05 15:23:07.591405+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹66.05 | Entry: ₹65.25 | P&L: +1.23%
+    Initial Stop: ₹48.94 (distance: 34.97%)
+[2026-01-05 15:23:07.589978+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-05 15:23:07.678945] Fetching quotes for 22 options...
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-05
+Broker: Zerodha
+Daily Direction: PUT @ 26200.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[15:23:07] Waiting 112s for next candle at 15:25:00
+[2026-01-05 15:23:07.718354] ✓ Retrieved 22 option quotes
+[2026-01-05 15:23:07.589978+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹66.05 | Entry: ₹65.25 | P&L: +1.23%
+    Initial Stop: ₹48.94 (distance: 34.97%)
+[2026-01-05 15:24:07.725198+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-05 15:24:07.775228] Fetching quotes for 22 options...
+[2026-01-05 15:24:07.808691] ✓ Retrieved 22 option quotes
+[2026-01-05 15:24:07.725198+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹66.80 | Entry: ₹65.25 | P&L: +2.38%
+    Initial Stop: ₹48.94 (distance: 36.50%)
+
+================================================================================
+[2026-01-05 15:25:00.003182+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-05 15:25:00.003182+05:30] Nifty Spot: 26238.45
+[2026-01-05 15:25:00.080876] Fetching quotes for 22 options...
+[2026-01-05 15:25:00.122633] ✓ Retrieved 22 option quotes
+[2026-01-05 15:25:00.003182+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹65.10 | Entry: ₹65.25 | P&L: -0.23%
+    Initial Stop: ₹48.94 (distance: 33.03%)
+    VWAP Stop: ₹62.70 | Current VWAP: ₹66.00
+    OI Change: -19.83% (Threshold: 10%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-05
+Broker: Zerodha
+Daily Direction: PUT @ 26200.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[15:25:00] Waiting 300s for next candle at 15:30:00
+[2026-01-05 15:25:07.815818+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-05 15:25:07.878668] Fetching quotes for 22 options...
+[2026-01-05 15:25:07.929908] ✓ Retrieved 22 option quotes
+[2026-01-05 15:25:07.815818+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹64.55 | Entry: ₹65.25 | P&L: -1.07%
+    Initial Stop: ₹48.94 (distance: 31.90%)
+    VWAP Stop: ₹62.42 | Current VWAP: ₹65.71
+    OI Change: -19.83% (Threshold: 10%)
+[2026-01-05 15:26:07.937288+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-05 15:26:07.997070] Fetching quotes for 22 options...
+[2026-01-05 15:26:08.029100] ✓ Retrieved 22 option quotes
+[2026-01-05 15:26:07.937288+05:30] 📊 LTP CHECK: 26250.0 PUT
+    Current LTP: ₹61.60 | Entry: ₹65.25 | P&L: -5.59%
+    Initial Stop: ₹48.94 (distance: 25.87%)
+    VWAP Stop: ₹61.77 | Current VWAP: ₹65.02
+    OI Change: -19.83% (Threshold: 10%)
+[2026-01-05 15:26:07.937288+05:30] EXIT SIGNAL: VWAP Stop (>5% below VWAP)
+[2026-01-05 15:26:08.032002] ✓ SELL ORDER EXECUTED
+  Strike: 26250.0 PUT
+  Exit Price: ₹61.60
+  P&L: ₹-273.75 (-5.59%)
+  Exit Reason: VWAP Stop (>5% below VWAP)
+  Cash: ₹105,887.50
+[2026-01-05 15:30:00.007113+05:30] Market closed, stopping...
+
+================================================================================
+[2026-01-05 15:30:00.007245+05:30] Shutting down...
+================================================================================
+
+Final Statistics:
+  Total Trades: 1
+  Win Rate: 0.0%
+  Total P&L: ₹-273.75
+  ROI: -0.27%
+[2026-01-05 15:30:05.013676] Logging out...
+[2026-01-05 15:30:05.050820] ✓ Logged out successfully
+
+[2026-01-05 15:30:05.050853+05:30] ✓ Shutdown complete

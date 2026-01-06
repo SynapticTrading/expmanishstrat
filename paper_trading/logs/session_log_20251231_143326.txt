@@ -1,0 +1,103 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2025-12-31 14:33:27.469051+05:30] Checking for previous session...
+[2025-12-31 14:33:27.469479+05:30] ✓ State loaded from paper_trading/state/trading_state_20251231.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2025-12-31T14:28:42.476970+05:30
+Downtime: ~4 minutes
+Active Positions: 0
+Daily P&L: ₹6,420.00
+================================================================================
+
+Resume from crash? (y/n): 
+[2025-12-31 14:33:30.306347+05:30] Resuming session...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2025-12-31T14:28:42.476970+05:30
+Recovery Time: 2025-12-31 14:33:30.306513+05:30
+Downtime: 4 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+
+[2025-12-31 14:33:30.307368+05:30] Connecting to Zerodha...
+[2025-12-31 14:33:30.307391] Connecting to Zerodha...
+[2025-12-31 14:33:30.507676] Generated TOTP: 897423
+[2025-12-31 14:33:30.590792] ✓ Request token extracted from redirect
+[2025-12-31 14:33:30.590811] Request token obtained: lIYaJpfcbfhnGavvYTpJ...
+[2025-12-31 14:33:30.654075] ✓ Connection successful!
+[2025-12-31 14:33:30.654094] Access Token: tSIiEy8ZMSrmM0vhVaTM...
+[2025-12-31 14:33:30.654119] Zerodha data feed initialized
+[2025-12-31 14:33:30.654126+05:30] ✓ Connected to Zerodha
+
+[2025-12-31 14:33:30.654147+05:30] Resuming from previous session...
+[2025-12-31 14:33:30.654171+05:30] Loading instruments...
+[2025-12-31 14:33:30.654180] Loading instruments...
+[2025-12-31 14:33:30.654185] Fetching instruments for NFO...
+[2025-12-31 14:33:31.744220] ✓ Retrieved 37220 instruments
+[2025-12-31 14:33:31.749371] Fetching instruments for NSE...
+[2025-12-31 14:33:31.923925] ✓ Retrieved 9058 instruments
+[2025-12-31 14:33:31.927039] ✓ Nifty 50 token: 256265
+[2025-12-31 14:33:31.927060] ✓ Instruments loaded
+[2025-12-31 14:33:31.927070+05:30] Initializing paper broker...
+[2025-12-31 14:33:31.927715] Paper Broker initialized with capital: ₹106,547.50
+[2025-12-31 14:33:31.927730] Daily trade log: paper_trading/logs/trades_20251231_143331.csv
+[2025-12-31 14:33:31.927734] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2025-12-31 14:33:31.927744+05:30] Initializing OI analyzer...
+[2025-12-31 14:33:31.928109+05:30] Initializing strategy...
+[2025-12-31 14:33:31.928142] Strategy initialized
+  Entry: 09:30:00 - 14:25:00
+  Exit: 14:15:00 - 14:16:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2025-12-31 14:33:31.928165+05:30] Restoring strategy state...
+  Restored direction: CALL
+  Restored strike: 26200.0
+  Restored expiry: None
+[2025-12-31 14:33:31.928518+05:30] ✓ All components initialized
+
+================================================================================
+[2025-12-31 14:33:31.928533+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2025-12-31 14:33:31.928685+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2025-12-31 14:33:31.928713+05:30] Exit Monitor: Past EOD exit time (14:16:00), stopping...
+[2025-12-31 14:33:31.928779+05:30] ✓ Exit monitor loop started
+[2025-12-31 14:33:31.929107+05:30] ✓ Strategy loop started
+[2025-12-31 14:33:31.929119+05:30] Past EOD exit time (14:16:00), stopping...
+
+================================================================================
+[2025-12-31 14:33:31.929133+05:30] Shutting down...
+================================================================================
+
+Final Statistics:
+  Total Trades: 0
+  Win Rate: 0.0%
+  Total P&L: ₹0.00
+  ROI: +0.00%
+[2025-12-31 14:33:31.929478] Logging out...
+[2025-12-31 14:33:31.955350] ✓ Logged out successfully
+
+[2025-12-31 14:33:31.955368+05:30] ✓ Shutdown complete

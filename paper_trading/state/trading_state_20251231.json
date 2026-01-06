@@ -1,0 +1,74 @@
+{
+  "timestamp": "2025-12-31T14:15:00.000000+05:30",
+  "date": "2025-12-31",
+  "session_id": "SESSION_20251231_1030",
+  "mode": "paper",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "PAPER_20251231_001",
+      "strike": 26050.0,
+      "option_type": "CALL",
+      "expiry": "2026-01-06",
+      "entry_time": "2025-12-31T10:30:25.000000+05:30",
+      "exit_time": "2025-12-31T14:15:00.000000+05:30",
+      "entry_price": 107.4,
+      "exit_price": 193.0,
+      "size": 75,
+      "pnl": 6420.0,
+      "pnl_pct": 79.7020484171322,
+      "vwap_at_entry": 106.28,
+      "vwap_at_exit": 194.53738749119054,
+      "oi_at_entry": 7215845,
+      "oi_change_at_entry": -70.75657805842559,
+      "oi_at_exit": 2104895,
+      "exit_reason": "EOD Exit"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 26122.95,
+    "trading_strike": 26050.0,
+    "direction": "CALL",
+    "max_call_oi_strike": 26200.0,
+    "max_put_oi_strike": 26000.0,
+    "last_oi_check": "2025-12-31T14:15:00.000000+05:30",
+    "vwap_tracking": {
+      "26050.0CALL": {
+        "sum_typical_price_volume": 30606578359.5,
+        "sum_volume": 271448320.0,
+        "current_vwap": 106.28,
+        "last_update": "2025-12-31T10:30:25.000000+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 6420.0,
+    "win_count": 1,
+    "loss_count": 0,
+    "win_rate": 100.0
+  },
+  "portfolio": {
+    "initial_capital": 100127.5,
+    "current_cash": 106547.5,
+    "positions_value": 0,
+    "total_value": 106547.5,
+    "total_return_pct": 6.410134453781515
+  },
+  "api_stats": {
+    "calls_5min_loop": 12,
+    "calls_1min_ltp": 20,
+    "total_calls_today": 32,
+    "last_api_call": "2025-12-31T14:15:00.000000+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2025-12-31T14:15:00.000000+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false
+  }
+}

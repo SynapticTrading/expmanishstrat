@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-01-01T13:25:00.003225+05:30",
+  "date": "2026-01-01",
+  "session_id": "SESSION_20260101_1250",
+  "mode": "paper",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "PAPER_20260101_001",
+      "strike": 26200.0,
+      "option_type": "CALL",
+      "expiry": "2026-01-06",
+      "entry_time": "2026-01-01T13:05:31.389006+05:30",
+      "exit_time": "2026-01-01T13:22:17.979993+05:30",
+      "entry_price": 67.7,
+      "exit_price": 62.55,
+      "size": 75,
+      "pnl": -386.25,
+      "pnl_pct": -7.6070901033973515,
+      "vwap_at_entry": 67.09424289980674,
+      "vwap_at_exit": 66.97640440523107,
+      "oi_at_entry": 15235545,
+      "oi_change_at_entry": 0.3455734599582705,
+      "oi_at_exit": 15288195,
+      "exit_reason": "VWAP Stop (>5% below VWAP)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 26165.45,
+    "trading_strike": 26200.0,
+    "direction": "CALL",
+    "max_call_oi_strike": 26200.0,
+    "max_put_oi_strike": 26000.0,
+    "last_oi_check": "2026-01-01T13:20:00.096772+05:30",
+    "vwap_tracking": {
+      "26200.0CALL": {
+        "sum_typical_price_volume": 269268635428.0,
+        "sum_volume": 4011305090.0,
+        "current_vwap": 67.12743842378741,
+        "last_update": "2026-01-01T13:20:00.096780+05:30"
+      },
+      "26150.0CALL": {
+        "sum_typical_price_volume": 11388686400.0,
+        "sum_volume": 126540960.0,
+        "current_vwap": 90.0,
+        "last_update": "2026-01-01T13:20:00.096787+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": -386.25,
+    "win_count": 0,
+    "loss_count": 1,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 106547.5,
+    "current_cash": 106161.25,
+    "positions_value": 0,
+    "total_value": 106161.25,
+    "total_return_pct": -0.3625143715244361
+  },
+  "api_stats": {
+    "calls_5min_loop": 7,
+    "calls_1min_ltp": 17,
+    "total_calls_today": 24,
+    "last_api_call": "2026-01-01T13:22:17.981580+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-01T13:25:00.003206+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false
+  }
+}

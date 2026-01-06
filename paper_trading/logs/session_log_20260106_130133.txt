@@ -1,0 +1,485 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-06 13:01:34.289508+05:30] Checking for previous session...
+[2026-01-06 13:01:34.289693+05:30] ✓ State loaded from paper_trading/state/trading_state_20260106.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-06T11:42:44.003224+05:30
+Downtime: ~78 minutes
+Active Positions: 0
+Daily P&L: ₹-243.75
+================================================================================
+
+Resume from crash? (y/n): 
+[2026-01-06 13:01:37.614768+05:30] Resuming session...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-06T11:42:44.003224+05:30
+Recovery Time: 2026-01-06 13:01:37.615004+05:30
+Downtime: 78 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+
+[2026-01-06 13:01:37.615983+05:30] Connecting to Zerodha...
+[2026-01-06 13:01:37.616013] Connecting to Zerodha...
+[2026-01-06 13:01:37.849222] Generated TOTP: 184167
+[2026-01-06 13:01:37.994469] ✓ Request token extracted from redirect
+[2026-01-06 13:01:37.994504] Request token obtained: s9NAMtKPxQzMDPz8pgnM...
+[2026-01-06 13:01:38.072456] ✓ Connection successful!
+[2026-01-06 13:01:38.072483] Access Token: Z603fw7x56CPJVpxzC5G...
+[2026-01-06 13:01:38.072547] Zerodha data feed initialized
+[2026-01-06 13:01:38.072568+05:30] ✓ Connected to Zerodha
+
+[2026-01-06 13:01:38.072606+05:30] Resuming from previous session...
+[2026-01-06 13:01:38.072668+05:30] Loading instruments...
+[2026-01-06 13:01:38.072684] Loading instruments...
+[2026-01-06 13:01:38.072693] Fetching instruments for NFO...
+[2026-01-06 13:01:39.157077] ✓ Retrieved 38126 instruments
+[2026-01-06 13:01:39.163750] Fetching instruments for NSE...
+[2026-01-06 13:01:39.275243] ✓ Retrieved 9084 instruments
+[2026-01-06 13:01:39.277615] ✓ Nifty 50 token: 256265
+[2026-01-06 13:01:39.277631] ✓ Instruments loaded
+[2026-01-06 13:01:39.277640+05:30] Initializing paper broker...
+[2026-01-06 13:01:39.278449] Paper Broker initialized with capital: ₹105,636.25
+[2026-01-06 13:01:39.278462] Daily trade log: paper_trading/logs/trades_20260106_130139.csv
+[2026-01-06 13:01:39.278466] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-06 13:01:39.278477] Restoring 1 closed trade(s)...
+  ✓ Restored trade: CALL 26200.0 | P&L: ₹-243.75
+[2026-01-06 13:01:39.278498] ✓ Restored 1 closed trade(s)
+[2026-01-06 13:01:39.278502+05:30] Initializing OI analyzer...
+[2026-01-06 13:01:39.278811+05:30] Initializing strategy...
+[2026-01-06 13:01:39.278838] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-06 13:01:39.278859+05:30] Restoring strategy state...
+  Restored current_date: 2026-01-06
+  Restored expiry from closed position: 2026-01-06
+  Restored daily_trade_taken: True (has closed trades, trades_today=1)
+  Restored direction: CALL
+  Restored strike: 26200.0
+  Restored expiry: 2026-01-06
+[2026-01-06 13:01:39.279503+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-06 13:01:39.279516+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2026-01-06 13:01:39.279642+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-06 13:01:39.279667+05:30] ✓ Exit monitor loop started
+[2026-01-06 13:01:39.280111+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-06 13:01:39.280122+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:01:39.280122+05:30] Nifty Spot: 26183.45
+[2026-01-06 13:01:39.280122+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:01:39.280122+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:01:39.339562] Fetching quotes for 22 options...
+[2026-01-06 13:01:39.379337] ✓ Retrieved 22 option quotes
+[2026-01-06 13:01:39.280122+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-06
+[2026-01-06 13:01:39.280122+05:30] 🎯 Initialized VWAP for CALL 26200.0: 46 bars from 9:15 AM
+[2026-01-06 13:01:39.280122+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:01:39.280122+05:30] CALL 26200.0: OI=52,394,615, Change=0 (+0.00%) - BUILDING
+[2026-01-06 13:01:39.280122+05:30] CALL 26200.0: Price=₹20.15, VWAP=₹20.15 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:01:39] Waiting 201s for next candle at 13:05:00
+
+================================================================================
+[2026-01-06 13:05:00.004551+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:05:00.004551+05:30] Nifty Spot: 26177.20
+[2026-01-06 13:05:00.004551+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:05:00.004551+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:05:00.075301] Fetching quotes for 22 options...
+[2026-01-06 13:05:00.111211] ✓ Retrieved 22 option quotes
+[2026-01-06 13:05:00.004551+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:05:00.004551+05:30] CALL 26200.0: OI=50,459,825, Change=-1,934,790 (-3.69%) - UNWINDING ✓
+[2026-01-06 13:05:00.004551+05:30] CALL 26200.0: Price=₹16.10, VWAP=₹18.10 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:05:00] Waiting 300s for next candle at 13:10:00
+
+================================================================================
+[2026-01-06 13:10:00.021712+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:10:30.039284] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-06 13:10:30.039348] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:10:00.021712+05:30] Nifty Spot: 26188.35
+[2026-01-06 13:10:00.021712+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:10:00.021712+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:10:31.124878] Fetching quotes for 22 options...
+[2026-01-06 13:10:31.157890] ✓ Retrieved 22 option quotes
+[2026-01-06 13:10:00.021712+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:10:00.021712+05:30] CALL 26200.0: OI=51,586,730, Change=-807,885 (-1.54%) - UNWINDING ✓
+[2026-01-06 13:10:00.021712+05:30] CALL 26200.0: Price=₹18.50, VWAP=₹18.24 - ABOVE ✓
+[2026-01-06 13:10:00.021712+05:30] 🎯 ENTRY SIGNAL: CALL 26200.0 - Price: 18.50, VWAP: 18.24, OI Change: -807,885 (-1.54%)
+[2026-01-06 13:10:00.021712+05:30] ⛔ Entry blocked: Daily trade limit reached (1 trade/day)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:10:31] Waiting 269s for next candle at 13:15:00
+
+================================================================================
+[2026-01-06 13:15:00.005203+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:15:24.999141] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:15:24.999211] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:15:00.005203+05:30] Nifty Spot: 26172.00
+[2026-01-06 13:15:00.005203+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:15:00.005203+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:15:26.078644] Fetching quotes for 22 options...
+[2026-01-06 13:15:26.111316] ✓ Retrieved 22 option quotes
+[2026-01-06 13:15:00.005203+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:15:00.005203+05:30] CALL 26200.0: OI=52,759,980, Change=365,365 (+0.70%) - BUILDING
+[2026-01-06 13:15:00.005203+05:30] CALL 26200.0: Price=₹11.40, VWAP=₹16.44 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:15:26] Waiting 274s for next candle at 13:20:00
+
+================================================================================
+[2026-01-06 13:20:00.005128+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:20:23.981507] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:20:23.981579] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:20:00.005128+05:30] Nifty Spot: 26167.65
+[2026-01-06 13:20:00.005128+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:20:00.005128+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:20:25.070533] Fetching quotes for 22 options...
+[2026-01-06 13:20:25.108110] ✓ Retrieved 22 option quotes
+[2026-01-06 13:20:00.005128+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:20:00.005128+05:30] CALL 26200.0: OI=52,697,125, Change=302,510 (+0.58%) - BUILDING
+[2026-01-06 13:20:00.005128+05:30] CALL 26200.0: Price=₹10.25, VWAP=₹15.12 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:20:25] Waiting 275s for next candle at 13:25:00
+
+================================================================================
+[2026-01-06 13:25:00.014922+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:25:28.664088] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:25:28.664146] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:25:00.014922+05:30] Nifty Spot: 26162.15
+[2026-01-06 13:25:00.014922+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:25:00.014922+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:25:29.758383] Fetching quotes for 22 options...
+[2026-01-06 13:25:29.803275] ✓ Retrieved 22 option quotes
+[2026-01-06 13:25:00.014922+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:25:00.014922+05:30] CALL 26200.0: OI=53,695,005, Change=1,300,390 (+2.48%) - BUILDING
+[2026-01-06 13:25:00.014922+05:30] CALL 26200.0: Price=₹7.95, VWAP=₹13.83 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:25:29] Waiting 270s for next candle at 13:30:00
+
+================================================================================
+[2026-01-06 13:30:00.005685+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:30:30.012374] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-06 13:30:30.012435] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:30:00.005685+05:30] Nifty Spot: 26159.85
+[2026-01-06 13:30:00.005685+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:30:00.005685+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:30:31.095547] Fetching quotes for 22 options...
+[2026-01-06 13:30:31.130347] ✓ Retrieved 22 option quotes
+[2026-01-06 13:30:00.005685+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:30:00.005685+05:30] CALL 26200.0: OI=54,200,315, Change=1,805,700 (+3.45%) - BUILDING
+[2026-01-06 13:30:00.005685+05:30] CALL 26200.0: Price=₹6.80, VWAP=₹12.74 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:30:31] Waiting 269s for next candle at 13:35:00
+
+================================================================================
+[2026-01-06 13:35:00.005676+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:35:24.023566] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:35:24.023604] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:35:00.005676+05:30] Nifty Spot: 26158.40
+[2026-01-06 13:35:00.005676+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:35:00.005676+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:35:25.127349] Fetching quotes for 22 options...
+[2026-01-06 13:35:25.169373] ✓ Retrieved 22 option quotes
+[2026-01-06 13:35:00.005676+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:35:00.005676+05:30] CALL 26200.0: OI=56,233,645, Change=3,839,030 (+7.33%) - BUILDING
+[2026-01-06 13:35:00.005676+05:30] CALL 26200.0: Price=₹5.95, VWAP=₹11.81 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:35:25] Waiting 275s for next candle at 13:40:00
+
+================================================================================
+[2026-01-06 13:40:00.005767+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:40:29.629133] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:40:29.629228] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:40:00.005767+05:30] Nifty Spot: 26155.80
+[2026-01-06 13:40:00.005767+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:40:00.005767+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:40:30.709249] Fetching quotes for 22 options...
+[2026-01-06 13:40:30.749062] ✓ Retrieved 22 option quotes
+[2026-01-06 13:40:00.005767+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:40:00.005767+05:30] CALL 26200.0: OI=57,520,255, Change=5,125,640 (+9.78%) - BUILDING
+[2026-01-06 13:40:00.005767+05:30] CALL 26200.0: Price=₹5.90, VWAP=₹11.09 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:40:30] Waiting 269s for next candle at 13:45:00
+
+================================================================================
+[2026-01-06 13:45:00.007126+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:45:25.516438] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:45:25.516479] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:45:00.007126+05:30] Nifty Spot: 26163.70
+[2026-01-06 13:45:00.007126+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:45:00.007126+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:45:26.640046] Fetching quotes for 22 options...
+[2026-01-06 13:45:26.694644] ✓ Retrieved 22 option quotes
+[2026-01-06 13:45:00.007126+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:45:00.007126+05:30] CALL 26200.0: OI=59,319,130, Change=6,924,515 (+13.22%) - BUILDING
+[2026-01-06 13:45:00.007126+05:30] CALL 26200.0: Price=₹7.60, VWAP=₹10.70 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:45:26] Waiting 273s for next candle at 13:50:00
+
+================================================================================
+[2026-01-06 13:50:00.005755+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:50:25.966017] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 13:50:25.966061] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:50:00.005755+05:30] Nifty Spot: 26174.25
+[2026-01-06 13:50:00.005755+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:50:00.005755+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:50:27.076432] Fetching quotes for 22 options...
+[2026-01-06 13:50:27.115208] ✓ Retrieved 22 option quotes
+[2026-01-06 13:50:00.005755+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:50:00.005755+05:30] CALL 26200.0: OI=59,730,905, Change=7,336,290 (+14.00%) - BUILDING
+[2026-01-06 13:50:00.005755+05:30] CALL 26200.0: Price=₹9.30, VWAP=₹10.55 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:50:27] Waiting 273s for next candle at 13:55:00
+
+================================================================================
+[2026-01-06 13:55:00.005742+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 13:55:30.011037] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-06 13:55:30.011192] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 13:55:00.005742+05:30] Nifty Spot: 26158.05
+[2026-01-06 13:55:00.005742+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 13:55:00.005742+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 13:55:31.102118] Fetching quotes for 22 options...
+[2026-01-06 13:55:31.138630] ✓ Retrieved 22 option quotes
+[2026-01-06 13:55:00.005742+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 13:55:00.005742+05:30] CALL 26200.0: OI=59,549,880, Change=7,155,265 (+13.66%) - BUILDING
+[2026-01-06 13:55:00.005742+05:30] CALL 26200.0: Price=₹4.15, VWAP=₹9.92 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[13:55:31] Waiting 269s for next candle at 14:00:00
+
+================================================================================
+[2026-01-06 14:00:00.005783+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 14:00:27.122177] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 14:00:27.122225] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 14:00:00.005783+05:30] Nifty Spot: 26155.95
+[2026-01-06 14:00:00.005783+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 14:00:00.005783+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 14:00:28.202692] Fetching quotes for 22 options...
+[2026-01-06 14:00:28.236186] ✓ Retrieved 22 option quotes
+[2026-01-06 14:00:00.005783+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 14:00:00.005783+05:30] CALL 26200.0: OI=58,408,350, Change=6,013,735 (+11.48%) - BUILDING
+[2026-01-06 14:00:00.005783+05:30] CALL 26200.0: Price=₹4.10, VWAP=₹9.39 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[14:00:28] Waiting 272s for next candle at 14:05:00
+
+================================================================================
+[2026-01-06 14:05:00.005762+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-06 14:05:21.898462] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-06 14:05:21.898548] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-06 14:05:00.005762+05:30] Nifty Spot: 26154.90
+[2026-01-06 14:05:00.005762+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-06 14:05:00.005762+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-06 14:05:22.975960] Fetching quotes for 22 options...
+[2026-01-06 14:05:23.007944] ✓ Retrieved 22 option quotes
+[2026-01-06 14:05:00.005762+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2026-01-06 14:05:00.005762+05:30] CALL 26200.0: OI=58,982,300, Change=6,587,685 (+12.57%) - BUILDING
+[2026-01-06 14:05:00.005762+05:30] CALL 26200.0: Price=₹3.50, VWAP=₹8.89 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-06
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹-243.75
+ROI: -0.23%
+--------------------------------------------------------------------------------
+
+[14:05:23] Waiting 277s for next candle at 14:10:00

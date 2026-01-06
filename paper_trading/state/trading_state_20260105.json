@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-01-05T16:20:56.362225+05:30",
+  "date": "2026-01-05",
+  "session_id": "SESSION_20260105_1220",
+  "mode": "paper",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "PAPER_20260105_001",
+      "strike": 26350.0,
+      "option_type": "CALL",
+      "expiry": "2026-01-06",
+      "entry_time": "2026-01-05T12:20:00.097073+05:30",
+      "exit_time": "2026-01-05T12:33:14.366108+05:30",
+      "entry_price": 48.15,
+      "exit_price": 44.4,
+      "size": 75,
+      "pnl": -281.25,
+      "pnl_pct": -7.788161993769471,
+      "vwap_at_entry": 47.851730643921755,
+      "vwap_at_exit": 46.82224440991992,
+      "oi_at_entry": 21133645,
+      "oi_change_at_entry": -0.5983062765599682,
+      "oi_at_exit": 21227050,
+      "exit_reason": "VWAP Stop (>5% below VWAP)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 26335.7,
+    "trading_strike": 26350.0,
+    "direction": "CALL",
+    "max_call_oi_strike": 26400.0,
+    "max_put_oi_strike": 26300.0,
+    "last_oi_check": "2026-01-05T12:35:00.000000+05:30",
+    "vwap_tracking": {
+      "26350.0CALL": {
+        "sum_typical_price_volume": 219456789012.34,
+        "sum_volume": 4756234567.0,
+        "current_vwap": 46.82,
+        "last_update": "2026-01-05T12:35:00.000000+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": -281.25,
+    "win_count": 0,
+    "loss_count": 1,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 106161.25,
+    "current_cash": 105880.0,
+    "positions_value": 0.0,
+    "total_value": 105880.0,
+    "total_return_pct": -0.26489363024959806
+  },
+  "api_stats": {
+    "calls_5min_loop": 8,
+    "calls_1min_ltp": 15,
+    "total_calls_today": 23,
+    "last_api_call": "2026-01-05T12:35:00.000000+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-05T16:20:56.362214+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": true,
+    "strategy_loop_running": true,
+    "recovered": true,
+    "recovery_time": "2026-01-05T16:20:54.680099+05:30"
+  }
+}

@@ -1,0 +1,92 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-05 16:20:50.755667+05:30] Checking for previous session...
+[2026-01-05 16:20:50.755824+05:30] ✓ State loaded from paper_trading/state/trading_state_20260105.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-05T12:35:00.000000+05:30
+Downtime: ~225 minutes
+Active Positions: 0
+Daily P&L: ₹-281.25
+================================================================================
+
+Resume from crash? (y/n): 
+[2026-01-05 16:20:54.679766+05:30] Resuming session...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-05T12:35:00.000000+05:30
+Recovery Time: 2026-01-05 16:20:54.680062+05:30
+Downtime: 225 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+
+[2026-01-05 16:20:54.681149+05:30] Connecting to Zerodha...
+[2026-01-05 16:20:54.681182] Connecting to Zerodha...
+[2026-01-05 16:20:54.884690] Generated TOTP: 874911
+[2026-01-05 16:20:55.071770] ✓ Request token extracted from redirect
+[2026-01-05 16:20:55.071810] Request token obtained: oouGiIvSgSmbOhK7HqaJ...
+[2026-01-05 16:20:55.171842] ✓ Connection successful!
+[2026-01-05 16:20:55.171863] Access Token: uOnXbf8c4VyfWkrOKdvL...
+[2026-01-05 16:20:55.171911] Zerodha data feed initialized
+[2026-01-05 16:20:55.171928+05:30] ✓ Connected to Zerodha
+
+[2026-01-05 16:20:55.171978+05:30] Resuming from previous session...
+[2026-01-05 16:20:55.172043+05:30] Loading instruments...
+[2026-01-05 16:20:55.172066] Loading instruments...
+[2026-01-05 16:20:55.172079] Fetching instruments for NFO...
+[2026-01-05 16:20:56.234859] ✓ Retrieved 37479 instruments
+[2026-01-05 16:20:56.239939] Fetching instruments for NSE...
+[2026-01-05 16:20:56.358447] ✓ Retrieved 9107 instruments
+[2026-01-05 16:20:56.360902] ✓ Nifty 50 token: 256265
+[2026-01-05 16:20:56.360919] ✓ Instruments loaded
+[2026-01-05 16:20:56.360929+05:30] Initializing paper broker...
+[2026-01-05 16:20:56.361437] Paper Broker initialized with capital: ₹105,880.00
+[2026-01-05 16:20:56.361450] Daily trade log: paper_trading/logs/trades_20260105_162056.csv
+[2026-01-05 16:20:56.361454] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-05 16:20:56.361465] Restoring 1 closed trade(s)...
+  ✓ Restored trade: CALL 26350.0 | P&L: ₹-281.25
+[2026-01-05 16:20:56.361486] ✓ Restored 1 closed trade(s)
+[2026-01-05 16:20:56.361490+05:30] Initializing OI analyzer...
+[2026-01-05 16:20:56.361812+05:30] Initializing strategy...
+[2026-01-05 16:20:56.361842] Strategy initialized
+  Entry: 09:30:00 - 14:30:00
+  Exit: 14:50:00 - 15:00:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-05 16:20:56.361863+05:30] Restoring strategy state...
+  Restored current_date: 2026-01-05
+  Restored expiry from closed position: 2026-01-06
+  Restored daily_trade_taken: True (has closed trades, trades_today=1)
+  Restored direction: CALL
+  Restored strike: 26350.0
+  Restored expiry: 2026-01-06
+[2026-01-05 16:20:56.362591+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-05 16:20:56.362608+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2026-01-05 16:20:56.362632+05:30] Market closed, waiting...
+[2026-01-05 16:21:56.367672+05:30] Market closed, waiting...

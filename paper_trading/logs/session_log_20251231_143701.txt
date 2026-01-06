@@ -1,0 +1,217 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2025-12-31 14:37:02.678506+05:30] Checking for previous session...
+[2025-12-31 14:37:02.678693+05:30] ✓ State loaded from paper_trading/state/trading_state_20251231.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2025-12-31T14:34:56.038428+05:30
+Downtime: ~2 minutes
+Active Positions: 0
+Daily P&L: ₹6,420.00
+================================================================================
+
+Resume from crash? (y/n): 
+[2025-12-31 14:37:04.726029+05:30] Resuming session...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2025-12-31T14:34:56.038428+05:30
+Recovery Time: 2025-12-31 14:37:04.726248+05:30
+Downtime: 2 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+
+[2025-12-31 14:37:04.727353+05:30] Connecting to Zerodha...
+[2025-12-31 14:37:04.727382] Connecting to Zerodha...
+[2025-12-31 14:37:04.941668] Generated TOTP: 380711
+[2025-12-31 14:37:05.038708] ✓ Request token extracted from redirect
+[2025-12-31 14:37:05.038740] Request token obtained: vLWdEqJespXMBv2I4ffX...
+[2025-12-31 14:37:05.126308] ✓ Connection successful!
+[2025-12-31 14:37:05.126344] Access Token: VCfsWD4yhjt1RKQrAK1E...
+[2025-12-31 14:37:05.126394] Zerodha data feed initialized
+[2025-12-31 14:37:05.126408+05:30] ✓ Connected to Zerodha
+
+[2025-12-31 14:37:05.126443+05:30] Resuming from previous session...
+[2025-12-31 14:37:05.126486+05:30] Loading instruments...
+[2025-12-31 14:37:05.126505] Loading instruments...
+[2025-12-31 14:37:05.126514] Fetching instruments for NFO...
+[2025-12-31 14:37:06.198130] ✓ Retrieved 37220 instruments
+[2025-12-31 14:37:06.204460] Fetching instruments for NSE...
+[2025-12-31 14:37:06.306231] ✓ Retrieved 9058 instruments
+[2025-12-31 14:37:06.309666] ✓ Nifty 50 token: 256265
+[2025-12-31 14:37:06.309691] ✓ Instruments loaded
+[2025-12-31 14:37:06.309701+05:30] Initializing paper broker...
+[2025-12-31 14:37:06.310431] Paper Broker initialized with capital: ₹106,547.50
+[2025-12-31 14:37:06.310452] Daily trade log: paper_trading/logs/trades_20251231_143706.csv
+[2025-12-31 14:37:06.310458] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2025-12-31 14:37:06.310469] Restoring 1 closed trade(s)...
+  ✓ Restored trade: CALL 0 | P&L: ₹+6,420.00
+[2025-12-31 14:37:06.310492] ✓ Restored 1 closed trade(s)
+[2025-12-31 14:37:06.310497+05:30] Initializing OI analyzer...
+[2025-12-31 14:37:06.310904+05:30] Initializing strategy...
+[2025-12-31 14:37:06.310939] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2025-12-31 14:37:06.310961+05:30] Restoring strategy state...
+  Restored direction: CALL
+  Restored strike: 26200.0
+  Restored expiry: None
+[2025-12-31 14:37:06.311316+05:30] ✓ All components initialized
+
+================================================================================
+[2025-12-31 14:37:06.311331+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+
+[2025-12-31 14:37:06.311511+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2025-12-31 14:37:06.311563+05:30] ✓ Exit monitor loop started
+[2025-12-31 14:37:06.311884+05:30] ✓ Strategy loop started
+
+================================================================================
+[2025-12-31 14:37:06.311898+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-31 14:37:06.311898+05:30] Nifty Spot: 26163.70
+[2025-12-31 14:37:06.364542] Fetching quotes for 22 options...
+[2025-12-31 14:37:06.425293] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2025-12-31 14:37:06.311898+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2025-12-31 14:37:06.311898+05:30] Determining direction using CURRENT OI data...
+[2025-12-31 14:37:06.311898+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+
+================================================================================
+[2025-12-31 14:37:06.311898+05:30] NEW TRADING DAY: 2025-12-31
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 26163.70)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25900.0          1,371,305            -263.70
+25950.0            918,580            -213.70
+26000.0          5,288,400            -163.70
+26050.0          2,046,590            -113.70
+26100.0          5,417,880             -63.70
+26150.0          4,531,475             -13.70
+26200.0          7,998,445              36.30 👈 MAX
+26250.0          3,249,610              86.30
+26300.0          6,037,070             136.30
+26350.0          2,681,120             186.30
+26400.0          7,636,200             236.30
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25900.0          9,363,575             263.70
+25950.0          6,149,065             213.70
+26000.0         19,891,105             163.70 👈 MAX
+26050.0          9,203,285             113.70
+26100.0         13,273,260              63.70
+26150.0          7,327,385              13.70
+26200.0          7,943,130             -36.30
+26250.0          1,637,870             -86.30
+26300.0          2,522,390            -136.30
+26350.0            476,385            -186.30
+26400.0            584,220            -236.30
+================================================================================
+
+[2025-12-31 14:37:06.311898+05:30] Max Call OI: 7,998,445 @ 26200.0, Max Put OI: 19,891,105 @ 26000.0
+[2025-12-31 14:37:06.311898+05:30] Direction determined: CALL (Call dist: 36.30, Put dist: 163.70)
+[2025-12-31 14:37:06.311898+05:30] ✓ Daily Analysis Complete: Direction=CALL, Strike=26200.0, Expiry=2026-01-06, Spot=26163.70
+[2025-12-31 14:37:06.311898+05:30] 🔄 Reset VWAP running totals for new day: 2025-12-31
+[2025-12-31 14:37:06.311898+05:30] 🎯 Initialized VWAP for CALL 26200.0: 65 bars from 9:15 AM
+[2025-12-31 14:37:06.311898+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2025-12-31 14:37:06.311898+05:30] CALL 26200.0: OI=7,998,445, Change=0 (+0.00%) - BUILDING
+[2025-12-31 14:37:06.311898+05:30] CALL 26200.0: Price=₹93.90, VWAP=₹93.90 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-31
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 0
+Total P&L: ₹6,420.00
+ROI: +6.03%
+--------------------------------------------------------------------------------
+
+[14:37:06] Waiting 174s for next candle at 14:40:00
+
+================================================================================
+[2025-12-31 14:40:00.004100+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2025-12-31 14:40:00.004100+05:30] Nifty Spot: 26173.65
+[2025-12-31 14:40:00.056008] Fetching quotes for 22 options...
+[2025-12-31 14:40:00.098816] ✓ Retrieved 22 option quotes
+[2025-12-31 14:40:00.004100+05:30] Checking entry: CALL 26200.0, Expiry=2026-01-06
+[2025-12-31 14:40:00.004100+05:30] CALL 26200.0: OI=7,986,485, Change=-11,960 (-0.15%) - UNWINDING ✓
+[2025-12-31 14:40:00.004100+05:30] CALL 26200.0: Price=₹99.25, VWAP=₹96.59 - ABOVE ✓
+[2025-12-31 14:40:00.004100+05:30] 🎯 ENTRY SIGNAL: CALL 26200.0 - Price: 99.25, VWAP: 96.59, OI Change: -11,960 (-0.15%)
+[2025-12-31 14:40:00.004100+05:30] 📈 PLACING BUY ORDER: size=1, expected_price=99.25
+[2025-12-31 14:40:00.101329] ✓ BUY ORDER EXECUTED
+  Strike: 26200.0 CALL
+  Expiry: 2026-01-06
+  Entry Price: ₹99.25
+  Size: 75
+  Cost: ₹7,443.75
+  VWAP: ₹96.59
+  OI: 7,986,485 (Change: -14.95%)
+  Remaining Cash: ₹99,103.75
+[2025-12-31 14:40:00.004100+05:30] 🔵 BUY OPTION EXECUTED: CALL 26200.0 @ ₹99.25 (Expiry: 2026-01-06, 1 lot = 75 qty)
+[2025-12-31 14:40:00.004100+05:30]    📊 ENTRY DATA: VWAP=96.59, OI=7,986,485, OI Change=-11,960 (-0.15%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2025-12-31
+Broker: Zerodha
+Daily Direction: CALL @ 26200.0
+Open Positions: 1
+Total P&L: ₹6,420.00
+ROI: +6.03%
+--------------------------------------------------------------------------------
+
+[14:40:00] Waiting 300s for next candle at 14:45:00
+[2025-12-31 14:40:06.321849+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2025-12-31 14:40:06.376897] Fetching quotes for 22 options...
+[2025-12-31 14:40:06.411673] ✓ Retrieved 22 option quotes
+[2025-12-31 14:40:06.321849+05:30] 📊 LTP CHECK: 26200.0 CALL
+    Current LTP: ₹99.30 | Entry: ₹99.25 | P&L: +0.05%
+    Initial Stop: ₹74.44 (distance: 33.40%)
+[2025-12-31 14:41:06.417906+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2025-12-31 14:41:06.491075] Fetching quotes for 22 options...
+[2025-12-31 14:41:06.524137] ✓ Retrieved 22 option quotes
+[2025-12-31 14:41:06.417906+05:30] 📊 LTP CHECK: 26200.0 CALL
+    Current LTP: ₹99.00 | Entry: ₹99.25 | P&L: -0.25%
+    Initial Stop: ₹74.44 (distance: 33.00%)
+    VWAP Stop: ₹92.98 | Current VWAP: ₹97.88
+    OI Change: +0.00% (Threshold: 10%)

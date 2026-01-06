@@ -1,0 +1,135 @@
+/Users/Algo_Trading/manishsir_options/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+
+Loading configuration...
+Loading credentials from: paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-05 13:59:34.094838+05:30] Checking for previous session...
+[2026-01-05 13:59:34.095148+05:30] ✓ State loaded from paper_trading/state/trading_state_20260105.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-05T13:01:19.065176+05:30
+Downtime: ~58 minutes
+Active Positions: 0
+Daily P&L: ₹-281.25
+================================================================================
+
+Resume from crash? (y/n): 
+[2026-01-05 13:59:34.095238+05:30] Starting fresh session...
+
+[2026-01-05 13:59:34.095248+05:30] Connecting to Zerodha...
+[2026-01-05 13:59:34.095262] Connecting to Zerodha...
+[2026-01-05 13:59:34.275888] Generated TOTP: 934451
+[2026-01-05 13:59:34.377034] ✓ Request token extracted from redirect
+[2026-01-05 13:59:34.377053] Request token obtained: OezVA8qytV2HBYeP82bI...
+[2026-01-05 13:59:34.439819] ✓ Connection successful!
+[2026-01-05 13:59:34.439834] Access Token: RdeeUH04AOYW5SIxyMAY...
+[2026-01-05 13:59:34.439862] Zerodha data feed initialized
+[2026-01-05 13:59:34.439868+05:30] ✓ Connected to Zerodha
+
+[2026-01-05 13:59:34.439887+05:30] Initializing new session...
+[2026-01-05 13:59:34.440238+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-05
+  Starting Capital: ₹105,880.00
+  Previous P&L: ₹-281.25
+  Previous Trades: 1
+  Previous Win Rate: 0.0%
+[2026-01-05 13:59:34.440636+05:30] Session initialized: SESSION_20260105_1359
+[2026-01-05 13:59:34.440647+05:30] State file: paper_trading/state/trading_state_20260105.json
+[2026-01-05 13:59:34.440666+05:30] Loading instruments...
+[2026-01-05 13:59:34.440676] Loading instruments...
+[2026-01-05 13:59:34.440681] Fetching instruments for NFO...
+[2026-01-05 13:59:35.492084] ✓ Retrieved 37479 instruments
+[2026-01-05 13:59:35.498994] Fetching instruments for NSE...
+[2026-01-05 13:59:35.606466] ✓ Retrieved 9107 instruments
+[2026-01-05 13:59:35.609874] ✓ Nifty 50 token: 256265
+[2026-01-05 13:59:35.609897] ✓ Instruments loaded
+[2026-01-05 13:59:35.609910+05:30] Initializing paper broker...
+[2026-01-05 13:59:35.610790] Paper Broker initialized with capital: ₹105,880.00
+[2026-01-05 13:59:35.610812] Daily trade log: paper_trading/logs/trades_20260105_135935.csv
+[2026-01-05 13:59:35.610817] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-05 13:59:35.610830+05:30] Initializing OI analyzer...
+[2026-01-05 13:59:35.611615+05:30] Initializing strategy...
+[2026-01-05 13:59:35.611666] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-05 13:59:35.612049+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-05 13:59:35.612066+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+
+[2026-01-05 13:59:35.612230+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-05 13:59:35.612258+05:30] ✓ Exit monitor loop started
+[2026-01-05 13:59:35.612472+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-05 13:59:35.612483+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-05 13:59:35.612483+05:30] Nifty Spot: 26257.45
+[2026-01-05 13:59:35.657369] Fetching quotes for 22 options...
+[2026-01-05 13:59:35.692764] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-05 13:59:35.612483+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-05 13:59:35.612483+05:30] Determining direction using CURRENT OI data...
+[2026-01-05 13:59:35.612483+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+
+================================================================================
+[2026-01-05 13:59:35.612483+05:30] NEW TRADING DAY: 2026-01-05
+================================================================================
+[2026-01-05 13:59:35.692857+05:30] ✗ Error in strategy loop: 'PaperBroker' object has no attribute 'closed_positions'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 396, in _strategy_loop
+    self.strategy.on_candle(current_time, spot_price, options_data)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/strategy.py", line 221, in on_candle
+    self.on_new_day(current_time, spot_price, options_data)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/strategy.py", line 110, in on_new_day
+    has_closed_trades = len(self.broker.closed_positions) > 0
+AttributeError: 'PaperBroker' object has no attribute 'closed_positions'
+
+================================================================================
+[2026-01-05 14:00:35.700275+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+
+[2026-01-05 14:00:35.700275+05:30] Nifty Spot: 26250.15
+[2026-01-05 14:00:35.750360] Fetching quotes for 22 options...
+[2026-01-05 14:00:35.797199] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-05 14:00:35.700275+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-05 14:00:35.700275+05:30] Determining direction using CURRENT OI data...
+[2026-01-05 14:00:35.700275+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-05
+Broker: Zerodha
+Daily Direction: None @ None
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+
+[14:00:35] Waiting 264s for next candle at 14:05:00

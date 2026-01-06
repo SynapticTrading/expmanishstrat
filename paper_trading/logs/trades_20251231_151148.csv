@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2025-12-31 15:25:27,2025-12-31 15:29:58,26150.0,CALL,2026-01-06,112.7,115.0,75,172.5,2.0408163265306145,112.62499646173983,113.53968606945767,4159805,-5.638371595818404,3796910,EOD Exit

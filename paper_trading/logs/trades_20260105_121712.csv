@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-05 12:20:00,2026-01-05 12:33:14,26350.0,CALL,2026-01-06,48.15,44.4,75,-281.25,-7.788161993769471,47.851730643921755,46.82224440991992,21133645,-0.5983062765599682,21227050,VWAP Stop (>5% below VWAP)
