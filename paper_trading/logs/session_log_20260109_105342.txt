@@ -1,0 +1,167 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_105342.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 10:53:42.429080+05:30] Checking for previous session...
+[2026-01-09 10:53:42.429466+05:30] ✓ State loaded from paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 10:53:42.429523+05:30] Previous state found but nothing to recover - starting fresh
+
+[2026-01-09 10:53:42.429555+05:30] Connecting to AngelOne...
+[2026-01-09 10:53:42.433654] Generated TOTP: 302025
+[2026-01-09 10:53:42.433694] Connecting to AngelOne...
+[2026-01-09 10:53:42.567333] ✓ Connection successful!
+[2026-01-09 10:53:42.567450] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 10:53:42.567483] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5MzYyMjIsImV4cCI6MTc2ODAyMjYyMn0.s1lwJS8jvUZJcv8azTlEhmeNwSBk6_6C83qo5iezJipSwRRn4qx4ZLR4WOIzHtLpA5932ssZMQj-76A_BONWXw
+[2026-01-09 10:53:42.567510+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 10:53:42.567548+05:30] Initializing new session...
+[2026-01-09 10:53:42.567919+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-09
+  Starting Capital: ₹100,000.00
+  Previous P&L: ₹+0.00
+  Previous Trades: 0
+  Previous Win Rate: 0.0%
+[2026-01-09 10:53:42.570889+05:30] Session initialized: SESSION_20260109_1053
+[2026-01-09 10:53:42.570948+05:30] State file: paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 10:53:42.570994+05:30] Loading instruments...
+[2026-01-09 10:53:42.571022] Loading instruments from AngelOne...
+[2026-01-09 10:53:46.020212] ✓ Downloaded 179933 instruments
+[2026-01-09 10:53:46.189435] ✓ Filtered 40442 NFO instruments
+[2026-01-09 10:53:46.239014] ✓ Loaded 1500 NIFTY options
+[2026-01-09 10:53:46.239246] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 10:53:46.281013+05:30] Initializing paper broker...
+[2026-01-09 10:53:46.281659] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 10:53:46.281711] Daily trade log: paper_trading/logs/trades_20260109_105346.csv
+[2026-01-09 10:53:46.281739] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-09 10:53:46.281769+05:30] Initializing OI analyzer...
+[2026-01-09 10:53:46.282118+05:30] Initializing strategy...
+[2026-01-09 10:53:46.282188] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 10:53:46.282626+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 10:53:46.282687+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+[2026-01-09 10:53:46.282903+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-09 10:53:46.282953+05:30] ✓ Exit monitor loop started
+[2026-01-09 10:53:46.283177+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-09 10:53:46.283211+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 10:53:46.283211+05:30] Nifty Spot: 25834.15
+[2026-01-09 10:53:46.379544] Fetching quotes for 22 options...
+[2026-01-09 10:53:47.912412] ⚠️  Failed to fetch NIFTY13JAN2625700CE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:53:48.339966] ✓ Retrieved 21 option quotes
+
+================================================================================
+[2026-01-09 10:53:46.283211+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-09 10:53:46.283211+05:30] Determining direction using CURRENT OI data...
+[2026-01-09 10:53:46.283211+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-09 10:53:46.283211+05:30] NEW TRADING DAY: 2026-01-09
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25834.15)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25600.0                  0            -234.15 👈 MAX
+25650.0                  0            -184.15 👈 MAX
+25750.0                  0             -84.15 👈 MAX
+25800.0                  0             -34.15 👈 MAX
+25850.0                  0              15.85 👈 MAX
+25900.0                  0              65.85 👈 MAX
+25950.0                  0             115.85 👈 MAX
+26000.0                  0             165.85 👈 MAX
+26050.0                  0             215.85 👈 MAX
+26100.0                  0             265.85 👈 MAX
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25600.0                  0             234.15 👈 MAX
+25650.0                  0             184.15 👈 MAX
+25700.0                  0             134.15 👈 MAX
+25750.0                  0              84.15 👈 MAX
+25800.0                  0              34.15 👈 MAX
+25850.0                  0             -15.85 👈 MAX
+25900.0                  0             -65.85 👈 MAX
+25950.0                  0            -115.85 👈 MAX
+26000.0                  0            -165.85 👈 MAX
+26050.0                  0            -215.85 👈 MAX
+26100.0                  0            -265.85 👈 MAX
+================================================================================
+[2026-01-09 10:53:46.283211+05:30] Max Call OI: 0 @ 25600.0, Max Put OI: 0 @ 26050.0
+[2026-01-09 10:53:46.283211+05:30] Direction determined: CALL (Call dist: -234.15, Put dist: -215.85)
+[2026-01-09 10:53:46.283211+05:30] ✓ Daily Analysis Complete: Direction=CALL, Strike=25850.0, Expiry=2026-01-13, Spot=25834.15
+[2026-01-09 10:53:46.283211+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-09
+[2026-01-09 10:53:46.283211+05:30] 🎯 Initialized VWAP for CALL 25850.0: 20 bars from 9:15 AM
+[2026-01-09 10:53:46.283211+05:30] Checking entry: CALL 25850.0, Expiry=2026-01-13
+[2026-01-09 10:53:46.283211+05:30] CALL 25850.0: OI=0, Change=0 (+0.00%) - BUILDING
+[2026-01-09 10:53:46.283211+05:30] CALL 25850.0: Price=₹101.65, VWAP=₹101.65 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: CALL @ 25850.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[10:53:48] Waiting 72s for next candle at 10:55:00
+
+================================================================================
+[2026-01-09 10:55:00.004886+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 10:55:00.004886+05:30] Nifty Spot: 25831.65
+[2026-01-09 10:55:00.078846] Fetching quotes for 22 options...
+[2026-01-09 10:55:00.730936] ⚠️  Failed to fetch NIFTY13JAN2625700PE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:55:00.789694] ⚠️  Failed to fetch NIFTY13JAN2625800PE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:55:00.841217] ⚠️  Failed to fetch NIFTY13JAN2625950CE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:55:00.891450] ⚠️  Failed to fetch NIFTY13JAN2625650PE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:55:00.941446] ⚠️  Failed to fetch NIFTY13JAN2625800CE: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+[2026-01-09 10:55:01.489859] ✓ Retrieved 17 option quotes
+[2026-01-09 10:55:00.004886+05:30] Checking entry: CALL 25850.0, Expiry=2026-01-13
+[2026-01-09 10:55:00.004886+05:30] CALL 25850.0: OI=0, Change=0 (+0.00%) - BUILDING
+[2026-01-09 10:55:00.004886+05:30] CALL 25850.0: Price=₹101.65, VWAP=₹101.65 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: CALL @ 25850.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[10:55:01] Waiting 299s for next candle at 11:00:00

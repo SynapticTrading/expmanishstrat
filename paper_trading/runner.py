@@ -12,6 +12,7 @@ import argparse
 import pytz
 from src.config_loader import ConfigLoader
 from src.oi_analyzer import OIAnalyzer
+# Generic credential loader - works for both Zerodha and AngelOne
 from paper_trading.legacy.zerodha_connection import load_credentials_from_file
 from paper_trading.utils.factory import create_broker
 from paper_trading.core.broker import PaperBroker
@@ -21,6 +22,77 @@ import pandas as pd
 import signal
 import threading
 import time as time_module
+import logging
+import os
+
+
+def setup_logging():
+    """
+    Setup logging to both console and timestamped file
+    Returns the path to the log file
+    """
+    # Get the paper_trading directory (where runner.py is located)
+    paper_trading_dir = Path(__file__).parent
+
+    # Create necessary directories
+    logs_dir = paper_trading_dir / "logs"
+    state_dir = paper_trading_dir / "state"
+    logs_dir.mkdir(exist_ok=True)
+    state_dir.mkdir(exist_ok=True)
+
+    # Generate timestamped log filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = logs_dir / f"session_log_{timestamp}.txt"
+
+    # Setup logging with both console and file handlers
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    # Remove any existing handlers
+    logger.handlers = []
+
+    # Save original stdout/stderr
+    original_stdout = sys.stdout
+    original_stderr = sys.stderr
+
+    # Console handler (uses original stdout)
+    console_handler = logging.StreamHandler(original_stdout)
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter('%(message)s')
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
+
+    # File handler with immediate flushing
+    # Open file with line buffering (mode 1) for immediate writes
+    file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+    file_handler.setLevel(logging.INFO)
+    file_formatter = logging.Formatter('%(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+
+    # Redirect print statements to logger
+    class LoggerWriter:
+        def __init__(self, level, handlers):
+            self.level = level
+            self.handlers = handlers
+
+        def write(self, message):
+            if message.strip():  # Only log non-empty messages
+                self.level(message.rstrip())
+                # Flush all handlers immediately
+                for handler in self.handlers:
+                    handler.flush()
+
+        def flush(self):
+            # Flush all handlers
+            for handler in self.handlers:
+                handler.flush()
+
+    # Redirect stdout and stderr to logger
+    sys.stdout = LoggerWriter(logger.info, logger.handlers)
+    sys.stderr = LoggerWriter(logger.error, logger.handlers)
+
+    return log_file
 
 
 class UniversalPaperTrader:
@@ -60,8 +132,11 @@ class UniversalPaperTrader:
         self.strategy = None
         self.oi_analyzer = None
 
-        # State management
-        self.state_manager = StateManager()
+        # State management (pass broker name for separate state files)
+        # Use absolute path to ensure consistent location
+        paper_trading_dir = Path(__file__).parent
+        state_dir = paper_trading_dir / "state"
+        self.state_manager = StateManager(state_dir=str(state_dir), broker_name=self.broker_api.name)
         self.ist = pytz.timezone('Asia/Kolkata')
 
         # Threading
@@ -201,7 +276,15 @@ class UniversalPaperTrader:
 
         # Initialize paper broker
         print(f"[{self._get_ist_now()}] Initializing paper broker...")
-        self.paper_broker = PaperBroker(initial_capital, state_manager=self.state_manager)
+        # Use absolute path for logs directory
+        paper_trading_dir = Path(__file__).parent
+        logs_dir = paper_trading_dir / "logs"
+        self.paper_broker = PaperBroker(
+            initial_capital,
+            state_manager=self.state_manager,
+            logs_dir=str(logs_dir),
+            broker_name=self.broker_api.name  # Pass broker name for tracking
+        )
 
         # Restore positions if recovering from crash
         if self.recovery_mode and self.recovery_info:
@@ -542,32 +625,96 @@ class UniversalPaperTrader:
         print(f"\n[{self._get_ist_now()}] ✓ Shutdown complete")
 
 
+def print_session_summary(log_file, start_time, trader=None):
+    """Print end-of-session summary with file locations"""
+    print("\n")
+    print("=" * 80)
+    print("Paper trading stopped")
+    print("")
+    print(f"Session log: {log_file}")
+    print("")
+    print("View files:")
+    print(f"  Session log:  cat {log_file}")
+
+    # Find latest trade log
+    logs_dir = Path(log_file).parent
+    trade_logs = sorted(logs_dir.glob("trades_*.csv"))
+    if trade_logs:
+        latest_trade_log = trade_logs[-1]
+        print(f"  Trade log:    cat {latest_trade_log}")
+
+    # Find latest state file
+    state_dir = logs_dir.parent / "state"
+    state_files = sorted(state_dir.glob("trading_state_*.json"))
+    if state_files:
+        latest_state = state_files[-1]
+        print(f"  State (JSON): cat {latest_state} | jq .")
+
+    print("")
+    print("All paper trading files are in: paper_trading/")
+    print("  - paper_trading/logs/       (session logs & trade CSVs)")
+    print("  - paper_trading/state/      (state JSON files)")
+    print("=" * 80)
+    print("")
+
+
 def main():
     """Main entry point"""
+    # Setup logging first (creates directories and log file)
+    log_file = setup_logging()
+    start_time = datetime.now()
+
+    # Print startup banner
+    print("=" * 80)
+    print("   PAPER TRADING LAUNCHER")
+    print("=" * 80)
+    print("")
+
+    # Determine the paper_trading directory (where runner.py is located)
+    paper_trading_dir = Path(__file__).parent
+
     parser = argparse.ArgumentParser(description='Universal Paper Trading System')
     parser.add_argument('--broker', choices=['zerodha', 'angelone'], help='Broker to use (auto-detected if not specified)')
-    parser.add_argument('--config', default='paper_trading/config/config.yaml', help='Config file path')
+    parser.add_argument('--config', help='Config file path')
     parser.add_argument('--credentials', help='Credentials file path (auto-selected if not specified)')
 
     args = parser.parse_args()
 
+    # Set default config path relative to runner.py location
+    if not args.config:
+        args.config = str(paper_trading_dir / 'config' / 'config.yaml')
+
     # Auto-select credentials file based on broker
     if not args.credentials:
         if args.broker == 'zerodha':
-            args.credentials = 'paper_trading/config/credentials_zerodha.txt'
+            args.credentials = str(paper_trading_dir / 'config' / 'credentials_zerodha.txt')
         elif args.broker == 'angelone':
-            args.credentials = 'paper_trading/config/credentials_angelone.txt'
+            args.credentials = str(paper_trading_dir / 'config' / 'credentials_angelone.txt')
         else:
             # Try Zerodha first
-            if Path('paper_trading/config/credentials_zerodha.txt').exists():
-                args.credentials = 'paper_trading/config/credentials_zerodha.txt'
-            elif Path('paper_trading/config/credentials_angelone.txt').exists():
-                args.credentials = 'paper_trading/config/credentials_angelone.txt'
+            zerodha_creds = paper_trading_dir / 'config' / 'credentials_zerodha.txt'
+            angelone_creds = paper_trading_dir / 'config' / 'credentials_angelone.txt'
+
+            if zerodha_creds.exists():
+                args.credentials = str(zerodha_creds)
+            elif angelone_creds.exists():
+                args.credentials = str(angelone_creds)
             else:
                 print("Error: No credentials file found!")
-                print("Create either config/credentials_zerodha.txt or config/credentials_angelone.txt")
+                print(f"Create either:")
+                print(f"  - {zerodha_creds}")
+                print(f"  - {angelone_creds}")
                 return
 
+    print("Starting paper trading...")
+    print(f"Broker: {args.broker if args.broker else 'Auto-detect'}")
+    print(f"Log file: {log_file}")
+    print("")
+    print("Press Ctrl+C to stop")
+    print("=" * 80)
+    print("")
+
+    trader = None
     try:
         # Create trader
         trader = UniversalPaperTrader(args.config, args.credentials, args.broker)
@@ -584,10 +731,15 @@ def main():
         # Run
         trader.run()
 
+    except KeyboardInterrupt:
+        print("\n\nReceived interrupt signal, shutting down...")
     except Exception as e:
         print(f"\n✗ Fatal error: {e}")
         import traceback
         traceback.print_exc()
+    finally:
+        # Print session summary
+        print_session_summary(log_file, start_time, trader)
 
 
 if __name__ == "__main__":

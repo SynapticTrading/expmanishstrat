@@ -1,0 +1,71 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_104732.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 10:47:32.599836+05:30] Checking for previous session...
+[2026-01-09 10:47:32.600001+05:30] No previous state found - starting fresh
+
+[2026-01-09 10:47:32.600041+05:30] Connecting to AngelOne...
+[2026-01-09 10:47:32.604570] Generated TOTP: 537812
+[2026-01-09 10:47:32.604621] Connecting to AngelOne...
+[2026-01-09 10:47:32.740675] ✓ Connection successful!
+[2026-01-09 10:47:32.740784] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 10:47:32.740816] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5MzU4NTIsImV4cCI6MTc2ODAyMjI1Mn0.u26TuEcMM5f75PEaat7MpQuwUx6ZybsK5re7QX23weUvXb7v82PltdXb8oAbZPvVX7wTJ9wsxvZIsiQpLmHxIw
+[2026-01-09 10:47:32.740847+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 10:47:32.740890+05:30] Initializing new session...
+[2026-01-09 10:47:32.741168+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 10:47:32.741618+05:30] Session initialized: SESSION_20260109_1047
+[2026-01-09 10:47:32.741660+05:30] State file: paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 10:47:32.741700+05:30] Loading instruments...
+[2026-01-09 10:47:32.741728+05:30] Initializing paper broker...
+[2026-01-09 10:47:32.741963] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 10:47:32.741997] Daily trade log: paper_trading/logs/trades_20260109_104732.csv
+[2026-01-09 10:47:32.742020] Cumulative trade log: paper_trading/logs/trades_cumulative.csv
+[2026-01-09 10:47:32.742048+05:30] Initializing OI analyzer...
+[2026-01-09 10:47:32.742704+05:30] Initializing strategy...
+[2026-01-09 10:47:32.742762] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 10:47:32.743116+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 10:47:32.743175+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+[2026-01-09 10:47:32.743360+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-09 10:47:32.743421+05:30] ✓ Exit monitor loop started
+[2026-01-09 10:47:32.743744+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-09 10:47:32.743789+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 10:47:32.743789+05:30] Nifty Spot: 25867.25
+[2026-01-09 10:47:32.743789+05:30] ✗ No options data, skipping...
+[10:47:32] Waiting 147s for next candle at 10:50:00
+
+================================================================================
+[2026-01-09 10:50:00.004585+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 10:50:00.004585+05:30] Nifty Spot: 25855.40
+[2026-01-09 10:50:00.004585+05:30] ✗ No options data, skipping...
+[10:50:00] Waiting 300s for next candle at 10:55:00

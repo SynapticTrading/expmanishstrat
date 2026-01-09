@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-01-09T11:23:02.175019+05:30",
+  "date": "2026-01-09",
+  "session_id": "SESSION_20260109_1123",
+  "mode": "paper",
+  "active_positions": {},
+  "closed_positions": [],
+  "strategy_state": {
+    "current_spot": 25799.6,
+    "trading_strike": 25750.0,
+    "direction": "PUT",
+    "max_call_oi_strike": 26000.0,
+    "max_put_oi_strike": 25800.0,
+    "last_oi_check": "2026-01-09T11:23:02.174981+05:30",
+    "vwap_tracking": {
+      "25750.0PUT": {
+        "sum_typical_price_volume": 6278533560.0,
+        "sum_volume": 121324320.0,
+        "current_vwap": 51.75,
+        "last_update": "2026-01-09T11:23:02.175010+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 0,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 0.0,
+    "win_count": 0,
+    "loss_count": 0,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 100000,
+    "current_cash": 100000,
+    "positions_value": 0.0,
+    "total_value": 0.0,
+    "total_return_pct": 0.0
+  },
+  "api_stats": {
+    "calls_5min_loop": 1,
+    "calls_1min_ltp": 0,
+    "total_calls_today": 1,
+    "last_api_call": "2026-01-09T11:23:02.175290+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-09T11:23:02.068570+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": true,
+    "strategy_loop_running": true
+  }
+}

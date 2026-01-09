@@ -1,0 +1,5 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+usage: runner.py [-h] [--broker {zerodha,angelone}] [--config CONFIG] [--credentials CREDENTIALS]
+runner.py: error: unrecognized arguments: -broker zerodha

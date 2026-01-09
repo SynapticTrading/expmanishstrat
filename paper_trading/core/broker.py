@@ -38,24 +38,31 @@ class PaperPosition:
 class PaperBroker:
     """Simulates broker for paper trading"""
 
-    def __init__(self, initial_capital=100000, state_manager=None):
+    def __init__(self, initial_capital=100000, state_manager=None, logs_dir=None, broker_name=None):
         self.initial_capital = initial_capital
         self.cash = initial_capital
         self.positions = []
         self.trade_history = []
         self.state_manager = state_manager
+        self.broker_name = broker_name or "Unknown"  # Track which broker this is
 
         # Setup daily trade log file
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.daily_trade_log = Path('paper_trading/logs') / f'trades_{timestamp}.csv'
-        self.daily_trade_log.parent.mkdir(parents=True, exist_ok=True)
 
-        # Setup cumulative trade log file
-        self.cumulative_trade_log = Path('paper_trading/logs') / 'trades_cumulative.csv'
+        # Use provided logs_dir or fall back to relative path
+        if logs_dir:
+            logs_path = Path(logs_dir)
+        else:
+            logs_path = Path('paper_trading/logs')
 
-        # CSV fieldnames
+        logs_path.mkdir(parents=True, exist_ok=True)
+
+        self.daily_trade_log = logs_path / f'trades_{timestamp}.csv'
+        self.cumulative_trade_log = logs_path / 'trades_cumulative.csv'
+
+        # CSV fieldnames (added 'broker' column for multi-broker tracking)
         self.csv_fieldnames = [
-            'entry_time', 'exit_time', 'strike', 'option_type', 'expiry',
+            'entry_time', 'exit_time', 'broker', 'strike', 'option_type', 'expiry',
             'entry_price', 'exit_price', 'size', 'pnl', 'pnl_pct',
             'vwap_at_entry', 'vwap_at_exit', 'oi_at_entry', 'oi_change_at_entry',
             'oi_at_exit', 'exit_reason'
@@ -269,6 +276,7 @@ class PaperBroker:
         trade_data = {
             'entry_time': position.entry_time.strftime('%Y-%m-%d %H:%M:%S'),
             'exit_time': position.exit_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'broker': self.broker_name,  # Track which broker made this trade
             'strike': position.strike,
             'option_type': position.option_type,
             'expiry': position.expiry,

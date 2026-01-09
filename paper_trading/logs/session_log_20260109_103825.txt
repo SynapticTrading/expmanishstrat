@@ -1,0 +1,5 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Error: No credentials file found!
+Create either config/credentials_zerodha.txt or config/credentials_angelone.txt

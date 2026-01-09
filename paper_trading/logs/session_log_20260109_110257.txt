@@ -1,0 +1,13 @@
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_110257.txt
+Line 1: Testing immediate flush
+Line 2: Another test line
+Line 3: Final test line
+
+✓ Log file contains 181 characters
+✓ Log file has 4 lines
+
+Log file content:
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_110257.txt
+Line 1: Testing immediate flush
+Line 2: Another test line
+Line 3: Final test line

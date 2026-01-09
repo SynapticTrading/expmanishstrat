@@ -1,0 +1,156 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_112150.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 11:21:50.900231+05:30] Checking for previous session...
+[2026-01-09 11:21:50.900392+05:30] No previous state found - starting fresh
+
+[2026-01-09 11:21:50.900438+05:30] Connecting to AngelOne...
+[2026-01-09 11:21:50.904601] Generated TOTP: 158377
+[2026-01-09 11:21:50.904646] Connecting to AngelOne...
+[2026-01-09 11:21:51.040332] ✓ Connection successful!
+[2026-01-09 11:21:51.040594] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 11:21:51.040667] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5Mzc5MTAsImV4cCI6MTc2ODAyNDMxMH0.1_Vrwbi1AFYAzeQwNkwR6UiMFgapRTexGa8f7V3x8bVwqzvxU60RyhlODsNHK9q1bN_nn3xhW1ZUTsz9VLk_qQ
+[2026-01-09 11:21:51.040772+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 11:21:51.040826+05:30] Initializing new session...
+[2026-01-09 11:21:51.041167+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 11:21:51.041710+05:30] Session initialized: SESSION_20260109_1121
+[2026-01-09 11:21:51.041796+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 11:21:51.041852+05:30] Loading instruments...
+[2026-01-09 11:21:51.041888] Loading instruments from AngelOne...
+[2026-01-09 11:21:54.752832] ✓ Downloaded 179933 instruments
+[2026-01-09 11:21:54.914747] ✓ Filtered 40442 NFO instruments
+[2026-01-09 11:21:54.960168] ✓ Loaded 1500 NIFTY options
+[2026-01-09 11:21:54.960507] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 11:21:55.003372+05:30] Initializing paper broker...
+[2026-01-09 11:21:55.004034] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 11:21:55.004087] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_112155.csv
+[2026-01-09 11:21:55.004116] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 11:21:55.004151+05:30] Initializing OI analyzer...
+[2026-01-09 11:21:55.004519+05:30] Initializing strategy...
+[2026-01-09 11:21:55.004587] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 11:21:55.005035+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 11:21:55.005100+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+[2026-01-09 11:21:55.005337+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-09 11:21:55.005402+05:30] ✓ Exit monitor loop started
+[2026-01-09 11:21:55.005659+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-09 11:21:55.005694+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:21:55.005694+05:30] Nifty Spot: 25793.30
+[2026-01-09 11:21:55.107493] Fetching quotes for 22 options...
+[2026-01-09 11:22:03.113329] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-09 11:21:55.005694+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-09 11:21:55.005694+05:30] Determining direction using CURRENT OI data...
+[2026-01-09 11:21:55.005694+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-09 11:21:55.005694+05:30] NEW TRADING DAY: 2026-01-09
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25793.30)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25550.0             58,305            -243.30
+25600.0            542,165            -193.30
+25650.0            239,395            -143.30
+25700.0          1,839,760             -93.30
+25750.0          1,375,465             -43.30
+25800.0          7,689,500               6.70
+25850.0          8,631,610              56.70
+25900.0         18,117,775             106.70
+25950.0         10,381,020             156.70
+26000.0         22,296,430             206.70 👈 MAX
+26050.0          9,605,895             256.70
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25550.0          3,466,385             243.30
+25600.0         10,140,000             193.30
+25650.0          5,185,635             143.30
+25700.0         12,640,160              93.30
+25750.0          7,454,850              43.30
+25800.0         18,509,855              -6.70 👈 MAX
+25850.0          9,910,485             -56.70
+25900.0         12,346,165            -106.70
+25950.0          4,002,505            -156.70
+26000.0          5,533,840            -206.70
+26050.0          1,524,705            -256.70
+================================================================================
+[2026-01-09 11:21:55.005694+05:30] Max Call OI: 22,296,430 @ 26000.0, Max Put OI: 18,509,855 @ 25800.0
+[2026-01-09 11:21:55.005694+05:30] Direction determined: PUT (Call dist: 206.70, Put dist: -6.70)
+[2026-01-09 11:21:55.005694+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25750.0, Expiry=2026-01-13, Spot=25793.30
+[2026-01-09 11:21:55.005694+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-09
+[2026-01-09 11:21:55.005694+05:30] 🎯 Initialized VWAP for PUT 25750.0: 26 bars from 9:15 AM
+[2026-01-09 11:21:55.005694+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 11:21:55.005694+05:30] PUT 25750.0: OI=7,454,850, Change=0 (+0.00%) - BUILDING
+[2026-01-09 11:21:55.005694+05:30] PUT 25750.0: Price=₹54.25, VWAP=₹54.25 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:22:03] Waiting 177s for next candle at 11:25:00
+
+================================================================================
+[2026-01-09 11:24:59.968869+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:24:59.968869+05:30] Nifty Spot: 25792.75
+[2026-01-09 11:25:00.048764] Fetching quotes for 22 options...
+[2026-01-09 11:25:07.538547] ✓ Retrieved 22 option quotes
+[2026-01-09 11:24:59.968869+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 11:24:59.968869+05:30] PUT 25750.0: OI=7,876,440, Change=421,590 (+5.66%) - BUILDING
+[2026-01-09 11:24:59.968869+05:30] PUT 25750.0: Price=₹53.85, VWAP=₹54.05 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:25:07] Waiting 292s for next candle at 11:30:00

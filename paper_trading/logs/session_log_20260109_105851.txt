@@ -1,0 +1,29 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_105851.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 10:58:51.171935+05:30] Checking for previous session...
+[2026-01-09 10:58:51.172363+05:30] ✓ State loaded from paper_trading/state/trading_state_angelone_20260109.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-09T10:53:46.282982+05:30
+Downtime: ~5 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+Resume from crash? (y/n):

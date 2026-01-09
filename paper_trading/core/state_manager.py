@@ -13,18 +13,22 @@ import numpy as np
 class StateManager:
     """Manages state persistence for paper trading"""
 
-    def __init__(self, state_dir="paper_trading/state"):
+    def __init__(self, state_dir="paper_trading/state", broker_name=None):
         """
         Initialize state manager
 
         Args:
             state_dir: Directory to save state files
+            broker_name: Optional broker name to create separate state files
         """
         self.state_dir = Path(state_dir)
         self.state_dir.mkdir(parents=True, exist_ok=True)
 
         # IST timezone
         self.ist = pytz.timezone('Asia/Kolkata')
+
+        # Broker name for separate state files
+        self.broker_name = broker_name
 
         # Current state
         self.state = None
@@ -75,8 +79,11 @@ class StateManager:
         date_str = now.strftime('%Y%m%d')
         session_id = f"SESSION_{date_str}_{now.strftime('%H%M')}"
 
-        # Create state file
-        self.state_file = self.state_dir / f"trading_state_{date_str}.json"
+        # Create state file (include broker name if specified)
+        if self.broker_name:
+            self.state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{date_str}.json"
+        else:
+            self.state_file = self.state_dir / f"trading_state_{date_str}.json"
 
         # Initialize state
         self.state = {
@@ -459,7 +466,11 @@ class StateManager:
         if date_str is None:
             date_str = self.get_ist_now().strftime('%Y%m%d')
 
-        state_file = self.state_dir / f"trading_state_{date_str}.json"
+        # Try broker-specific file first, then fall back to generic file
+        if self.broker_name:
+            state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{date_str}.json"
+        else:
+            state_file = self.state_dir / f"trading_state_{date_str}.json"
 
         if not state_file.exists():
             return None
@@ -484,7 +495,13 @@ class StateManager:
                   or None if no previous state found
         """
         # Get all state files sorted by date (newest first)
-        state_files = sorted(self.state_dir.glob("trading_state_*.json"), reverse=True)
+        # If broker_name is set, only look at broker-specific files
+        if self.broker_name:
+            pattern = f"trading_state_{self.broker_name.lower()}_*.json"
+        else:
+            pattern = "trading_state_*.json"
+
+        state_files = sorted(self.state_dir.glob(pattern), reverse=True)
 
         if not state_files:
             return None
