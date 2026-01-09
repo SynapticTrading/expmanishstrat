@@ -1,1 +1,2 @@
 entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-09 11:40:07,2026-01-09 12:04:38,25750.0,PUT,2026-01-13,64.75,69.85,75,382.5,7.8764478764478785,57.919142533518745,72.33938819275096,7339735,-2.682880584666299,8666450,Trailing Stop (10%)

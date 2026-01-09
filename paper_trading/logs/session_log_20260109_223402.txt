@@ -1,0 +1,93 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_223402.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-09 22:34:02.414158+05:30] Checking for previous session...
+[2026-01-09 22:34:02.414294+05:30] No previous state found - starting fresh
+
+[2026-01-09 22:34:02.414334+05:30] Connecting to Zerodha...
+[2026-01-09 22:34:02.414364] Connecting to Zerodha...
+[2026-01-09 22:34:02.590642] Generated TOTP: 999307
+[2026-01-09 22:34:02.677028] ✓ Request token extracted from redirect
+[2026-01-09 22:34:02.677169] Request token obtained: c84dCxGS5BrQTahQAk1T...
+[2026-01-09 22:34:02.747792] ✓ Connection successful!
+[2026-01-09 22:34:02.747915] Access Token: n0raJcc0leZunhEWwTVl...
+[2026-01-09 22:34:02.747998] Zerodha data feed initialized
+[2026-01-09 22:34:02.748079+05:30] ✓ Connected to Zerodha
+
+[2026-01-09 22:34:02.748203+05:30] Initializing new session...
+[2026-01-09 22:34:02.748601+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 22:34:02.751843+05:30] Session initialized: SESSION_20260109_2234
+[2026-01-09 22:34:02.751928+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260109.json
+[2026-01-09 22:34:02.752576+05:30] Loading instruments...
+[2026-01-09 22:34:02.752703] Loading instruments...
+[2026-01-09 22:34:02.752735] Fetching instruments for NFO...
+[2026-01-09 22:34:03.352553] ✓ Retrieved 40424 instruments
+[2026-01-09 22:34:03.355722] Fetching instruments for NSE...
+[2026-01-09 22:34:03.442238] ✓ Retrieved 9108 instruments
+[2026-01-09 22:34:03.443830] ✓ Nifty 50 token: 256265
+[2026-01-09 22:34:03.443889] ✓ Instruments loaded
+[2026-01-09 22:34:03.443912+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-09T22:28:41.667517)
+Options lot size: 65 units per lot
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-09 22:34:03.444335+05:30] ✓ Contract manager initialized
+[2026-01-09 22:34:03.444362+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 22:34:03.444385+05:30] Initializing paper broker...
+[2026-01-09 22:34:03.444609] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 22:34:03.444633] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_223403.csv
+[2026-01-09 22:34:03.444648] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 22:34:03.444664+05:30] Initializing OI analyzer...
+[2026-01-09 22:34:03.444853+05:30] Initializing strategy...
+[2026-01-09 22:34:03.444884] Using lot size from contract manager: 65 units/lot
+[2026-01-09 22:34:03.444901] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 22:34:03.445126+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 22:34:03.445162+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-09 22:34:03.445281+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 22:34:03.445322+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 22:34:03.445371+05:30] Market closed, waiting...
+[2026-01-09 22:35:03.450776+05:30] Market closed, waiting...
+[2026-01-09 22:36:03.459332+05:30] Market closed, waiting...
+[2026-01-09 22:37:03.465491+05:30] Market closed, waiting...
+[2026-01-09 22:38:03.470951+05:30] Market closed, waiting...
+[2026-01-09 22:39:03.451736+05:30] 🔄 Contract monitor: Checking for cache updates...
+======================================================================
+CACHE FILE UPDATED - RELOADING CONTRACTS
+======================================================================
+Previous mtime: 1767977921.667781
+Current mtime:  1767978326.2663975
+Loaded 18 options expiries from cache (cached at: 2026-01-09T22:28:41.667517)
+Options lot size: 34 units per lot
+✓ Contracts reloaded successfully
+  Options: 18 expiry dates
+  Active Options: 2026-01-13 (4 days)
+======================================================================
+[2026-01-09 22:39:03.456619+05:30] ✓ Contracts reloaded from cronjob update
+[2026-01-09 22:39:03.456689+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 22:39:03.473888+05:30] Market closed, waiting...

@@ -1,0 +1,29 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_125043.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-09 12:50:43.182592+05:30] Checking for previous session...
+[2026-01-09 12:50:43.183005+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260109.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-09T12:37:45.407200+05:30
+Downtime: ~12 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+Resume from crash? (y/n):

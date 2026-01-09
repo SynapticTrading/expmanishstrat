@@ -1,0 +1,152 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_114854.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 11:48:54.553082+05:30] Checking for previous session...
+[2026-01-09 11:48:54.553509+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260109.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-09T11:21:55.005472+05:30
+Downtime: ~26 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-09T11:21:55.005472+05:30
+Recovery Time: 2026-01-09 11:48:54.553908+05:30
+Downtime: 26 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+
+[2026-01-09 11:48:54.554393+05:30] Connecting to AngelOne...
+[2026-01-09 11:48:54.558519] Generated TOTP: 320687
+[2026-01-09 11:48:54.558583] Connecting to AngelOne...
+[2026-01-09 11:48:54.706616] ✓ Connection successful!
+[2026-01-09 11:48:54.706743] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 11:48:54.706781] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5Mzk1MzQsImV4cCI6MTc2ODAyNTkzNH0.nmo1iZTFvWo6CrgaoDW96T4RROlModvTxHBKkHK7Zib36jfqE5BdV2X6hvqu1iuFZ4E1Wo36GDE3saGwhEiHfQ
+[2026-01-09 11:48:54.706817+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 11:48:54.706863+05:30] Resuming from previous session...
+[2026-01-09 11:48:54.706907+05:30] Loading instruments...
+[2026-01-09 11:48:54.706939] Loading instruments from AngelOne...
+[2026-01-09 11:49:00.712521] ✓ Downloaded 179933 instruments
+[2026-01-09 11:49:00.869367] ✓ Filtered 40442 NFO instruments
+[2026-01-09 11:49:00.914307] ✓ Loaded 1500 NIFTY options
+[2026-01-09 11:49:00.914546] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 11:49:00.957649+05:30] Initializing contract manager...
+No cache file found
+Cache is stale or not available, refreshing contracts...
+======================================================================
+REFRESHING OPTIONS CONTRACTS
+======================================================================
+Loading instruments from AngelOne...
+[2026-01-09 11:49:00.958148] Loading instruments from AngelOne...
+[2026-01-09 11:49:07.099428] ✓ Downloaded 179933 instruments
+[2026-01-09 11:49:07.246122] ✓ Filtered 40442 NFO instruments
+[2026-01-09 11:49:07.290504] ✓ Loaded 1500 NIFTY options
+[2026-01-09 11:49:07.290767] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+✓ Instruments loaded from AngelOne
+Found 18 unique options expiry dates
+  Strike range: 12000.0 - 34500.0 (step: 1000.0)
+  [Options 0] Expiry: 2026-01-13 (4 days)
+  [Options 1] Expiry: 2026-01-20 (11 days)
+  [Options 2] Expiry: 2026-01-27 (18 days)
+  [Options 3] Expiry: 2026-02-03 (25 days)
+  [Options 4] Expiry: 2026-02-10 (32 days)
+Saved 18 options expiries to cache: /Users/Algo_Trading/manishsir_options/paper_trading/cache/contracts_cache_angelone.json
+======================================================================
+CONTRACT MAPPING COMPLETE
+======================================================================
+
+======================================================================
+OPTIONS EXPIRY MAPPING
+======================================================================
+
+CURRENT WEEK:
+  Expiry Date:      2026-01-13
+  Days to Expiry:   4 days
+
+NEXT WEEK:
+  Expiry Date:      2026-01-20
+  Days to Expiry:   11 days
+
+CURRENT MONTH:
+  Expiry Date:      2026-01-27
+  Days to Expiry:   18 days
+
+NEXT MONTH:
+  Expiry Date:      2026-02-24
+  Days to Expiry:   46 days
+
+OPTIONS STRIKE RANGE:
+  Min Strike:       12000.0
+  Max Strike:       34500.0
+  Strike Step:      1000.0
+
+======================================================================
+[2026-01-09 11:49:07.342211+05:30] ✓ Contract manager initialized
+[2026-01-09 11:49:07.342260+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 11:49:07.342295+05:30] Initializing paper broker...
+[2026-01-09 11:49:07.342600] Paper Broker initialized with capital: ₹95,143.75
+[2026-01-09 11:49:07.342635] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_114907.csv
+[2026-01-09 11:49:07.342659] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 11:49:07.342688] Restoring 1 position(s)...
+  ✓ Restored: PUT 25750.0 @ ₹64.75
+     Size: 75, Peak: ₹77.50, Trailing: True
+[2026-01-09 11:49:07.342769] ✓ Restored 1 position(s)
+[2026-01-09 11:49:07.342791] Available cash: ₹95,143.75
+[2026-01-09 11:49:07.342814+05:30] Initializing OI analyzer...
+[2026-01-09 11:49:07.343105+05:30] Initializing strategy...
+[2026-01-09 11:49:07.343163] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 11:49:07.343309+05:30] Restoring strategy state...
+  Restored current_date: 2026-01-09
+  Restored daily_trade_taken: True (has open positions)
+  Restored direction: PUT
+  Restored strike: 25750.0
+  Restored expiry: 2026-01-13
+[2026-01-09 11:49:07.343788+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 11:49:07.343851+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-09 11:49:07.344075+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-09 11:49:07.344289+05:30] ✓ Exit monitor loop started
+[2026-01-09 11:49:07.344745+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 11:49:07.344823+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 11:49:07.345500+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-09 11:49:07.345572+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================

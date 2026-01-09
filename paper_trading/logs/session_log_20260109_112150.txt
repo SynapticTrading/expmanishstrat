@@ -154,3 +154,653 @@ Total P&L: ₹0.00
 ROI: +0.00%
 --------------------------------------------------------------------------------
 [11:25:07] Waiting 292s for next candle at 11:30:00
+
+================================================================================
+[2026-01-09 11:30:00.000393+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:30:00.000393+05:30] Nifty Spot: 25804.50
+[2026-01-09 11:30:00.083448] Fetching quotes for 22 options...
+[2026-01-09 11:30:08.952879] ✓ Retrieved 22 option quotes
+[2026-01-09 11:30:00.000393+05:30] 📍 STRIKE UPDATED: 25750.0 → 25800.0 (Spot: 25804.50)
+[2026-01-09 11:30:00.000393+05:30] 🎯 Initialized VWAP for PUT 25800.0: 28 bars from 9:15 AM
+[2026-01-09 11:30:00.000393+05:30] Checking entry: PUT 25800.0, Expiry=2026-01-13
+[2026-01-09 11:30:00.000393+05:30] PUT 25800.0: OI=18,104,645, Change=0 (+0.00%) - BUILDING
+[2026-01-09 11:30:00.000393+05:30] PUT 25800.0: Price=₹68.30, VWAP=₹68.30 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25800.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:30:08] Waiting 291s for next candle at 11:35:00
+
+================================================================================
+[2026-01-09 11:35:00.002985+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:35:00.002985+05:30] Nifty Spot: 25791.75
+[2026-01-09 11:35:00.104707] Fetching quotes for 22 options...
+[2026-01-09 11:35:07.436129] ✓ Retrieved 22 option quotes
+[2026-01-09 11:35:00.002985+05:30] 📍 STRIKE UPDATED: 25800.0 → 25750.0 (Spot: 25791.75)
+[2026-01-09 11:35:00.002985+05:30] 🎯 Initialized VWAP for PUT 25750.0: 29 bars from 9:15 AM
+[2026-01-09 11:35:00.002985+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 11:35:00.002985+05:30] PUT 25750.0: OI=7,542,080, Change=0 (+0.00%) - BUILDING
+[2026-01-09 11:35:00.002985+05:30] PUT 25750.0: Price=₹57.40, VWAP=₹55.23 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:35:07] Waiting 293s for next candle at 11:40:00
+
+================================================================================
+[2026-01-09 11:40:00.000943+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:40:00.000943+05:30] Nifty Spot: 25759.95
+[2026-01-09 11:40:00.118537] Fetching quotes for 22 options...
+[2026-01-09 11:40:07.667807] ✓ Retrieved 22 option quotes
+[2026-01-09 11:40:00.000943+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 11:40:00.000943+05:30] PUT 25750.0: OI=7,339,735, Change=-202,345 (-2.68%) - UNWINDING ✓
+[2026-01-09 11:40:00.000943+05:30] PUT 25750.0: Price=₹64.75, VWAP=₹57.92 - ABOVE ✓
+[2026-01-09 11:40:00.000943+05:30] 🎯 ENTRY SIGNAL: PUT 25750.0 - Price: 64.75, VWAP: 57.92, OI Change: -202,345 (-2.68%)
+[2026-01-09 11:40:00.000943+05:30] 📈 PLACING BUY ORDER: size=1, expected_price=64.75
+[2026-01-09 11:40:07.672446] ✓ BUY ORDER EXECUTED
+  Strike: 25750.0 PUT
+  Expiry: 2026-01-13
+  Entry Price: ₹64.75
+  Size: 75
+  Cost: ₹4,856.25
+  VWAP: ₹57.92
+  OI: 7,339,735 (Change: -268.29%)
+  Remaining Cash: ₹95,143.75
+[2026-01-09 11:40:00.000943+05:30] 🔵 BUY OPTION EXECUTED: PUT 25750.0 @ ₹64.75 (Expiry: 2026-01-13, 1 lot = 75 qty)
+[2026-01-09 11:40:00.000943+05:30]    📊 ENTRY DATA: VWAP=57.92, OI=7,339,735, OI Change=-202,345 (-2.68%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:40:07] Waiting 292s for next candle at 11:45:00
+[2026-01-09 11:40:55.025695+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:40:55.109965] Fetching quotes for 22 options...
+[2026-01-09 11:41:02.342610] ✓ Retrieved 22 option quotes
+[2026-01-09 11:40:55.025695+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹65.60 | Entry: ₹64.75 | P&L: +1.31%
+    Initial Stop: ₹48.56 (distance: 35.08%)
+[2026-01-09 11:42:02.350049+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:42:02.440205] Fetching quotes for 22 options...
+[2026-01-09 11:42:09.787492] ✓ Retrieved 22 option quotes
+[2026-01-09 11:42:02.350049+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹66.95 | Entry: ₹64.75 | P&L: +3.40%
+    Initial Stop: ₹48.56 (distance: 37.86%)
+[2026-01-09 11:43:09.812145+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:43:09.921663] Fetching quotes for 22 options...
+[2026-01-09 11:43:17.207215] ✓ Retrieved 22 option quotes
+[2026-01-09 11:43:09.812145+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹66.85 | Entry: ₹64.75 | P&L: +3.24%
+    Initial Stop: ₹48.56 (distance: 37.66%)
+[2026-01-09 11:44:17.213468+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:44:17.291582] Fetching quotes for 22 options...
+[2026-01-09 11:44:24.615562] ✓ Retrieved 22 option quotes
+[2026-01-09 11:44:17.213468+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹67.95 | Entry: ₹64.75 | P&L: +4.94%
+    Initial Stop: ₹48.56 (distance: 39.92%)
+
+================================================================================
+[2026-01-09 11:45:00.025026+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:45:00.025026+05:30] Nifty Spot: 25755.35
+[2026-01-09 11:45:00.117255] Fetching quotes for 22 options...
+[2026-01-09 11:45:07.830058] ✓ Retrieved 22 option quotes
+[2026-01-09 11:45:00.025026+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹68.75 | Entry: ₹64.75 | P&L: +6.18%
+    Initial Stop: ₹48.56 (distance: 41.57%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:45:07] Waiting 292s for next candle at 11:50:00
+[2026-01-09 11:45:24.620869+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:45:24.713317] Fetching quotes for 22 options...
+[2026-01-09 11:45:32.513820] ✓ Retrieved 22 option quotes
+[2026-01-09 11:45:24.620869+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹68.10 | Entry: ₹64.75 | P&L: +5.17%
+    Initial Stop: ₹48.56 (distance: 40.23%)
+[2026-01-09 11:46:32.517381+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:46:32.593630] Fetching quotes for 22 options...
+[2026-01-09 11:46:40.090507] ✓ Retrieved 22 option quotes
+[2026-01-09 11:46:32.517381+05:30] 🎯 Trailing stop ACTIVATED for 25750.0 PUT
+[2026-01-09 11:46:32.517381+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹71.45 | Entry: ₹64.75 | P&L: +10.35%
+    Initial Stop: ₹48.56 (distance: 47.13%)
+    🎯 Trailing: Active | Peak: ₹71.45 | Stop: ₹64.31
+[2026-01-09 11:47:40.094377+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:47:40.196420] Fetching quotes for 22 options...
+[2026-01-09 11:47:47.459268] ✓ Retrieved 22 option quotes
+[2026-01-09 11:47:40.094377+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹77.50 | Entry: ₹64.75 | P&L: +19.69%
+    Initial Stop: ₹48.56 (distance: 59.59%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+[2026-01-09 11:48:47.466962+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:48:47.541078] Fetching quotes for 22 options...
+[2026-01-09 11:48:54.693518] ✓ Retrieved 22 option quotes
+[2026-01-09 11:48:47.466962+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹74.05 | Entry: ₹64.75 | P&L: +14.36%
+    Initial Stop: ₹48.56 (distance: 52.48%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+[2026-01-09 11:49:54.699989+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:49:54.775639] Fetching quotes for 22 options...
+
+================================================================================
+[2026-01-09 11:50:00.004246+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:50:00.004246+05:30] Nifty Spot: 25746.65
+[2026-01-09 11:50:00.071895] Fetching quotes for 22 options...
+[2026-01-09 11:50:02.062016] ✓ Retrieved 22 option quotes
+[2026-01-09 11:49:54.699989+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹75.20 | Entry: ₹64.75 | P&L: +16.14%
+    Initial Stop: ₹48.56 (distance: 54.85%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+[2026-01-09 11:50:08.494563] ✓ Retrieved 22 option quotes
+[2026-01-09 11:50:00.004246+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹74.20 | Entry: ₹64.75 | P&L: +14.59%
+    Initial Stop: ₹48.56 (distance: 52.79%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:50:08] Waiting 292s for next candle at 11:55:00
+[2026-01-09 11:51:02.067679+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:51:02.138985] Fetching quotes for 22 options...
+[2026-01-09 11:51:09.431710] ✓ Retrieved 22 option quotes
+[2026-01-09 11:51:02.067679+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹75.70 | Entry: ₹64.75 | P&L: +16.91%
+    Initial Stop: ₹48.56 (distance: 55.88%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+[2026-01-09 11:52:09.436925+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:52:09.523778] Fetching quotes for 22 options...
+[2026-01-09 11:52:16.779576] ✓ Retrieved 22 option quotes
+[2026-01-09 11:52:09.436925+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹76.80 | Entry: ₹64.75 | P&L: +18.61%
+    Initial Stop: ₹48.56 (distance: 58.15%)
+    🎯 Trailing: Active | Peak: ₹77.50 | Stop: ₹69.75
+[2026-01-09 11:53:16.787241+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:53:16.877129] Fetching quotes for 22 options...
+[2026-01-09 11:53:24.307930] ✓ Retrieved 22 option quotes
+[2026-01-09 11:53:16.787241+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹80.40 | Entry: ₹64.75 | P&L: +24.17%
+    Initial Stop: ₹48.56 (distance: 65.56%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 11:54:24.314813+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:54:24.394167] Fetching quotes for 22 options...
+[2026-01-09 11:54:31.602971] ✓ Retrieved 22 option quotes
+[2026-01-09 11:54:24.314813+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹75.90 | Entry: ₹64.75 | P&L: +17.22%
+    Initial Stop: ₹48.56 (distance: 56.29%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+
+================================================================================
+[2026-01-09 11:55:00.003087+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:55:00.003087+05:30] Nifty Spot: 25741.75
+[2026-01-09 11:55:00.077310] Fetching quotes for 22 options...
+[2026-01-09 11:55:07.639825] ✓ Retrieved 22 option quotes
+[2026-01-09 11:55:00.003087+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹75.85 | Entry: ₹64.75 | P&L: +17.14%
+    Initial Stop: ₹48.56 (distance: 56.19%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[11:55:07] Waiting 292s for next candle at 12:00:00
+[2026-01-09 11:55:31.610843+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:55:31.681383] Fetching quotes for 22 options...
+[2026-01-09 11:55:39.000885] ✓ Retrieved 22 option quotes
+[2026-01-09 11:55:31.610843+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹74.20 | Entry: ₹64.75 | P&L: +14.59%
+    Initial Stop: ₹48.56 (distance: 52.79%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 11:56:39.008304+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:56:39.088410] Fetching quotes for 22 options...
+[2026-01-09 11:56:46.348212] ✓ Retrieved 22 option quotes
+[2026-01-09 11:56:39.008304+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹77.70 | Entry: ₹64.75 | P&L: +20.00%
+    Initial Stop: ₹48.56 (distance: 60.00%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 11:57:46.355131+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:57:46.430188] Fetching quotes for 22 options...
+[2026-01-09 11:57:53.669193] ✓ Retrieved 22 option quotes
+[2026-01-09 11:57:46.355131+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹78.00 | Entry: ₹64.75 | P&L: +20.46%
+    Initial Stop: ₹48.56 (distance: 60.62%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 11:58:53.674588+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 11:58:53.752018] Fetching quotes for 22 options...
+[2026-01-09 11:59:00.895825] ✓ Retrieved 22 option quotes
+[2026-01-09 11:58:53.674588+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹77.30 | Entry: ₹64.75 | P&L: +19.38%
+    Initial Stop: ₹48.56 (distance: 59.18%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+
+================================================================================
+[2026-01-09 11:59:59.999511+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 11:59:59.999511+05:30] Nifty Spot: 25743.25
+[2026-01-09 12:00:00.082713] Fetching quotes for 22 options...
+[2026-01-09 12:00:00.899892+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 12:00:00.982019] Fetching quotes for 22 options...
+[2026-01-09 12:00:07.409746] ✓ Retrieved 22 option quotes
+[2026-01-09 11:59:59.999511+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹77.05 | Entry: ₹64.75 | P&L: +19.00%
+    Initial Stop: ₹48.56 (distance: 58.66%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[12:00:07] Waiting 293s for next candle at 12:05:00
+[2026-01-09 12:00:09.417904] ✓ Retrieved 22 option quotes
+[2026-01-09 12:00:00.899892+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹76.55 | Entry: ₹64.75 | P&L: +18.22%
+    Initial Stop: ₹48.56 (distance: 57.63%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 12:01:09.425009+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 12:01:09.519993] Fetching quotes for 22 options...
+[2026-01-09 12:01:16.814153] ✓ Retrieved 22 option quotes
+[2026-01-09 12:01:09.425009+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹78.45 | Entry: ₹64.75 | P&L: +21.16%
+    Initial Stop: ₹48.56 (distance: 61.54%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 12:02:16.826415+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 12:02:16.903218] Fetching quotes for 22 options...
+[2026-01-09 12:02:24.240091] ✓ Retrieved 22 option quotes
+[2026-01-09 12:02:16.826415+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹76.35 | Entry: ₹64.75 | P&L: +17.92%
+    Initial Stop: ₹48.56 (distance: 57.22%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 12:03:24.246469+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 12:03:24.321302] Fetching quotes for 22 options...
+[2026-01-09 12:03:31.661170] ✓ Retrieved 22 option quotes
+[2026-01-09 12:03:24.246469+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹73.50 | Entry: ₹64.75 | P&L: +13.51%
+    Initial Stop: ₹48.56 (distance: 51.35%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 12:04:31.666394+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-09 12:04:31.736670] Fetching quotes for 22 options...
+[2026-01-09 12:04:38.919053] ✓ Retrieved 22 option quotes
+[2026-01-09 12:04:31.666394+05:30] 📊 LTP CHECK: 25750.0 PUT
+    Current LTP: ₹69.85 | Entry: ₹64.75 | P&L: +7.88%
+    Initial Stop: ₹48.56 (distance: 43.84%)
+    🎯 Trailing: Active | Peak: ₹80.40 | Stop: ₹72.36
+[2026-01-09 12:04:31.666394+05:30] EXIT SIGNAL: Trailing Stop (10%)
+[2026-01-09 12:04:38.923375] ✓ SELL ORDER EXECUTED
+  Strike: 25750.0 PUT
+  Exit Price: ₹69.85
+  P&L: ₹+382.50 (+7.88%)
+  Exit Reason: Trailing Stop (10%)
+  Cash: ₹100,382.50
+
+================================================================================
+[2026-01-09 12:05:00.004293+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:05:00.004293+05:30] Nifty Spot: 25756.05
+[2026-01-09 12:05:00.004293+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:05:00.004293+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:05:00.076916] Fetching quotes for 22 options...
+[2026-01-09 12:05:10.438747] ✓ Retrieved 22 option quotes
+[2026-01-09 12:05:00.004293+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 12:05:00.004293+05:30] PUT 25750.0: OI=8,311,875, Change=769,795 (+10.21%) - BUILDING
+[2026-01-09 12:05:00.004293+05:30] PUT 25750.0: Price=₹70.45, VWAP=₹72.27 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:05:10] Waiting 290s for next candle at 12:10:00
+
+================================================================================
+[2026-01-09 12:10:00.004308+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:10:00.004308+05:30] Nifty Spot: 25750.05
+[2026-01-09 12:10:00.004308+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:10:00.004308+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:10:00.083634] Fetching quotes for 22 options...
+[2026-01-09 12:10:07.505934] ✓ Retrieved 22 option quotes
+[2026-01-09 12:10:00.004308+05:30] Checking entry: PUT 25750.0, Expiry=2026-01-13
+[2026-01-09 12:10:00.004308+05:30] PUT 25750.0: OI=8,687,120, Change=1,145,040 (+15.18%) - BUILDING
+[2026-01-09 12:10:00.004308+05:30] PUT 25750.0: Price=₹75.80, VWAP=₹72.40 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25750.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:10:07] Waiting 292s for next candle at 12:15:00
+
+================================================================================
+[2026-01-09 12:15:00.002481+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:15:00.002481+05:30] Nifty Spot: 25739.35
+[2026-01-09 12:15:00.002481+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:15:00.002481+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:15:00.080359] Fetching quotes for 22 options...
+[2026-01-09 12:15:07.514911] ✓ Retrieved 22 option quotes
+[2026-01-09 12:15:00.002481+05:30] 📍 STRIKE UPDATED: 25750.0 → 25700.0 (Spot: 25739.35)
+[2026-01-09 12:15:00.002481+05:30] 🎯 Initialized VWAP for PUT 25700.0: 37 bars from 9:15 AM
+[2026-01-09 12:15:00.002481+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:15:00.002481+05:30] PUT 25700.0: OI=13,768,105, Change=0 (+0.00%) - BUILDING
+[2026-01-09 12:15:00.002481+05:30] PUT 25700.0: Price=₹59.85, VWAP=₹59.85 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:15:07] Waiting 292s for next candle at 12:20:00
+
+================================================================================
+[2026-01-09 12:20:00.021570+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:20:00.021570+05:30] Nifty Spot: 25743.95
+[2026-01-09 12:20:00.021570+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:20:00.021570+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:20:00.111296] Fetching quotes for 22 options...
+[2026-01-09 12:20:07.511535] ✓ Retrieved 22 option quotes
+[2026-01-09 12:20:00.021570+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:20:00.021570+05:30] PUT 25700.0: OI=14,134,705, Change=366,600 (+2.66%) - BUILDING
+[2026-01-09 12:20:00.021570+05:30] PUT 25700.0: Price=₹58.70, VWAP=₹59.27 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:20:07] Waiting 292s for next candle at 12:25:00
+
+================================================================================
+[2026-01-09 12:25:00.002914+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:25:00.002914+05:30] Nifty Spot: 25731.10
+[2026-01-09 12:25:00.002914+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:25:00.002914+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:25:00.092280] Fetching quotes for 22 options...
+[2026-01-09 12:25:07.684723] ✓ Retrieved 22 option quotes
+[2026-01-09 12:25:00.002914+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:25:00.002914+05:30] PUT 25700.0: OI=14,016,405, Change=248,300 (+1.80%) - BUILDING
+[2026-01-09 12:25:00.002914+05:30] PUT 25700.0: Price=₹62.60, VWAP=₹60.41 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:25:07] Waiting 292s for next candle at 12:30:00
+
+================================================================================
+[2026-01-09 12:30:00.005390+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:30:00.005390+05:30] Nifty Spot: 25716.75
+[2026-01-09 12:30:00.005390+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:30:00.005390+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:30:00.106907] Fetching quotes for 22 options...
+[2026-01-09 12:30:08.050764] ✓ Retrieved 22 option quotes
+[2026-01-09 12:30:00.005390+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:30:00.005390+05:30] PUT 25700.0: OI=13,932,620, Change=164,515 (+1.19%) - BUILDING
+[2026-01-09 12:30:00.005390+05:30] PUT 25700.0: Price=₹67.05, VWAP=₹62.18 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:30:08] Waiting 292s for next candle at 12:35:00
+
+================================================================================
+[2026-01-09 12:35:00.013868+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:35:00.013868+05:30] Nifty Spot: 25718.65
+[2026-01-09 12:35:00.013868+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:35:00.013868+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:35:00.086052] Fetching quotes for 22 options...
+[2026-01-09 12:35:07.425490] ✓ Retrieved 22 option quotes
+[2026-01-09 12:35:00.013868+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:35:00.013868+05:30] PUT 25700.0: OI=13,572,585, Change=-195,520 (-1.42%) - UNWINDING ✓
+[2026-01-09 12:35:00.013868+05:30] PUT 25700.0: Price=₹69.45, VWAP=₹63.76 - ABOVE ✓
+[2026-01-09 12:35:00.013868+05:30] 🎯 ENTRY SIGNAL: PUT 25700.0 - Price: 69.45, VWAP: 63.76, OI Change: -195,520 (-1.42%)
+[2026-01-09 12:35:00.013868+05:30] ⛔ Entry blocked: Daily trade limit reached (1 trade/day)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:35:07] Waiting 293s for next candle at 12:40:00
+
+================================================================================
+[2026-01-09 12:40:00.006063+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:40:00.006063+05:30] Nifty Spot: 25695.20
+[2026-01-09 12:40:00.006063+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:40:00.006063+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:40:00.082735] Fetching quotes for 22 options...
+[2026-01-09 12:40:07.431780] ✓ Retrieved 22 option quotes
+[2026-01-09 12:40:00.006063+05:30] 📍 STRIKE UPDATED: 25700.0 → 25650.0 (Spot: 25695.20)
+[2026-01-09 12:40:00.006063+05:30] 🎯 Initialized VWAP for PUT 25650.0: 42 bars from 9:15 AM
+[2026-01-09 12:40:00.006063+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 12:40:00.006063+05:30] PUT 25650.0: OI=4,638,530, Change=0 (+0.00%) - BUILDING
+[2026-01-09 12:40:00.006063+05:30] PUT 25650.0: Price=₹65.75, VWAP=₹65.75 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:40:07] Waiting 293s for next candle at 12:45:00
+
+================================================================================
+[2026-01-09 12:45:00.005734+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:45:00.005734+05:30] Nifty Spot: 25689.15
+[2026-01-09 12:45:00.005734+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:45:00.005734+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:45:00.082374] Fetching quotes for 22 options...
+[2026-01-09 12:45:07.431714] ✓ Retrieved 22 option quotes
+[2026-01-09 12:45:00.005734+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 12:45:00.005734+05:30] PUT 25650.0: OI=5,906,160, Change=1,267,630 (+27.33%) - BUILDING
+[2026-01-09 12:45:00.005734+05:30] PUT 25650.0: Price=₹67.05, VWAP=₹66.42 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:45:07] Waiting 293s for next candle at 12:50:00
+
+================================================================================
+[2026-01-09 12:50:00.002415+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:50:00.002415+05:30] Nifty Spot: 25673.45
+[2026-01-09 12:50:00.002415+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:50:00.002415+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:50:00.075515] Fetching quotes for 22 options...
+[2026-01-09 12:50:07.406841] ✓ Retrieved 22 option quotes
+[2026-01-09 12:50:00.002415+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 12:50:00.002415+05:30] PUT 25650.0: OI=6,474,000, Change=1,835,470 (+39.57%) - BUILDING
+[2026-01-09 12:50:00.002415+05:30] PUT 25650.0: Price=₹72.00, VWAP=₹68.40 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:50:07] Waiting 293s for next candle at 12:55:00
+
+================================================================================
+[2026-01-09 12:55:00.007685+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:55:00.007685+05:30] Nifty Spot: 25692.90
+[2026-01-09 12:55:00.007685+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 12:55:00.007685+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 12:55:00.088693] Fetching quotes for 22 options...
+[2026-01-09 12:55:14.249466] ⚠️  Failed to fetch NIFTY13JAN2625900CE: HTTPSConnectionPool(host='apiconnect.angelone.in', port=443): Max retries exceeded with url: /rest/secure/angelbroking/market/v1/quote (Caused by ConnectTimeoutError(<HTTPSConnection(host='apiconnect.angelone.in', port=443) at 0x12a137c40>, 'Connection to apiconnect.angelone.in timed out. (connect timeout=7)'))
+[2026-01-09 12:55:14.251224] ✓ Retrieved 21 option quotes
+[2026-01-09 12:55:00.007685+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 12:55:00.007685+05:30] PUT 25650.0: OI=7,454,720, Change=2,816,190 (+60.71%) - BUILDING
+[2026-01-09 12:55:00.007685+05:30] PUT 25650.0: Price=₹65.90, VWAP=₹67.72 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[12:55:14] Waiting 286s for next candle at 13:00:00
+
+================================================================================
+[2026-01-09 13:00:00.002759+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 13:00:00.002759+05:30] Nifty Spot: 25689.70
+[2026-01-09 13:00:00.002759+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 13:00:00.002759+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 13:00:00.086424] Fetching quotes for 22 options...
+[2026-01-09 13:00:07.356973] ✓ Retrieved 22 option quotes
+[2026-01-09 13:00:00.002759+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 13:00:00.002759+05:30] PUT 25650.0: OI=8,482,890, Change=3,844,360 (+82.88%) - BUILDING
+[2026-01-09 13:00:00.002759+05:30] PUT 25650.0: Price=₹63.85, VWAP=₹66.87 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[13:00:07] Waiting 293s for next candle at 13:05:00
+
+================================================================================
+[2026-01-09 13:05:00.002369+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 13:05:00.002369+05:30] Nifty Spot: 25689.25
+[2026-01-09 13:05:00.002369+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-09 13:05:00.002369+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-09 13:05:00.076137] Fetching quotes for 22 options...
+[2026-01-09 13:05:07.258746] ✓ Retrieved 22 option quotes
+[2026-01-09 13:05:00.002369+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-13
+[2026-01-09 13:05:00.002369+05:30] PUT 25650.0: OI=8,799,700, Change=4,161,170 (+89.71%) - BUILDING
+[2026-01-09 13:05:00.002369+05:30] PUT 25650.0: Price=₹65.20, VWAP=₹66.56 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹382.50
+ROI: +0.38%
+--------------------------------------------------------------------------------
+[13:05:07] Waiting 293s for next candle at 13:10:00

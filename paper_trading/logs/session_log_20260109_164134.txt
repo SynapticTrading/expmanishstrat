@@ -1,0 +1,68 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_164134.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 16:41:34.561263+05:30] Checking for previous session...
+[2026-01-09 16:41:34.561407+05:30] No previous state found - starting fresh
+
+[2026-01-09 16:41:34.561450+05:30] Connecting to AngelOne...
+[2026-01-09 16:41:34.565297] Generated TOTP: 198926
+[2026-01-09 16:41:34.565339] Connecting to AngelOne...
+[2026-01-09 16:41:34.837101] ✓ Connection successful!
+[2026-01-09 16:41:34.837219] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 16:41:34.837258] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5NTcwOTQsImV4cCI6MTc2ODA0MzQ5NH0.UVeRz1ftAIhgzQVNQqhgKt3WrhCnvr2qbyu4I5Nln07Uql8D673La22PZUaDCweBpkxjzxm3-vZgjguGdtk6xQ
+[2026-01-09 16:41:34.837297+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 16:41:34.837347+05:30] Initializing new session...
+[2026-01-09 16:41:34.837623+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 16:41:34.838084+05:30] Session initialized: SESSION_20260109_1641
+[2026-01-09 16:41:34.838131+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 16:41:34.838174+05:30] Loading instruments...
+[2026-01-09 16:41:34.838204] Loading instruments from AngelOne...
+[2026-01-09 16:41:41.638700] ✓ Downloaded 179933 instruments
+[2026-01-09 16:41:41.803031] ✓ Filtered 40442 NFO instruments
+[2026-01-09 16:41:41.848219] ✓ Loaded 1500 NIFTY options
+[2026-01-09 16:41:41.848471] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 16:41:41.895311+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-09T12:51:36.566912)
+Options lot size: 25 units per lot
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-09 16:41:41.896655+05:30] ✓ Contract manager initialized
+[2026-01-09 16:41:41.896716+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 16:41:41.896760+05:30] Initializing paper broker...
+[2026-01-09 16:41:41.897180] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 16:41:41.897224] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_164141.csv
+[2026-01-09 16:41:41.897250] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 16:41:41.897281+05:30] Initializing OI analyzer...
+[2026-01-09 16:41:41.897646+05:30] Initializing strategy...
+[2026-01-09 16:41:41.897708] Using lot size from contract manager: 25 units/lot
+[2026-01-09 16:41:41.897739] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 16:41:41.898141+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 16:41:41.898204+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+[2026-01-09 16:41:41.898316+05:30] Market closed, waiting...
+[2026-01-09 16:42:41.903525+05:30] Market closed, waiting...

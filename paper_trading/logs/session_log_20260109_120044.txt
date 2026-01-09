@@ -1,0 +1,142 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_120044.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 12:00:44.263090+05:30] Checking for previous session...
+[2026-01-09 12:00:44.263242+05:30] No previous state found - starting fresh
+
+[2026-01-09 12:00:44.263287+05:30] Connecting to AngelOne...
+[2026-01-09 12:00:44.267440] Generated TOTP: 172267
+[2026-01-09 12:00:44.267482] Connecting to AngelOne...
+[2026-01-09 12:00:44.397446] ✓ Connection successful!
+[2026-01-09 12:00:44.397579] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 12:00:44.397619] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5NDAyNDQsImV4cCI6MTc2ODAyNjY0NH0.8Qi90FOD1LWylp8D6RztnjeTiXijLdQyxnhlXoJpdwGJ9ujgv4GYZMymDe-i47Bvt-KFTHhxGeY387O7ETT4ZQ
+[2026-01-09 12:00:44.397655+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 12:00:44.397706+05:30] Initializing new session...
+[2026-01-09 12:00:44.398051+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 12:00:44.398602+05:30] Session initialized: SESSION_20260109_1200
+[2026-01-09 12:00:44.398647+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 12:00:44.398694+05:30] Loading instruments...
+[2026-01-09 12:00:44.398726] Loading instruments from AngelOne...
+[2026-01-09 12:00:47.901544] ✓ Downloaded 179933 instruments
+[2026-01-09 12:00:48.046268] ✓ Filtered 40442 NFO instruments
+[2026-01-09 12:00:48.090108] ✓ Loaded 1500 NIFTY options
+[2026-01-09 12:00:48.090388] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 12:00:48.133808+05:30] Initializing contract manager (reading from universal cache)...
+No cache file found
+⚠️  Could not load cache from /Users/Algo_Trading/manishsir_options/contracts_cache.json
+Please run: python refresh_contracts.py
+[2026-01-09 12:00:48.134153+05:30] ✓ Contract manager initialized
+[2026-01-09 12:00:48.134190+05:30] Initializing paper broker...
+[2026-01-09 12:00:48.135001] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 12:00:48.135064] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_120048.csv
+[2026-01-09 12:00:48.135096] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 12:00:48.135140+05:30] Initializing OI analyzer...
+[2026-01-09 12:00:48.135491+05:30] Initializing strategy...
+[2026-01-09 12:00:48.135555] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 12:00:48.135972+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 12:00:48.136033+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+================================================================================
+[2026-01-09 12:00:48.136239+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-09 12:00:48.136296+05:30] ✓ Exit monitor loop started
+[2026-01-09 12:00:48.136421+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 12:00:48.136469+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 12:00:48.136765+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-09 12:00:48.136803+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-09 12:00:48.136803+05:30] Nifty Spot: 25743.60
+[2026-01-09 12:00:48.136803+05:30] ⚠️ Contract manager: No current week expiry, falling back to broker
+[2026-01-09 12:00:48.229766] Fetching quotes for 22 options...
+[2026-01-09 12:00:56.054565] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-09 12:00:48.136803+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-09 12:00:48.136803+05:30] Determining direction using CURRENT OI data...
+[2026-01-09 12:00:48.136803+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-09 12:00:48.136803+05:30] NEW TRADING DAY: 2026-01-09
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25743.60)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25500.0            668,395            -243.60
+25550.0            107,900            -193.60
+25600.0          1,378,325            -143.60
+25650.0            502,775             -93.60
+25700.0          3,681,275             -43.60
+25750.0          4,044,755               6.40
+25800.0         12,529,010              56.40
+25850.0          9,256,910             106.40
+25900.0         19,692,010             156.40
+25950.0          9,668,035             206.40
+26000.0         22,817,600             256.40 👈 MAX
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25500.0         11,918,140             243.60
+25550.0          3,758,950             193.60
+25600.0         11,169,015             143.60
+25650.0          5,233,280              93.60
+25700.0         13,645,125              43.60 👈 MAX
+25750.0          8,682,895              -6.40
+25800.0         13,296,400             -56.40
+25850.0          5,585,060            -106.40
+25900.0          8,185,710            -156.40
+25950.0          2,716,545            -206.40
+26000.0          4,730,765            -256.40
+================================================================================
+[2026-01-09 12:00:48.136803+05:30] Max Call OI: 22,817,600 @ 26000.0, Max Put OI: 13,645,125 @ 25700.0
+[2026-01-09 12:00:48.136803+05:30] Direction determined: PUT (Call dist: 256.40, Put dist: 43.60)
+[2026-01-09 12:00:48.136803+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25700.0, Expiry=2026-01-13, Spot=25743.60
+[2026-01-09 12:00:48.136803+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-09
+[2026-01-09 12:00:48.136803+05:30] 🎯 Initialized VWAP for PUT 25700.0: 34 bars from 9:15 AM
+[2026-01-09 12:00:48.136803+05:30] Checking entry: PUT 25700.0, Expiry=2026-01-13
+[2026-01-09 12:00:48.136803+05:30] PUT 25700.0: OI=13,645,125, Change=0 (+0.00%) - BUILDING
+[2026-01-09 12:00:48.136803+05:30] PUT 25700.0: Price=₹58.75, VWAP=₹58.75 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-09
+Broker: AngelOne
+Daily Direction: PUT @ 25700.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[12:00:56] Waiting 244s for next candle at 12:05:00

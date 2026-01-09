@@ -1,0 +1,89 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260109_224020.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+Creating broker instance...
+✓ Broker: AngelOne
+
+[2026-01-09 22:40:20.550552+05:30] Checking for previous session...
+[2026-01-09 22:40:20.550680+05:30] No previous state found - starting fresh
+
+[2026-01-09 22:40:20.550710+05:30] Connecting to AngelOne...
+[2026-01-09 22:40:20.553821] Generated TOTP: 109867
+[2026-01-09 22:40:20.553858] Connecting to AngelOne...
+[2026-01-09 22:40:20.713081] ✓ Connection successful!
+[2026-01-09 22:40:20.713217] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-09 22:40:20.713258] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njc5Nzg2MjAsImV4cCI6MTc2ODA2NTAyMH0.zu8_xNY1TzQMFM2t88MmaplNguRbUwP5HmYHn2lNV6qJvdFzv_k2EJ1P5iPpL7MtJJvs-__67aKG8LXDSl7pIw
+[2026-01-09 22:40:20.713293+05:30] ✓ Connected to AngelOne
+
+[2026-01-09 22:40:20.713342+05:30] Initializing new session...
+[2026-01-09 22:40:20.713685+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-09 22:40:20.714176+05:30] Session initialized: SESSION_20260109_2240
+[2026-01-09 22:40:20.714262+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260109.json
+[2026-01-09 22:40:20.714331+05:30] Loading instruments...
+[2026-01-09 22:40:20.714365] Loading instruments from AngelOne...
+[2026-01-09 22:40:24.343821] ✓ Downloaded 179933 instruments
+[2026-01-09 22:40:24.433572] ✓ Filtered 40442 NFO instruments
+[2026-01-09 22:40:24.456981] ✓ Loaded 1500 NIFTY options
+[2026-01-09 22:40:24.457152] ✓ Available expiries: [datetime.date(2026, 1, 13), datetime.date(2026, 1, 20), datetime.date(2026, 1, 27), datetime.date(2026, 2, 3), datetime.date(2026, 2, 10)]
+[2026-01-09 22:40:24.489245+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-09T22:28:41.667517)
+Options lot size: 65 units per lot
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-09 22:40:24.490025+05:30] ✓ Contract manager initialized
+[2026-01-09 22:40:24.490064+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 22:40:24.490128+05:30] Initializing paper broker...
+[2026-01-09 22:40:24.490382] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-09 22:40:24.490410] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260109_224024.csv
+[2026-01-09 22:40:24.490430] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-09 22:40:24.490451+05:30] Initializing OI analyzer...
+[2026-01-09 22:40:24.490650+05:30] Initializing strategy...
+[2026-01-09 22:40:24.490683] Using lot size from contract manager: 65 units/lot
+[2026-01-09 22:40:24.490703] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-09 22:40:24.490919+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-09 22:40:24.490958+05:30] Starting DUAL-LOOP paper trading...
+  Broker: AngelOne
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-09 22:40:24.491097+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 22:40:24.491115+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-09 22:40:24.491164+05:30] Market closed, waiting...
+[2026-01-09 22:41:24.496544+05:30] Market closed, waiting...
+[2026-01-09 22:42:24.498751+05:30] Market closed, waiting...
+[2026-01-09 22:43:24.502441+05:30] Market closed, waiting...
+[2026-01-09 22:44:24.507901+05:30] Market closed, waiting...
+[2026-01-09 22:45:24.499931+05:30] 🔄 Contract monitor: Checking for cache updates...
+======================================================================
+CACHE FILE UPDATED - RELOADING CONTRACTS
+======================================================================
+Previous mtime: 1767978571.2258968
+Current mtime:  1767978642.880638
+Loaded 18 options expiries from cache (cached at: 2026-01-09T22:28:41.667517)
+Options lot size: 32 units per lot
+✓ Contracts reloaded successfully
+  Options: 18 expiry dates
+  Active Options: 2026-01-13 (4 days)
+======================================================================
+[2026-01-09 22:45:24.502328+05:30] ✓ Contracts reloaded from cronjob update
+[2026-01-09 22:45:24.502473+05:30] Active Weekly Expiry: 2026-01-13 (4 days)
+[2026-01-09 22:45:24.509216+05:30] Market closed, waiting...
