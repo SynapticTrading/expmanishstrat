@@ -18,6 +18,7 @@ from paper_trading.utils.factory import create_broker
 from paper_trading.core.broker import PaperBroker
 from paper_trading.core.strategy import IntradayMomentumOIPaper
 from paper_trading.core.state_manager import StateManager
+from paper_trading.core.contract_manager import ContractManager
 import pandas as pd
 import signal
 import threading
@@ -139,9 +140,15 @@ class UniversalPaperTrader:
         self.state_manager = StateManager(state_dir=str(state_dir), broker_name=self.broker_api.name)
         self.ist = pytz.timezone('Asia/Kolkata')
 
+        # Contract management for automatic expiry selection
+        self.contract_manager = None  # Initialized after broker connection
+        self.use_contract_manager = True  # Enable automatic contract management
+        self.contract_monitor_interval = 300  # Check for contract updates every 5 minutes
+
         # Threading
         self.running = False
         self.exit_monitor_thread = None
+        self.contract_monitor_thread = None
         self.exit_monitor_lock = threading.Lock()
 
         # Shared data
@@ -274,6 +281,30 @@ class UniversalPaperTrader:
         if not self.broker_api.load_instruments():
             print(f"[{self._get_ist_now()}] ⚠ Could not load instruments (may not affect operation)")
 
+        # Initialize contract manager for automatic expiry selection
+        # Reads from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+        if self.use_contract_manager:
+            print(f"[{self._get_ist_now()}] Initializing contract manager (reading from universal cache)...")
+            try:
+                self.contract_manager = ContractManager()
+                print(f"[{self._get_ist_now()}] ✓ Contract manager initialized")
+
+                # Show active expiry
+                current_week = self.contract_manager.get_options_expiry('current_week')
+                if current_week:
+                    days = self.contract_manager._calculate_days_to_expiry(current_week)
+                    print(f"[{self._get_ist_now()}] Active Weekly Expiry: {current_week} ({days} days)")
+
+                    # Check rollover warning
+                    if self.contract_manager.should_rollover_options('current_week', days_threshold=2):
+                        next_week = self.contract_manager.get_options_expiry('next_week')
+                        print(f"[{self._get_ist_now()}] ⚠️  ROLLOVER WARNING: Consider rolling to {next_week}")
+
+            except Exception as e:
+                print(f"[{self._get_ist_now()}] ⚠️  Contract manager initialization failed: {e}")
+                print(f"[{self._get_ist_now()}] Falling back to broker's expiry detection...")
+                self.contract_manager = None
+
         # Initialize paper broker
         print(f"[{self._get_ist_now()}] Initializing paper broker...")
         # Use absolute path for logs directory
@@ -315,7 +346,8 @@ class UniversalPaperTrader:
             config=self.config,
             broker=self.paper_broker,
             oi_analyzer=self.oi_analyzer,
-            state_manager=self.state_manager
+            state_manager=self.state_manager,
+            contract_manager=self.contract_manager
         )
 
         # Restore strategy state if recovering
@@ -393,9 +425,23 @@ class UniversalPaperTrader:
         print(f"  Broker: {self.broker_api.name}")
         print(f"  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)")
         print(f"  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)")
+        if self.use_contract_manager and self.contract_manager:
+            print(f"  Loop 3: Contract Monitor Loop - Every {self.contract_monitor_interval}s (Cache updates)")
         if self.recovery_mode:
             print(f"  MODE: RECOVERY (resumed from crash)")
         print(f"{'='*80}\n")
+
+        # Start contract monitor thread BEFORE market open
+        # This ensures cache updates are detected even when market is closed
+        # (e.g., cronjob runs at 8:30 AM, before market open at 9:15 AM)
+        if self.use_contract_manager and self.contract_manager:
+            self.contract_monitor_thread = threading.Thread(
+                target=self._contract_monitor_loop,
+                name="ContractMonitor",
+                daemon=True
+            )
+            self.contract_monitor_thread.start()
+            print(f"[{self._get_ist_now()}] ✓ Contract monitor loop started (checks every {self.contract_monitor_interval}s)")
 
         # Wait for market open
         while self.running and not self.broker_api.is_market_open():
@@ -552,10 +598,65 @@ class UniversalPaperTrader:
                 traceback.print_exc()
                 time_module.sleep(60)
 
+    def _contract_monitor_loop(self):
+        """
+        Contract monitor loop - runs every 5 minutes to check for contract cache updates.
+        Automatically reloads contracts when cache is updated by cronjob.
+        """
+        print(f"[{self._get_ist_now()}] ✓ Contract monitor loop started (checks every {self.contract_monitor_interval}s)")
+
+        while self.running:
+            try:
+                time_module.sleep(self.contract_monitor_interval)
+
+                if not self.contract_manager:
+                    continue
+
+                # Check if cache file was updated externally (e.g., by cronjob)
+                print(f"[{self._get_ist_now()}] 🔄 Contract monitor: Checking for cache updates...")
+                cache_updated = self.contract_manager.check_and_reload_if_updated()
+
+                if cache_updated:
+                    print(f"[{self._get_ist_now()}] ✓ Contracts reloaded from cronjob update")
+
+                    # Log updated expiry
+                    current_week = self.contract_manager.get_options_expiry('current_week')
+                    if current_week:
+                        days = self.contract_manager._calculate_days_to_expiry(current_week)
+                        print(f"[{self._get_ist_now()}] Active Weekly Expiry: {current_week} ({days} days)")
+
+                        # Check rollover warning
+                        if self.contract_manager.should_rollover_options('current_week', days_threshold=2):
+                            next_week = self.contract_manager.get_options_expiry('next_week')
+                            print(f"[{self._get_ist_now()}] ⚠️  ROLLOVER WARNING: Consider rolling to {next_week}")
+
+                    # Update state with contract info
+                    if current_week:
+                        self.state_manager.state['strategy_state']['active_expiry'] = current_week
+                        self.state_manager.save()
+                else:
+                    # Log that check completed (no updates)
+                    current_week = self.contract_manager.get_options_expiry('current_week')
+                    if current_week:
+                        days = self.contract_manager._calculate_days_to_expiry(current_week)
+                        print(f"[{self._get_ist_now()}] ✓ Contract check complete - No updates (Active: {current_week}, {days} days)")
+
+            except Exception as e:
+                print(f"[{self._get_ist_now()}] ✗ Error in contract monitor loop: {e}")
+                import traceback
+                traceback.print_exc()
+
     def _get_options_data(self, current_time, spot_price):
         """Get options chain data"""
-        # Get next expiry
-        expiry = self.broker_api.get_next_expiry()
+        # Get next expiry - use contract manager if available
+        if self.contract_manager:
+            expiry = self.contract_manager.get_options_expiry('current_week')
+            if not expiry:
+                print(f"[{current_time}] ⚠️ Contract manager: No current week expiry, falling back to broker")
+                expiry = self.broker_api.get_next_expiry()
+        else:
+            expiry = self.broker_api.get_next_expiry()
+
         if not expiry:
             return pd.DataFrame()
 

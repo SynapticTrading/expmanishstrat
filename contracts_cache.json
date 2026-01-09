@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-01-09T22:28:41.667517",
+  "symbol": "NIFTY",
+  "exchange": "NFO",
+  "futures": {
+    "contracts": [
+      {
+        "symbol": "NIFTY27JAN26FUT",
+        "exchange": "NFO",
+        "instrument_token": "49229",
+        "expiry": "2026-01-27",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 18
+      },
+      {
+        "symbol": "NIFTY24FEB26FUT",
+        "exchange": "NFO",
+        "instrument_token": "59182",
+        "expiry": "2026-02-24",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 46
+      },
+      {
+        "symbol": "NIFTY30MAR26FUT",
+        "exchange": "NFO",
+        "instrument_token": "51714",
+        "expiry": "2026-03-30",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 80
+      }
+    ],
+    "mapping": {
+      "current_month": {
+        "symbol": "NIFTY27JAN26FUT",
+        "exchange": "NFO",
+        "instrument_token": "49229",
+        "expiry": "2026-01-27",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 18
+      },
+      "next_month": {
+        "symbol": "NIFTY24FEB26FUT",
+        "exchange": "NFO",
+        "instrument_token": "59182",
+        "expiry": "2026-02-24",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 46
+      },
+      "far_next_month": {
+        "symbol": "NIFTY30MAR26FUT",
+        "exchange": "NFO",
+        "instrument_token": "51714",
+        "expiry": "2026-03-30",
+        "lot_size": 65,
+        "tick_size": 10.0,
+        "name": "NIFTY",
+        "days_to_expiry": 80
+      }
+    }
+  },
+  "options": {
+    "expiry_dates": [
+      "2026-01-13",
+      "2026-01-20",
+      "2026-01-27",
+      "2026-02-03",
+      "2026-02-10",
+      "2026-02-24",
+      "2026-03-30",
+      "2026-06-30",
+      "2026-09-29",
+      "2026-12-29",
+      "2027-06-29",
+      "2027-12-28",
+      "2028-06-27",
+      "2028-12-26",
+      "2029-06-26",
+      "2029-12-24",
+      "2030-06-25",
+      "2030-12-31"
+    ],
+    "mapping": {
+      "current_week": "2026-01-13",
+      "next_week": "2026-01-20",
+      "current_month": "2026-01-27",
+      "next_month": "2026-02-24"
+    },
+    "strikes": {
+      "min": 12000.0,
+      "max": 34500.0,
+      "step": 1000.0
+    },
+    "lot_size": 65
+  }
+}

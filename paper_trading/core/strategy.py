@@ -20,7 +20,7 @@ class IntradayMomentumOIPaper:
     Uses same logic as backtest but with real-time data
     """
 
-    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None):
+    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None, contract_manager=None):
         """
         Initialize strategy
 
@@ -29,11 +29,13 @@ class IntradayMomentumOIPaper:
             broker: PaperBroker instance
             oi_analyzer: OIAnalyzer instance
             state_manager: StateManager instance (optional)
+            contract_manager: ContractManager instance (optional)
         """
         self.config = config
         self.broker = broker
         self.oi_analyzer = oi_analyzer
         self.state_manager = state_manager
+        self.contract_manager = contract_manager
 
         # Extract config parameters
         entry_cfg = config['entry']
@@ -57,7 +59,14 @@ class IntradayMomentumOIPaper:
         self.oi_increase_stop_pct = exit_cfg['oi_increase_stop_pct']
 
         # Position sizing
-        self.lot_size = market_cfg['option_lot_size']
+        # Use contract manager lot size if available, otherwise fall back to config
+        if self.contract_manager:
+            self.lot_size = self.contract_manager.get_options_lot_size()
+            print(f"[{datetime.now()}] Using lot size from contract manager: {self.lot_size} units/lot")
+        else:
+            self.lot_size = market_cfg['option_lot_size']
+            print(f"[{datetime.now()}] Using lot size from config: {self.lot_size} units/lot")
+
         self.max_positions = risk_cfg['max_positions']
 
         # Daily state

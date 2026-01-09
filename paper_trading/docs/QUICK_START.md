@@ -1,91 +1,106 @@
-# Quick Start - Paper Trading
+# Quick Start - Multi-Broker Contract Manager
 
 ## TL;DR
 
 ```bash
-# 1. Install dependencies
-cd paper_trading
-pip install -r requirements.txt
+# Refresh cache (choose ONE):
+python3 refresh_contracts.py --broker zerodha    # Futures + Options
+python3 refresh_contracts.py --broker angelone   # Options only
 
-# 2. Test connection
-python test_zerodha_connection.py
-
-# 3. Run paper trading (during market hours) - DUAL LOOP VERSION
-python dual_loop_runner.py
+# Run paper trading (works with cache from either broker):
+python3 paper_trading/runner.py --broker angelone
+python3 paper_trading/runner.py --broker zerodha
 ```
 
-## ⚠️ Important: Use Dual-Loop Runner
+## Daily Cronjob (8:30 AM)
 
-**Correct**: `dual_loop_runner.py` - Proper implementation with:
-- Loop 1 (5-min): Entry decisions based on candles
-- Loop 2 (1-min): Exit decisions based on LTP
-
-**Wrong**: `zerodha_paper_runner.py` - Single loop (deprecated)
-- Delayed exits (up to 5 minutes!)
-- Worse execution prices
-
----
-
-## What You Need to Know
-
-### ✅ Credentials: Already Configured
-Your Zerodha credentials are saved in `credentials.txt` (secure, not in git).
-
-### ✅ Strategy: Same as Backtest
-- Entry: OI unwinding + Price > VWAP
-- Exit: 25% SL, VWAP stop, OI stop, Trailing stop, EOD
-- 1 trade/day, max 2 positions
-
-### ✅ Output: Trade Logs
-All trades logged to `logs/trades_YYYYMMDD_HHMMSS.csv`
-
----
-
-## Files You Need
-
-| File | What it does |
-|------|-------------|
-| `zerodha_paper_runner.py` | **Main script - run this** |
-| `test_zerodha_connection.py` | Test Zerodha connection |
-| `credentials.txt` | Your API credentials (configured) |
-| `config.yaml` | Strategy parameters |
-
----
-
-## Expected Output
-
-```
-[09:15:00] NEW TRADING DAY: 2024-12-26
-[09:15:00] Daily Direction: CALL @ 23000
-[09:30:00] ✓ BUY ORDER EXECUTED
-[10:15:00] ✓ SELL ORDER EXECUTED - P&L: ₹+1,500.00
-```
-
----
-
-## Troubleshooting
-
-**Connection failed?**
 ```bash
-python test_zerodha_connection.py
+crontab -e
+
+# Choose ONE:
+30 8 * * * python3 refresh_contracts.py --broker zerodha >> logs/refresh.log 2>&1
+# OR
+30 8 * * * cd /Users/Algo_Trading/manishsir_options && python3 refresh_contracts.py --broker angelone >> logs/refresh.log 2>&1
 ```
 
-**No options data?**
-- Must run during market hours (9:15 AM - 3:30 PM)
-- Check if it's a trading holiday
+## What You Get
 
-**Need help?**
-- Read `ZERODHA_SETUP.md` for full guide
-- Check `IMPLEMENTATION_SUMMARY.md` for details
+✅ **Automatic expiry selection** - No manual configuration needed  
+✅ **Auto-reload on cache updates** - Zero downtime  
+✅ **Rollover warnings** - 2-day threshold for options  
+✅ **Multi-broker support** - Zerodha OR AngelOne  
+✅ **Universal cache** - One file for all strategies  
+
+## Current Expiries
+
+Run this to see active expiries:
+
+```bash
+python3 -c "
+import json
+from datetime import datetime
+
+with open('contracts_cache.json') as f:
+    data = json.load(f)
+
+mapping = data['options']['mapping']
+for k, v in mapping.items():
+    expiry_date = datetime.strptime(v, '%Y-%m-%d').date()
+    days = (expiry_date - datetime.now().date()).days
+    print(f'{k:15} {v}  ({days} days)')
+"
+```
+
+## File Locations
+
+```
+/Users/Algo_Trading/manishsir_options/
+├── contracts_cache.json              ← Universal cache (both brokers write here)
+├── refresh_contracts.py              ← Run daily with --broker flag
+└── paper_trading/
+    ├── runner.py                     ← Main trading script
+    └── core/contract_manager.py      ← Reads from universal cache
+```
+
+## Logs
+
+```bash
+# Refresh logs
+tail -f logs/refresh_contracts.log
+
+# Paper trading logs (find latest)
+ls -lt paper_trading/logs/session_log_*.txt | head -1
+tail -f paper_trading/logs/session_log_$(date +%Y%m%d)_*.txt
+```
+
+## Verification
+
+After running refresh_contracts.py:
+
+```bash
+# Check cache updated
+ls -lh contracts_cache.json
+
+# View cache contents
+cat contracts_cache.json | python3 -m json.tool | less
+
+# Test paper trading can read it
+python3 -c "from paper_trading.core.contract_manager import ContractManager; m=ContractManager(); print('✓ Cache OK')"
+```
+
+## That's It!
+
+Everything else is automatic. Paper trading will:
+- Load expiries from cache on startup
+- Monitor cache every 5 minutes
+- Reload automatically when cronjob updates it
+- Log: "✓ Contracts reloaded from cronjob update"
+
+**No manual intervention needed! 🎉**
 
 ---
 
-## Important
-
-⚠️ **Paper trading only** - No real money used
-⚠️ **Market hours only** - 9:15 AM - 3:30 PM, Mon-Fri
-⚠️ **Test first** - Run for 5-10 days before considering live
-
----
-
-**Start now**: `python zerodha_paper_runner.py`
+For detailed docs, see:
+- `REFRESH_CONTRACTS_USAGE.md` - Complete usage guide
+- `MULTI_BROKER_IMPLEMENTATION_SUMMARY.md` - Full technical details
+- `paper_trading/CONTRACT_MANAGER_INTEGRATION.md` - Integration docs
