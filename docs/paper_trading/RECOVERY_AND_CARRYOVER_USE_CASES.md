@@ -2,6 +2,16 @@
 
 This document explains how the paper trading system handles various scenarios including crashes, restarts, and the 1-trade-per-day limit.
 
+## 🚀 AUTOMATIC CRASH RECOVERY
+
+**IMPORTANT: The system now AUTOMATICALLY recovers from crashes without any user input.**
+
+- ✅ No prompts asking "Resume from crash? (y/n)"
+- ✅ Always resumes from previous session when crash detected
+- ✅ Preserves all positions, trade history, and portfolio
+- ✅ Works for both open positions and closed trades
+- ✅ Zero manual intervention required
+
 ---
 
 ## ✅ Continuous Monitoring Feature
@@ -74,11 +84,15 @@ Final Statistics:
 ```
 10:00 - Trade taken
 11:00 - System crashes (position still open)
-11:30 - Restart → Choose "y" (recovery)
+11:30 - Restart → AUTOMATIC RECOVERY (no user input)
 ```
 
 **System Behavior:**
 ```
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
 Restoring 1 position(s)...
   ✓ Restored: CALL 26050.0 @ ₹107.40
   Peak: ₹176.95, Trailing: True
@@ -87,7 +101,7 @@ Restored daily_trade_taken: True (has open positions)
 
 → Continues monitoring position
 → Blocks new entries
-→ After exit: Auto-shutdown
+→ After exit: Continues monitoring until EOD
 ```
 
 ---
@@ -99,11 +113,14 @@ Restored daily_trade_taken: True (has open positions)
 10:00 - Trade taken
 10:30 - Trade exits
 11:00 - System crashes (no positions)
-11:30 - Restart → Choose "y" (recovery)
+11:30 - Restart → AUTOMATIC RECOVERY (no user input)
 ```
 
 **System Behavior:**
 ```
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
 Restoring 1 closed trade(s)...
   ✓ Restored trade: CALL 26050.0 | P&L: ₹+6,420.00
 
@@ -128,44 +145,49 @@ Final Statistics:
 
 ---
 
-## ⚠️ Use Case 4: Fresh Start (Same Day) - Portfolio Only
+## ⚠️ Use Case 4: Next Day Start - Portfolio Carryover
 
 **Scenario:**
 ```
-10:00 - Trade taken, P&L = +₹6,420
-10:30 - Trade exits
-11:00 - System crashes
-11:30 - Restart → Choose "n" (fresh start)
+Day 1:
+  10:00 - Trade taken, P&L = +₹6,420
+  10:30 - Trade exits
+  15:00 - System stops (EOD)
+
+Day 2:
+  09:30 - System starts (new day)
 ```
 
 **System Behavior:**
 ```
 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2025-01-10
   Starting Capital: ₹106,547.50 ← Cash preserved!
   Previous P&L: ₹+6,420.00
+  Previous Trades: 1
+  Previous Win Rate: 100.0%
 
-→ daily_trade_taken = False (reset)
-→ closed_positions = [] (cleared)
-→ CAN take another trade! ⚠️
+→ daily_trade_taken = False (new day)
+→ closed_positions = [] (new day)
+→ CAN take trade today! ✓
 ```
 
-**Why This is OK:**
-- You chose fresh start, not recovery
-- Portfolio (cash) is preserved
-- Trade history cleared by choice
+**Why This Works:**
+- New trading day detected
+- Portfolio (cash) carried forward
+- Trade history starts fresh for new day
 - Expected behavior
 
 ---
 
 ## 🔑 Summary Table
 
-| Scenario | Portfolio Preserved? | Trade History? | daily_trade_taken? | Continues Monitoring? | Shutdown Time |
-|----------|---------------------|----------------|-------------------|-----------------------|---------------|
-| Runtime (no crash) | ✅ Yes | ✅ Yes | ✅ Stays True | ✅ Yes (until EOD) | EOD / Market Close |
-| Recovery (open pos) | ✅ Yes | ✅ Yes | ✅ True | ✅ Yes (until EOD) | EOD / Market Close |
-| Recovery (closed) | ✅ Yes | ✅ Yes | ✅ True | ✅ Yes (until EOD) | EOD / Market Close |
-| Fresh start (same day) | ✅ Yes | ❌ No | ❌ False | ✅ Yes (until EOD) | EOD / Market Close |
-| Fresh start (next day) | ✅ Yes | ❌ No | ❌ False | ✅ Yes (until EOD) | EOD / Market Close |
+| Scenario | Portfolio Preserved? | Trade History? | daily_trade_taken? | Continues Monitoring? | Shutdown Time | User Input? |
+|----------|---------------------|----------------|-------------------|-----------------------|---------------|-------------|
+| Runtime (no crash) | ✅ Yes | ✅ Yes | ✅ Stays True | ✅ Yes (until EOD) | EOD / Market Close | N/A |
+| Auto-Recovery (open pos) | ✅ Yes | ✅ Yes | ✅ True | ✅ Yes (until EOD) | EOD / Market Close | ❌ No - Automatic |
+| Auto-Recovery (closed) | ✅ Yes | ✅ Yes | ✅ True | ✅ Yes (until EOD) | EOD / Market Close | ❌ No - Automatic |
+| Next day start | ✅ Yes | ❌ No (new day) | ❌ False (new day) | ✅ Yes (until EOD) | EOD / Market Close | N/A |
 
 ---
 
@@ -173,8 +195,9 @@ Final Statistics:
 
 - [ ] Take trade → Exit → Verify system continues monitoring (no auto-shutdown)
 - [ ] Trade complete → Check for entry signal → Verify entry blocked with log message
-- [ ] Crash with position → Recover → Verify position restored
-- [ ] Crash after exit → Recover → Verify P&L correct + continues monitoring
-- [ ] Fresh start same day → Verify portfolio preserved, can retrade
+- [ ] Crash with position → Restart → Verify AUTOMATIC recovery (no prompt) + position restored
+- [ ] Crash after exit → Restart → Verify AUTOMATIC recovery (no prompt) + P&L correct + continues monitoring
+- [ ] Verify NO user input prompt appears during crash recovery
 - [ ] EOD exit → Verify shutdown at 15:00 / 3:00 PM (only EOD shutdown)
 - [ ] Verify monitoring mode logs appear when trade limit reached
+- [ ] Next day start → Verify portfolio carryover but fresh trade history

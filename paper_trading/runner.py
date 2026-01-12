@@ -214,22 +214,15 @@ class UniversalPaperTrader:
             print(f"⚠️  CRITICAL: {self.recovery_info['active_positions_count']} open position(s) detected!")
             print(f"Cannot start fresh session with active positions.")
             print(f"Automatically resuming from crash...\n")
-
-            self.recovery_mode = True
-            self.state_manager.resume_session()
-            return True
         else:
-            # No positions - safe to ask user
-            response = input("Resume from crash? (y/n): ").strip().lower()
+            # No open positions but has previous session data
+            print(f"✓ AUTOMATIC RECOVERY: Previous session detected")
+            print(f"Automatically resuming from crash...\n")
 
-            if response == 'y':
-                print(f"\n[{self._get_ist_now()}] Resuming session...")
-                self.recovery_mode = True
-                self.state_manager.resume_session()
-                return True
-            else:
-                print(f"\n[{self._get_ist_now()}] Starting fresh session...")
-                return False
+        # Always automatically recover - no user input required
+        self.recovery_mode = True
+        self.state_manager.resume_session()
+        return True
 
     def connect(self):
         """Connect to broker"""

@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-01-12T23:45:53.743436+05:30",
+  "date": "2026-01-12",
+  "session_id": "SESSION_20260112_0930",
+  "mode": "paper",
+  "active_positions": {
+    "PAPER_20260112_001": {
+      "order_id": "PAPER_20260112_001",
+      "symbol": "NIFTY26JAN23750CE",
+      "strike": 23750.0,
+      "option_type": "CALL",
+      "expiry": "2026-01-16",
+      "entry": {
+        "price": 108.5,
+        "time": "2026-01-12T10:15:30.123456+05:30",
+        "quantity": 75,
+        "reason": "OI unwinding + Price above VWAP"
+      },
+      "stop_losses": {
+        "initial_stop": 81.375,
+        "initial_stop_pct": 25,
+        "vwap_stop": null,
+        "vwap_stop_active": false,
+        "oi_stop_active": false,
+        "trailing_stop": 119.88,
+        "trailing_stop_pct": 10,
+        "trailing_active": true
+      },
+      "price_tracking": {
+        "peak_price": 133.2,
+        "peak_time": "2026-01-12T11:35:45.789012+05:30",
+        "current_price": 128.75,
+        "unrealized_pnl": 1518.75,
+        "unrealized_pnl_pct": 18.663594470046082
+      },
+      "market_data": {
+        "entry_oi": 12850000,
+        "current_oi": 12675000,
+        "oi_change_pct": -1.3618677042801557,
+        "entry_vwap": 107.85,
+        "current_vwap": 125.4
+      },
+      "status": "OPEN"
+    }
+  },
+  "closed_positions": [],
+  "strategy_state": {
+    "current_spot": 23825.75,
+    "trading_strike": 23750.0,
+    "direction": "CALL",
+    "max_call_oi_strike": 23750.0,
+    "max_put_oi_strike": 23650.0,
+    "last_oi_check": "2026-01-12T11:45:00.000000+05:30",
+    "vwap_tracking": {
+      "23750.0CALL": {
+        "sum_typical_price_volume": 825000000.0,
+        "sum_volume": 6850000.0,
+        "current_vwap": 120.44,
+        "last_update": "2026-01-12T11:45:00.000000+05:30"
+      },
+      "23800.0CALL": {
+        "sum_typical_price_volume": 450000000.0,
+        "sum_volume": 3500000.0,
+        "current_vwap": 128.57,
+        "last_update": "2026-01-12T11:45:00.000000+05:30"
+      }
+    },
+    "active_expiry": "2026-01-16"
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 1,
+    "total_pnl_today": 0.0,
+    "win_count": 0,
+    "loss_count": 0,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 100000.0,
+    "current_cash": 91862.5,
+    "positions_value": 9656.25,
+    "total_value": 101518.75,
+    "total_return_pct": 1.51875
+  },
+  "api_stats": {
+    "calls_5min_loop": 27,
+    "calls_1min_ltp": 89,
+    "total_calls_today": 116,
+    "last_api_call": "2026-01-12T11:45:30.123456+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-12T23:45:53.743410+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": true,
+    "strategy_loop_running": true,
+    "recovered": true,
+    "recovery_time": "2026-01-12T23:45:51.632628+05:30"
+  }
+}
