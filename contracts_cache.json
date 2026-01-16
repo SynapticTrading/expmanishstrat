@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-12T23:23:58.208070",
+  "timestamp": "2026-01-15T09:38:47.664483",
   "symbol": "NIFTY",
   "exchange": "NFO",
   "futures": {
@@ -12,7 +12,7 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 15
+        "days_to_expiry": 12
       },
       {
         "symbol": "NIFTY24FEB26FUT",
@@ -22,7 +22,7 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 43
+        "days_to_expiry": 40
       },
       {
         "symbol": "NIFTY30MAR26FUT",
@@ -32,7 +32,7 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 77
+        "days_to_expiry": 74
       }
     ],
     "mapping": {
@@ -44,7 +44,7 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 15
+        "days_to_expiry": 12
       },
       "next_month": {
         "symbol": "NIFTY24FEB26FUT",
@@ -54,7 +54,7 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 43
+        "days_to_expiry": 40
       },
       "far_next_month": {
         "symbol": "NIFTY30MAR26FUT",
@@ -64,17 +64,17 @@
         "lot_size": 65,
         "tick_size": 10.0,
         "name": "NIFTY",
-        "days_to_expiry": 77
+        "days_to_expiry": 74
       }
     }
   },
   "options": {
     "expiry_dates": [
-      "2026-01-13",
       "2026-01-20",
       "2026-01-27",
       "2026-02-03",
       "2026-02-10",
+      "2026-02-17",
       "2026-02-24",
       "2026-03-30",
       "2026-06-30",
@@ -90,8 +90,8 @@
       "2030-12-31"
     ],
     "mapping": {
-      "current_week": "2026-01-13",
-      "next_week": "2026-01-20",
+      "current_week": "2026-01-20",
+      "next_week": "2026-01-27",
       "current_month": "2026-01-27",
       "next_month": "2026-02-24"
     },

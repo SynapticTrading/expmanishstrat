@@ -98,6 +98,7 @@ class StateManager:
             "strategy_state": {
                 "current_spot": None,
                 "trading_strike": None,
+                "trading_expiry": None,
                 "direction": None,
                 "max_call_oi_strike": None,
                 "max_put_oi_strike": None,
@@ -364,7 +365,7 @@ class StateManager:
             (total_value / initial_capital - 1) * 100 if initial_capital > 0 else 0
         )
 
-    def update_strategy_state(self, spot, strike, direction, call_strike, put_strike, vwap_tracking):
+    def update_strategy_state(self, spot, strike, direction, call_strike, put_strike, vwap_tracking, expiry=None):
         """
         Update strategy state
 
@@ -375,10 +376,18 @@ class StateManager:
             call_strike: Max call OI strike
             put_strike: Max put OI strike
             vwap_tracking: VWAP tracking dict
+            expiry: Trading expiry date (date object or string)
         """
         self.state["strategy_state"]["current_spot"] = spot
         self.state["strategy_state"]["trading_strike"] = strike
         self.state["strategy_state"]["direction"] = direction
+
+        # Save expiry as string for JSON serialization
+        if expiry is not None:
+            if hasattr(expiry, 'strftime'):
+                self.state["strategy_state"]["trading_expiry"] = expiry.strftime('%Y-%m-%d')
+            else:
+                self.state["strategy_state"]["trading_expiry"] = str(expiry)
         self.state["strategy_state"]["max_call_oi_strike"] = call_strike
         self.state["strategy_state"]["max_put_oi_strike"] = put_strike
         self.state["strategy_state"]["last_oi_check"] = self.get_ist_timestamp()

@@ -343,10 +343,17 @@ class UniversalPaperTrader:
             contract_manager=self.contract_manager
         )
 
-        # Restore strategy state if recovering
+        # Restore strategy state ONLY if there are active or closed positions
+        # If flat (no trades), start fresh and re-determine direction from current OI
         if self.recovery_mode and self.recovery_info:
-            print(f"[{self._get_ist_now()}] Restoring strategy state...")
-            self._restore_strategy_state(self.recovery_info['strategy_state'])
+            has_active = self.recovery_info.get('active_positions_count', 0) > 0
+            has_closed = len(self.recovery_info.get('closed_positions', [])) > 0
+
+            if has_active or has_closed:
+                print(f"[{self._get_ist_now()}] Restoring strategy state (has positions/trades)...")
+                self._restore_strategy_state(self.recovery_info['strategy_state'])
+            else:
+                print(f"[{self._get_ist_now()}] No positions/trades - starting fresh to re-determine direction")
 
         # Update system health
         self.state_manager.update_system_health(data_feed_status="ACTIVE")
@@ -366,18 +373,25 @@ class UniversalPaperTrader:
             self.strategy.current_date = datetime.strptime(date_str, '%Y-%m-%d').date()
             print(f"  Restored current_date: {self.strategy.current_date}")
 
-        # Restore expiry from positions (active or closed)
+        # Restore expiry - try strategy_state first (for flat days with no trades)
         expiry_restored = False
 
-        # Try active positions first
-        if self.recovery_info.get('active_positions'):
+        # Try strategy_state first (most reliable - always saved)
+        if strategy_state.get('trading_expiry'):
+            self.strategy.daily_expiry = strategy_state.get('trading_expiry')
+            expiry_restored = True
+            print(f"  Restored expiry from strategy_state: {self.strategy.daily_expiry}")
+
+        # Fallback: Try active positions
+        if not expiry_restored and self.recovery_info.get('active_positions'):
             active_positions_dict = self.recovery_info.get('active_positions', {})
             if active_positions_dict:
                 first_position = list(active_positions_dict.values())[0]
                 self.strategy.daily_expiry = first_position.get('expiry')
                 expiry_restored = True
+                print(f"  Restored expiry from active position: {self.strategy.daily_expiry}")
 
-        # If no active positions, try closed positions
+        # Fallback: Try closed positions
         if not expiry_restored and self.recovery_info.get('closed_positions'):
             closed_positions = self.recovery_info.get('closed_positions', [])
             if closed_positions:

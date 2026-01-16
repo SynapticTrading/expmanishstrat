@@ -194,7 +194,8 @@ class IntradayMomentumOIPaper:
                         direction=self.daily_direction,
                         call_strike=max_call_strike,
                         put_strike=max_put_strike,
-                        vwap_tracking=self.vwap_running_totals
+                        vwap_tracking=self.vwap_running_totals,
+                        expiry=self.daily_expiry
                     )
                     self.state_manager.save()
 
@@ -248,7 +249,8 @@ class IntradayMomentumOIPaper:
                 direction=self.daily_direction,
                 call_strike=self.max_call_oi_strike,
                 put_strike=self.max_put_oi_strike,
-                vwap_tracking=self.vwap_running_totals
+                vwap_tracking=self.vwap_running_totals,
+                expiry=self.daily_expiry
             )
             self.state_manager.save()
 
@@ -562,6 +564,10 @@ class IntradayMomentumOIPaper:
             # Convert expiry to comparable format (handle string vs date object)
             import pandas as pd
             from datetime import date
+
+            # If expiry is None, get it from options_data (from contracts_cache.json)
+            if expiry is None and not options_data.empty and 'expiry' in options_data.columns:
+                expiry = options_data.iloc[0]['expiry']
 
             # Normalize expiry to date object
             if isinstance(expiry, str):
