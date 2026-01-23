@@ -6,6 +6,12 @@ This script refreshes the contracts cache by downloading the latest
 futures and options contract information from broker (Zerodha/AngelOne).
 Intended to be run daily at 8:30 AM before market open.
 
+IMPORTANT: Uses EXCHANGE TOKENS (universal across all brokers)
+- NSE/NFO assigns each instrument a unique exchange_token
+- This token is the same regardless of broker (Zerodha, AngelOne, etc.)
+- Zerodha calls it 'exchange_token', AngelOne uses it as their 'token'
+- Zerodha's 'instrument_token' is different (internal to Zerodha)
+
 Usage:
     python refresh_contracts.py --broker zerodha
     python refresh_contracts.py --broker angelone
@@ -42,6 +48,8 @@ def setup_logging():
     )
 
     return logging.getLogger(__name__)
+
+
 
 
 def _create_cache_from_zerodha(kite):
@@ -146,6 +154,61 @@ def _create_cache_from_zerodha(kite):
     lot_size = lot_sizes[0] if lot_sizes else 65  # Default to 65
     logger.info(f"Options lot size: {lot_size} units per lot")
 
+    # === BUILD INSTRUMENT TOKEN MAP FOR OPTIONS ===
+    # This enables token-based lookups using UNIVERSAL EXCHANGE TOKENS
+    # Exchange tokens are assigned by NSE/NFO and are the same across all brokers
+    logger.info("Building options instrument token map (using exchange tokens)...")
+
+    # Get approximate spot price from futures for range filtering
+    spot_price = None
+    if futures_contracts:
+        # Try to get LTP from first futures contract (if we have market data access)
+        # For now, estimate from futures symbol or use a default
+        spot_price = 23000  # Default estimate, will be refined
+
+    # Build instruments dict: {expiry: {strike: {CE/PE: {token, zerodha_instrument_token}}}}
+    # token = UNIVERSAL exchange_token (same across all brokers)
+    # zerodha_instrument_token = Zerodha's internal token (stored for direct API use)
+    # NO SYMBOLS STORED - Forces pure token-based lookups!
+    options_instruments = {}
+    strike_range = 1500  # Cache strikes within ±1500 points of typical spot
+
+    for opt in options:
+        expiry_date = opt['expiry']
+        expiry_str = expiry_date.strftime('%Y-%m-%d')
+        strike = int(opt.get('strike', 0))
+        opt_type = opt.get('instrument_type')  # 'CE' or 'PE'
+
+        # IMPORTANT: Use exchange_token as the UNIVERSAL identifier
+        # This is the same token used by NSE/NFO, recognized by all brokers
+        exchange_token = str(opt.get('exchange_token', ''))
+        instrument_token = str(opt.get('instrument_token', ''))  # Zerodha's internal token
+
+        # Skip if missing required data
+        if not strike or not opt_type or not exchange_token:
+            continue
+
+        # Initialize nested dicts if needed
+        if expiry_str not in options_instruments:
+            options_instruments[expiry_str] = {}
+        if strike not in options_instruments[expiry_str]:
+            options_instruments[expiry_str][strike] = {}
+
+        # Store tokens AND tradingsymbol (tradingsymbol needed for Zerodha quote API!)
+        options_instruments[expiry_str][strike][opt_type] = {
+            'token': exchange_token,  # Universal exchange token (NSE/NFO assigned)
+            'zerodha_instrument_token': instrument_token,  # Zerodha's API token (pre-stored!)
+            'tradingsymbol': opt.get('tradingsymbol', '')  # Zerodha tradingsymbol for quote API
+        }
+
+    # Count instruments cached
+    total_instruments = sum(
+        len(opt_types)
+        for strikes in options_instruments.values()
+        for opt_types in strikes.values()
+    )
+    logger.info(f"Cached {total_instruments} options instrument tokens across {len(options_instruments)} expiries")
+
     # Create options expiry mapping
     options_mapping = {}
 
@@ -191,11 +254,13 @@ def _create_cache_from_zerodha(kite):
     if next_month_expiry:
         options_mapping['next_month'] = next_month_expiry
 
-    # Create cache data structure (FUTURES + OPTIONS)
+    # Create UNIVERSAL cache structure (flat, not broker-keyed)
+    # Exchange tokens are the same across all brokers - cache can be used by ANY broker
     cache_data = {
         'timestamp': datetime.now().isoformat(),
         'symbol': 'NIFTY',
         'exchange': 'NFO',
+        'source_broker': 'zerodha',  # Which broker was used to fetch this data
         'futures': {
             'contracts': futures_contracts,
             'mapping': futures_mapping
@@ -204,16 +269,22 @@ def _create_cache_from_zerodha(kite):
             'expiry_dates': expiry_dates,
             'mapping': options_mapping,
             'strikes': strikes_info,
-            'lot_size': lot_size
+            'lot_size': lot_size,
+            'instruments': options_instruments  # Token lookup with BOTH universal and Zerodha tokens
         }
+        # NOTE: Instruments contain ONLY TOKENS (no symbols!):
+        # - token: Universal exchange_token (works for all brokers)
+        # - zerodha_instrument_token: Zerodha's API token (only when refreshed from Zerodha)
+        # This forces 100% token-based API calls!
     }
 
-    # Save to cache file
+    # Save cache (flat structure - universal for all brokers)
     cache_file = Path('contracts_cache.json')
     with open(cache_file, 'w') as f:
         json.dump(cache_data, f, indent=2)
 
     logger.info(f"Saved {len(futures_contracts)} futures and {len(expiry_dates)} options expiries to cache: {cache_file}")
+    logger.info(f"Using UNIVERSAL exchange tokens (same for all brokers)")
 
     # Return mock manager object
     class MockManager:
@@ -355,6 +426,93 @@ def _create_cache_from_angelone(broker):
     lot_size = int(nifty_opts['lotsize'].iloc[0]) if not nifty_opts.empty and 'lotsize' in nifty_opts.columns else 65
     logger.info(f"Options lot size: {lot_size} units per lot")
 
+    # === BUILD INSTRUMENT TOKEN MAP FOR OPTIONS ===
+    # This enables token-based lookups using UNIVERSAL EXCHANGE TOKENS
+    # AngelOne's 'token' field IS the exchange token (same as NSE assigns)
+    logger.info("Building options instrument token map (using exchange tokens)...")
+
+    # Build instruments dict: {expiry: {strike: {CE/PE: {token, zerodha_instrument_token}}}}
+    # SMART MERGE: Load existing cache to preserve zerodha_instrument_token
+    # NO SYMBOLS STORED - Forces pure token-based lookups!
+    logger.info("Loading existing cache to preserve Zerodha instrument tokens...")
+    existing_instruments = {}
+    cache_file = Path('contracts_cache.json')
+    if cache_file.exists():
+        try:
+            with open(cache_file, 'r') as f:
+                existing_cache = json.load(f)
+                existing_instruments = existing_cache.get('options', {}).get('instruments', {})
+                logger.info(f"Loaded existing cache with {len(existing_instruments)} expiries")
+        except Exception as e:
+            logger.warning(f"Could not load existing cache: {e}")
+
+    options_instruments = {}
+
+    for _, opt in nifty_opts.iterrows():
+        expiry_date = opt['expiry']
+        # Convert to string if it's a date object
+        if hasattr(expiry_date, 'strftime'):
+            expiry_str = expiry_date.strftime('%Y-%m-%d')
+        else:
+            expiry_str = str(expiry_date)
+
+        strike = int(opt.get('strike', 0))
+        opt_type = opt.get('option_type')  # 'CE' or 'PE'
+        # AngelOne's token IS the exchange token (universal)
+        exchange_token = str(opt.get('token', ''))
+
+        # Skip if missing required data
+        if not strike or not opt_type or not exchange_token:
+            continue
+
+        # Initialize nested dicts if needed
+        if expiry_str not in options_instruments:
+            options_instruments[expiry_str] = {}
+        if strike not in options_instruments[expiry_str]:
+            options_instruments[expiry_str][strike] = {}
+
+        # Try to preserve zerodha_instrument_token from existing cache
+        zerodha_instrument_token = None
+        if (expiry_str in existing_instruments and
+            strike in existing_instruments[expiry_str] and
+            opt_type in existing_instruments[expiry_str][strike]):
+            existing_contract = existing_instruments[expiry_str][strike][opt_type]
+            zerodha_instrument_token = existing_contract.get('zerodha_instrument_token')
+
+        # Store ONLY tokens (no symbols!)
+        # This forces pure token-based API calls
+        contract_data = {
+            'token': exchange_token  # Universal exchange token
+        }
+
+        # Add Zerodha token if it exists (from previous Zerodha refresh)
+        if zerodha_instrument_token:
+            contract_data['zerodha_instrument_token'] = zerodha_instrument_token
+
+        options_instruments[expiry_str][strike][opt_type] = contract_data
+
+    # Log merge statistics
+    preserved_count = sum(
+        1 for expiry in options_instruments.values()
+        for strikes in expiry.values()
+        for contract in strikes.values()
+        if 'zerodha_instrument_token' in contract
+    )
+    total_count = sum(
+        len(strikes)
+        for expiry in options_instruments.values()
+        for strikes in expiry.values()
+    )
+    logger.info(f"Preserved {preserved_count}/{total_count} Zerodha instrument tokens from existing cache")
+
+    # Count instruments cached
+    total_instruments = sum(
+        len(opt_types)
+        for strikes in options_instruments.values()
+        for opt_types in strikes.values()
+    )
+    logger.info(f"Cached {total_instruments} options instrument tokens across {len(options_instruments)} expiries")
+
     # Create options expiry mapping
     options_mapping = {}
 
@@ -400,11 +558,13 @@ def _create_cache_from_angelone(broker):
     if next_month_expiry:
         options_mapping['next_month'] = next_month_expiry
 
-    # Create cache data structure (FUTURES + OPTIONS - same as Zerodha)
+    # Create UNIVERSAL cache structure (flat, not broker-keyed)
+    # Exchange tokens are the same across all brokers - cache can be used by ANY broker
     cache_data = {
         'timestamp': datetime.now().isoformat(),
         'symbol': 'NIFTY',
         'exchange': 'NFO',
+        'source_broker': 'angelone',  # Which broker was used to fetch this data
         'futures': {
             'contracts': futures_contracts,
             'mapping': futures_mapping
@@ -413,16 +573,22 @@ def _create_cache_from_angelone(broker):
             'expiry_dates': expiry_dates,
             'mapping': options_mapping,
             'strikes': strikes_info,
-            'lot_size': lot_size
+            'lot_size': lot_size,
+            'instruments': options_instruments  # Token lookup with universal tokens + preserved Zerodha tokens
         }
+        # NOTE: Instruments contain ONLY TOKENS (no symbols!):
+        # - token: Universal exchange_token (works for all brokers)
+        # - zerodha_instrument_token: Preserved from previous Zerodha refresh (if exists)
+        # This forces 100% token-based API calls!
     }
 
-    # Save to cache file
+    # Save cache (flat structure - universal for all brokers)
     cache_file = Path('contracts_cache.json')
     with open(cache_file, 'w') as f:
         json.dump(cache_data, f, indent=2)
 
     logger.info(f"Saved {len(futures_contracts)} futures and {len(expiry_dates)} options expiries to cache: {cache_file}")
+    logger.info(f"Using UNIVERSAL exchange tokens (same for all brokers)")
 
     # Return mock manager object
     class MockManager:
@@ -484,9 +650,9 @@ def main():
         logger.info("\nStep 1/3: Authenticating with %s...", args.broker.capitalize())
 
         if args.broker == 'zerodha':
-            # Use paper trading broker infrastructure for Zerodha
+            # Use new adapter system for Zerodha
             from paper_trading.legacy.zerodha_connection import load_credentials_from_file
-            from paper_trading.utils.factory import create_broker
+            from paper_trading.brokers.adapter import create_adapter
 
             # Load Zerodha credentials
             creds_file = Path(__file__).parent / 'paper_trading' / 'config' / 'credentials_zerodha.txt'
@@ -497,9 +663,9 @@ def main():
                 logger.error("Failed to load Zerodha credentials")
                 return 1
 
-            # Create Zerodha broker
-            broker = create_broker(credentials, 'zerodha')
-            if not broker.connect():
+            # Create Zerodha adapter
+            adapter = create_adapter(credentials, broker='zerodha')
+            if not adapter.connect():
                 logger.error("Failed to connect to Zerodha")
                 return 1
 
@@ -507,22 +673,22 @@ def main():
 
             # Load instruments
             logger.info("\nStep 2/3: Loading instruments from Zerodha...")
-            if not broker.load_instruments():
+            if not adapter.load_instruments():
                 logger.error("Failed to load instruments")
                 return 1
 
-            # Create cache using broker's Kite instance
+            # Create cache using adapter's Kite instance
             logger.info("Refreshing contracts...")
-            kite = broker.connection.kite
+            kite = adapter._kite
             manager = _create_cache_from_zerodha(kite)
 
             # Logout
-            broker.logout()
+            adapter.logout()
 
         elif args.broker == 'angelone':
-            # Use paper trading broker infrastructure for AngelOne
+            # Use new adapter system for AngelOne
             from paper_trading.legacy.zerodha_connection import load_credentials_from_file
-            from paper_trading.utils.factory import create_broker
+            from paper_trading.brokers.adapter import create_adapter
 
             # Load AngelOne credentials
             creds_file = Path(__file__).parent / 'paper_trading' / 'config' / 'credentials_angelone.txt'
@@ -533,9 +699,9 @@ def main():
                 logger.error("Failed to load AngelOne credentials")
                 return 1
 
-            # Create AngelOne broker
-            broker = create_broker(credentials, 'angelone')
-            if not broker.connect():
+            # Create AngelOne adapter
+            adapter = create_adapter(credentials, broker='angelone')
+            if not adapter.connect():
                 logger.error("Failed to connect to AngelOne")
                 return 1
 
@@ -543,16 +709,16 @@ def main():
 
             # Load instruments
             logger.info("\nStep 2/3: Loading instruments from AngelOne...")
-            if not broker.load_instruments():
+            if not adapter.load_instruments():
                 logger.error("Failed to load instruments")
                 return 1
 
-            # Create contract manager using broker's instruments
+            # Create contract manager using adapter's instruments
             logger.info("Refreshing contracts...")
-            manager = _create_cache_from_angelone(broker)
+            manager = _create_cache_from_angelone(adapter)
 
             # Logout
-            broker.logout()
+            adapter.logout()
 
         logger.info("✓ Contracts refreshed successfully")
 

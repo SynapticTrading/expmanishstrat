@@ -1,6 +1,9 @@
 """
 Universal Paper Trading Runner
 Supports multiple brokers (Zerodha, AngelOne) with automatic state recovery
+
+FULLY MIGRATED: Uses BrokerAdapter for ALL broker operations.
+The old broker_api (BrokerInterface) is no longer used.
 """
 
 import sys
@@ -14,11 +17,12 @@ from src.config_loader import ConfigLoader
 from src.oi_analyzer import OIAnalyzer
 # Generic credential loader - works for both Zerodha and AngelOne
 from paper_trading.legacy.zerodha_connection import load_credentials_from_file
-from paper_trading.utils.factory import create_broker
 from paper_trading.core.broker import PaperBroker
 from paper_trading.core.strategy import IntradayMomentumOIPaper
 from paper_trading.core.state_manager import StateManager
 from paper_trading.core.contract_manager import ContractManager
+# Broker adapter for unified interface - FULLY MIGRATED
+from paper_trading.brokers.adapter import create_adapter
 import pandas as pd
 import signal
 import threading
@@ -109,7 +113,7 @@ class UniversalPaperTrader:
             broker_type: 'zerodha' or 'angelone' (auto-detected if None)
         """
         print(f"\n{'='*80}")
-        print(f"UNIVERSAL PAPER TRADING SYSTEM")
+        print(f"UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)")
         print(f"{'='*80}\n")
 
         # Load config
@@ -123,32 +127,46 @@ class UniversalPaperTrader:
         if not self.credentials:
             raise Exception("Failed to load credentials!")
 
-        # Create broker
-        print(f"Creating broker instance...")
-        self.broker_api = create_broker(self.credentials, broker_type)
-        print(f"✓ Broker: {self.broker_api.name}")
+        # Store broker type for later adapter creation
+        self.broker_type = broker_type
+
+        # Determine broker name for state management (auto-detect if not specified)
+        if broker_type:
+            broker_name = broker_type
+        else:
+            # Auto-detect from credentials
+            if 'api_secret' in self.credentials:
+                broker_name = 'zerodha'
+            elif 'username' in self.credentials and 'api_key' in self.credentials:
+                broker_name = 'angelone'
+            else:
+                broker_name = 'paper'
+        print(f"✓ Broker: {broker_name}")
 
         # Components
         self.paper_broker = None
         self.strategy = None
         self.oi_analyzer = None
 
-        # State management (pass broker name for separate state files)
-        # Use absolute path to ensure consistent location
-        paper_trading_dir = Path(__file__).parent
-        state_dir = paper_trading_dir / "state"
-        self.state_manager = StateManager(state_dir=str(state_dir), broker_name=self.broker_api.name)
-        self.ist = pytz.timezone('Asia/Kolkata')
-
         # Contract management for automatic expiry selection
-        self.contract_manager = None  # Initialized after broker connection
+        self.contract_manager = None  # Initialized before adapter connection
         self.use_contract_manager = True  # Enable automatic contract management
         self.contract_monitor_interval = 300  # Check for contract updates every 5 minutes
+
+        # Broker adapter - FULLY MIGRATED: this is the ONLY broker interface
+        self.adapter = None  # Initialized in connect()
+
+        # State management - initialized early for crash recovery
+        paper_trading_dir = Path(__file__).parent
+        state_dir = paper_trading_dir / "state"
+        self.state_manager = StateManager(state_dir=str(state_dir), broker_name=broker_name)
+        self.ist = pytz.timezone('Asia/Kolkata')
 
         # Threading
         self.running = False
         self.exit_monitor_thread = None
         self.contract_monitor_thread = None
+        # THREAD SAFETY: Lock to prevent concurrent exit checks causing duplicate sells
         self.exit_monitor_lock = threading.Lock()
 
         # Shared data
@@ -167,6 +185,39 @@ class UniversalPaperTrader:
     def _get_ist_now(self):
         """Get current IST time"""
         return datetime.now(self.ist)
+
+    def _check_global_trades_today(self):
+        """
+        Check cumulative CSV for any trades today (from ANY broker).
+        This ensures 1 trade/day limit works globally, not per broker.
+        
+        Returns:
+            int: Number of trades today across all brokers
+        """
+        try:
+            cumulative_csv = Path(__file__).parent / "logs" / "trades_cumulative.csv"
+            if not cumulative_csv.exists():
+                return 0
+            
+            import pandas as pd
+            df = pd.read_csv(cumulative_csv)
+            if df.empty:
+                return 0
+            
+            # Get today's date
+            today = self._get_ist_now().date()
+            
+            # Parse entry_time and count trades from today
+            df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
+            trades_today = len(df[df['entry_date'] == today])
+            
+            if trades_today > 0:
+                print(f"[{self._get_ist_now()}] 📊 GLOBAL TRADE CHECK: Found {trades_today} trade(s) today across all brokers")
+            
+            return trades_today
+        except Exception as e:
+            print(f"[{self._get_ist_now()}] ⚠️  Error checking global trades: {e}")
+            return 0
 
     def _signal_handler(self, signum, frame):
         """Handle shutdown signals"""
@@ -225,13 +276,46 @@ class UniversalPaperTrader:
         return True
 
     def connect(self):
-        """Connect to broker"""
-        print(f"\n[{self._get_ist_now()}] Connecting to {self.broker_api.name}...")
+        """Connect to broker via adapter"""
+        # Initialize contract manager FIRST (before adapter needs it)
+        # ContractManager uses UNIVERSAL exchange tokens (same for all brokers)
+        if self.use_contract_manager:
+            print(f"[{self._get_ist_now()}] Initializing contract manager (reading from universal cache)...")
+            try:
+                self.contract_manager = ContractManager()
+                print(f"[{self._get_ist_now()}] ✓ Contract manager initialized (using universal exchange tokens)")
 
-        if not self.broker_api.connect():
-            raise Exception(f"Failed to connect to {self.broker_api.name}")
+                # Show active expiry
+                current_week = self.contract_manager.get_options_expiry('current_week')
+                if current_week:
+                    days = self.contract_manager._calculate_days_to_expiry(current_week)
+                    print(f"[{self._get_ist_now()}] Active Weekly Expiry: {current_week} ({days} days)")
 
-        print(f"[{self._get_ist_now()}] ✓ Connected to {self.broker_api.name}")
+                    # Check rollover warning
+                    if self.contract_manager.should_rollover_options('current_week', days_threshold=2):
+                        next_week = self.contract_manager.get_options_expiry('next_week')
+                        print(f"[{self._get_ist_now()}] ⚠️  ROLLOVER WARNING: Consider rolling to {next_week}")
+
+            except Exception as e:
+                print(f"[{self._get_ist_now()}] ⚠️  Contract manager initialization failed: {e}")
+                print(f"[{self._get_ist_now()}] Falling back to broker's expiry detection...")
+                self.contract_manager = None
+
+        # Create adapter with contract_manager for token-based lookups
+        print(f"[{self._get_ist_now()}] Creating broker adapter...")
+        self.adapter = create_adapter(
+            self.credentials,
+            broker=self.broker_type,
+            contract_manager=self.contract_manager
+        )
+        print(f"[{self._get_ist_now()}] ✓ Adapter created: {self.adapter.broker_name}")
+
+        # Connect adapter
+        print(f"[{self._get_ist_now()}] Connecting to {self.adapter.broker_name}...")
+        if not self.adapter.connect():
+            raise Exception(f"Failed to connect to {self.adapter.broker_name}")
+
+        print(f"[{self._get_ist_now()}] ✓ Connected to {self.adapter.broker_name}")
 
     def initialize(self):
         """Initialize components"""
@@ -269,34 +353,16 @@ class UniversalPaperTrader:
             data_feed_status="INITIALIZING"
         )
 
-        # Load instruments
+        # Load instruments via adapter
         print(f"[{self._get_ist_now()}] Loading instruments...")
-        if not self.broker_api.load_instruments():
+        if not self.adapter.load_instruments():
             print(f"[{self._get_ist_now()}] ⚠ Could not load instruments (may not affect operation)")
 
-        # Initialize contract manager for automatic expiry selection
-        # Reads from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
-        if self.use_contract_manager:
-            print(f"[{self._get_ist_now()}] Initializing contract manager (reading from universal cache)...")
-            try:
-                self.contract_manager = ContractManager()
-                print(f"[{self._get_ist_now()}] ✓ Contract manager initialized")
-
-                # Show active expiry
-                current_week = self.contract_manager.get_options_expiry('current_week')
-                if current_week:
-                    days = self.contract_manager._calculate_days_to_expiry(current_week)
-                    print(f"[{self._get_ist_now()}] Active Weekly Expiry: {current_week} ({days} days)")
-
-                    # Check rollover warning
-                    if self.contract_manager.should_rollover_options('current_week', days_threshold=2):
-                        next_week = self.contract_manager.get_options_expiry('next_week')
-                        print(f"[{self._get_ist_now()}] ⚠️  ROLLOVER WARNING: Consider rolling to {next_week}")
-
-            except Exception as e:
-                print(f"[{self._get_ist_now()}] ⚠️  Contract manager initialization failed: {e}")
-                print(f"[{self._get_ist_now()}] Falling back to broker's expiry detection...")
-                self.contract_manager = None
+        # Log adapter status
+        if self.contract_manager and self.contract_manager.has_instrument_tokens():
+            print(f"[{self._get_ist_now()}] ✓ Adapter ready with token-based lookups")
+        else:
+            print(f"[{self._get_ist_now()}] ✓ Adapter ready (symbol-based fallback)")
 
         # Initialize paper broker
         print(f"[{self._get_ist_now()}] Initializing paper broker...")
@@ -307,7 +373,7 @@ class UniversalPaperTrader:
             initial_capital,
             state_manager=self.state_manager,
             logs_dir=str(logs_dir),
-            broker_name=self.broker_api.name  # Pass broker name for tracking
+            broker_name=self.adapter.broker_name  # Pass broker name for tracking
         )
 
         # Restore positions if recovering from crash
@@ -340,8 +406,17 @@ class UniversalPaperTrader:
             broker=self.paper_broker,
             oi_analyzer=self.oi_analyzer,
             state_manager=self.state_manager,
-            contract_manager=self.contract_manager
+            contract_manager=self.contract_manager,
+            adapter=self.adapter  # New: pass adapter for token-based lookups
         )
+
+        # GLOBAL TRADE CHECK: Check if ANY broker took a trade today
+        # This must happen BEFORE strategy state restoration
+        global_trades_today = self._check_global_trades_today()
+        if global_trades_today > 0:
+            self.strategy.daily_trade_taken = True
+            print(f"[{self._get_ist_now()}] 📊 GLOBAL TRADE LIMIT: {global_trades_today} trade(s) already taken today (any broker)")
+            print(f"[{self._get_ist_now()}] Setting daily_trade_taken = True")
 
         # Restore strategy state ONLY if there are active or closed positions
         # If flat (no trades), start fresh and re-determine direction from current OI
@@ -400,12 +475,16 @@ class UniversalPaperTrader:
                 expiry_restored = True
                 print(f"  Restored expiry from closed position: {self.strategy.daily_expiry}")
 
-        # Restore daily_trade_taken flag - if there are open positions OR closed trades, trade was taken
+        # Restore daily_trade_taken flag - check GLOBAL trades (across all brokers)
+        # This ensures 1 trade/day limit works regardless of which broker was used
         has_open_positions = self.recovery_info.get('active_positions_count', 0) > 0
         has_closed_trades = len(self.recovery_info.get('closed_positions', [])) > 0
         trades_today = self.recovery_info.get('daily_stats', {}).get('trades_today', 0)
+        
+        # GLOBAL CHECK: Check cumulative CSV for any trade today (any broker)
+        global_trades_today = self._check_global_trades_today()
 
-        if has_open_positions or has_closed_trades or trades_today > 0:
+        if has_open_positions or has_closed_trades or trades_today > 0 or global_trades_today > 0:
             self.strategy.daily_trade_taken = True
             reason = []
             if has_open_positions:
@@ -414,6 +493,8 @@ class UniversalPaperTrader:
                 reason.append("has closed trades")
             if trades_today > 0:
                 reason.append(f"trades_today={trades_today}")
+            if global_trades_today > 0:
+                reason.append(f"global_trades_today={global_trades_today}")
             print(f"  Restored daily_trade_taken: True ({', '.join(reason)})")
 
         # Restore VWAP tracking
@@ -429,7 +510,7 @@ class UniversalPaperTrader:
 
         print(f"\n{'='*80}")
         print(f"[{self._get_ist_now()}] Starting DUAL-LOOP paper trading...")
-        print(f"  Broker: {self.broker_api.name}")
+        print(f"  Broker: {self.adapter.broker_name}")
         print(f"  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)")
         print(f"  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)")
         if self.use_contract_manager and self.contract_manager:
@@ -451,7 +532,7 @@ class UniversalPaperTrader:
             print(f"[{self._get_ist_now()}] ✓ Contract monitor loop started (checks every {self.contract_monitor_interval}s)")
 
         # Wait for market open
-        while self.running and not self.broker_api.is_market_open():
+        while self.running and not self.adapter.is_market_open():
             print(f"[{self._get_ist_now()}] Market closed, waiting...")
             time_module.sleep(60)
 
@@ -486,7 +567,7 @@ class UniversalPaperTrader:
                 current_time = self._get_ist_now()
 
                 # Check market open
-                if not self.broker_api.is_market_open():
+                if not self.adapter.is_market_open():
                     print(f"[{current_time}] Market closed, stopping...")
                     break
 
@@ -501,26 +582,35 @@ class UniversalPaperTrader:
                 print(f"[{current_time}] STRATEGY LOOP - Processing 5-min candle...")
                 print(f"{'='*80}\n")
 
-                # Get spot price
-                spot_price = self.broker_api.get_spot_price()
+                # Get spot price via adapter
+                spot_price = self.adapter.get_spot_price()
                 if not spot_price:
                     print(f"[{current_time}] ✗ Failed to get spot price, skipping...")
-                    self.broker_api.wait_for_next_candle()
+                    self.adapter.wait_for_next_candle()
                     continue
 
                 print(f"[{current_time}] Nifty Spot: {spot_price:.2f}")
 
-                # Check if in monitoring-only mode (trade already taken)
-                if self.strategy.daily_trade_taken and len(self.paper_broker.get_open_positions()) == 0:
+                # Check if we have open positions - skip entry logic
+                open_positions = self.paper_broker.get_open_positions()
+
+                if len(open_positions) > 0:
+                    print(f"[{current_time}] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop")
+                    print(f"[{current_time}] Skipping option chain fetch (not needed for exits)")
+                    self.adapter.wait_for_next_candle()
+                    continue
+
+                # Check if in monitoring-only mode (trade already taken but position closed)
+                if self.strategy.daily_trade_taken:
                     print(f"[{current_time}] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)")
                     print(f"[{current_time}] System will continue monitoring but will NOT enter new trades")
 
-                # Get options data
+                # Get options data for ENTRY decisions only (no open positions)
                 options_data = self._get_options_data(current_time, spot_price)
 
                 if options_data.empty:
                     print(f"[{current_time}] ✗ No options data, skipping...")
-                    self.broker_api.wait_for_next_candle()
+                    self.adapter.wait_for_next_candle()
                     continue
 
                 # Update shared data
@@ -528,8 +618,10 @@ class UniversalPaperTrader:
                     self.current_spot_price = spot_price
                     self.current_options_data = options_data
 
-                # Process candle
-                self.strategy.on_candle(current_time, spot_price, options_data)
+                # Process candle for ENTRY signals (with thread lock for exit checks)
+                # THREAD SAFETY: on_candle calls _check_exits internally
+                with self.exit_monitor_lock:
+                    self.strategy.on_candle(current_time, spot_price, options_data)
 
                 # Update state
                 self.state_manager.update_api_stats('5min')
@@ -538,8 +630,8 @@ class UniversalPaperTrader:
                 # Print status
                 self._print_status()
 
-                # Wait for next candle
-                self.broker_api.wait_for_next_candle()
+                # Wait for next candle via adapter
+                self.adapter.wait_for_next_candle()
 
             except Exception as e:
                 print(f"[{self._get_ist_now()}] ✗ Error in strategy loop: {e}")
@@ -554,7 +646,7 @@ class UniversalPaperTrader:
         while self.running:
             try:
                 # Only check if market is open
-                if not self.broker_api.is_market_open():
+                if not self.adapter.is_market_open():
                     time_module.sleep(60)
                     continue
 
@@ -575,23 +667,24 @@ class UniversalPaperTrader:
                     time_module.sleep(60)
                     continue
 
-                # Fetch FRESH real-time LTP data (not 5-min cached data)
-                spot_price = self.broker_api.get_spot_price()
+                # Fetch spot price via adapter
+                spot_price = self.adapter.get_spot_price()
                 if not spot_price:
                     print(f"[{current_time}] ⚠️ Exit Monitor: Could not get spot price, skipping...")
                     time_module.sleep(60)
                     continue
 
-                # Fetch fresh options chain with real-time LTP
-                print(f"[{current_time}] 🔍 Exit Monitor: Fetching real-time LTP for {len(positions)} position(s)...")
-                options_data = self._get_options_data(current_time, spot_price)
+                # Fetch LTP-only data for exit monitoring (fast!)
+                options_data = self._get_ltp_for_positions(current_time, positions)
                 if options_data is None or options_data.empty:
-                    print(f"[{current_time}] ⚠️ Exit Monitor: Could not get options data, skipping...")
+                    print(f"[{current_time}] ⚠️ Exit Monitor: Could not get LTP data, skipping...")
                     time_module.sleep(60)
                     continue
 
-                # Check exits using strategy logic with REAL-TIME LTP
-                self.strategy._check_exits(current_time, options_data)
+                # Check exits using strategy logic (with thread lock)
+                # THREAD SAFETY: Prevent concurrent exit checks with strategy loop
+                with self.exit_monitor_lock:
+                    self.strategy._check_exits(current_time, options_data)
 
                 # Update state
                 self.state_manager.update_api_stats('1min')
@@ -654,15 +747,15 @@ class UniversalPaperTrader:
                 traceback.print_exc()
 
     def _get_options_data(self, current_time, spot_price):
-        """Get options chain data"""
+        """Get options chain data with 5-min candles (for entry decisions)"""
         # Get next expiry - use contract manager if available
         if self.contract_manager:
             expiry = self.contract_manager.get_options_expiry('current_week')
             if not expiry:
-                print(f"[{current_time}] ⚠️ Contract manager: No current week expiry, falling back to broker")
-                expiry = self.broker_api.get_next_expiry()
+                print(f"[{current_time}] ⚠️ Contract manager: No current week expiry, falling back to adapter")
+                expiry = self.adapter.get_next_expiry()
         else:
-            expiry = self.broker_api.get_next_expiry()
+            expiry = self.adapter.get_next_expiry()
 
         if not expiry:
             return pd.DataFrame()
@@ -678,9 +771,78 @@ class UniversalPaperTrader:
         for i in range(-strikes_below, strikes_above + 1):
             strikes.append(base_strike + (i * strike_interval))
 
-        # Fetch options chain
-        options_df = self.broker_api.get_options_chain(expiry, strikes)
+        # Fetch options chain via adapter (5-min candles for strategy)
+        options_df = self.adapter.get_options_chain(expiry, strikes)
         return options_df if options_df is not None else pd.DataFrame()
+
+    def _get_ltp_for_positions(self, current_time, positions):
+        """
+        Get LTP-only data for open positions (fast, for exit monitoring).
+
+        Fetches only quote data (LTP + OI) for the specific positions held,
+        NOT candle data for the entire option chain.
+
+        Args:
+            current_time: Current timestamp
+            positions: List of open positions
+
+        Returns:
+            DataFrame with columns: strike, option_type, expiry, close (LTP), OI, volume
+        """
+        import pandas as pd
+
+        if not positions:
+            return pd.DataFrame()
+
+        result_data = []
+
+        for position in positions:
+            try:
+                # Convert option_type format: PUT→PE, CALL→CE (for adapter compatibility)
+                adapter_option_type = 'PE' if position.option_type == 'PUT' else 'CE'
+
+                # Ensure strike is integer (pandas can return floats)
+                strike = int(position.strike)
+
+                # Convert expiry to string format if needed
+                if hasattr(position.expiry, 'strftime'):
+                    expiry_str = position.expiry.strftime('%Y-%m-%d')
+                else:
+                    expiry_str = str(position.expiry)
+
+                # Debug logging
+                print(f"[{current_time}] 🔍 Fetching LTP: strike={strike}, type={adapter_option_type}, expiry={expiry_str}")
+
+                # Get quote (LTP + OI) for this specific position
+                quote = self.adapter.get_quote(
+                    underlying='NIFTY',
+                    option_type=adapter_option_type,
+                    strike=strike,
+                    expiry=expiry_str
+                )
+
+                if quote:
+                    result_data.append({
+                        'strike': strike,  # Use integer strike
+                        'option_type': adapter_option_type,  # Use adapter format (PE/CE) for consistency
+                        'expiry': expiry_str,
+                        'close': quote.ltp,  # Use LTP as close for exit monitoring
+                        'OI': quote.oi,
+                        'volume': quote.volume
+                    })
+                    print(f"[{current_time}] ✓ LTP fetched: ₹{quote.ltp:.2f}")
+                else:
+                    print(f"[{current_time}] ⚠️ Could not get LTP for {strike} {adapter_option_type} (quote returned None)")
+
+            except Exception as e:
+                strike = int(position.strike) if hasattr(position, 'strike') else 'unknown'
+                option_type = 'PE' if position.option_type == 'PUT' else 'CE'
+                print(f"[{current_time}] ✗ Error fetching LTP for {strike} {option_type}: {e}")
+                import traceback
+                traceback.print_exc()
+                continue
+
+        return pd.DataFrame(result_data)
 
     def _print_status(self):
         """Print current status"""
@@ -691,7 +853,7 @@ class UniversalPaperTrader:
         print(f"STATUS UPDATE")
         print(f"{'-'*80}")
         print(f"Date: {status['current_date']}")
-        print(f"Broker: {self.broker_api.name}")
+        print(f"Broker: {self.adapter.broker_name}")
         print(f"Daily Direction: {status['daily_direction']} @ {status['daily_strike']}")
         print(f"Open Positions: {status['open_positions']}")
         print(f"Total P&L: ₹{stats['total_pnl']:,.2f}")
@@ -726,9 +888,9 @@ class UniversalPaperTrader:
             print(f"  Total P&L: ₹{stats['total_pnl']:,.2f}")
             print(f"  ROI: {stats['roi']:+.2f}%")
 
-        # Logout
-        if self.broker_api:
-            self.broker_api.logout()
+        # Logout via adapter
+        if self.adapter:
+            self.adapter.logout()
 
         print(f"\n[{self._get_ist_now()}] ✓ Shutdown complete")
 

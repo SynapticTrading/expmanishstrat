@@ -1,0 +1,790 @@
+"""
+AngelOne Broker Adapter
+
+Implements BrokerAdapter for AngelOne SmartAPI.
+Uses instrument tokens from ContractManager for reliable lookups.
+"""
+
+import logging
+from typing import Dict, List, Optional
+from datetime import datetime, time, date, timedelta
+import pandas as pd
+import requests
+import time as time_module
+
+from ..base import BrokerAdapter
+from ..types import (
+    OrderRequest, OrderResponse, Quote, Position, Funds,
+    OrderType, ProductType, OrderStatus
+)
+
+logger = logging.getLogger(__name__)
+
+
+class AngelOneAdapter(BrokerAdapter):
+    """
+    AngelOne SmartAPI adapter.
+
+    Maps standard adapter interface to AngelOne-specific API calls.
+    Uses ContractManager for token-based instrument resolution.
+    """
+
+    broker_name = "angelone"
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # BROKER-SPECIFIC MAPPINGS
+    # ══════════════════════════════════════════════════════════════════════════
+
+    ORDER_TYPE_MAP = {
+        OrderType.MARKET: "MARKET",
+        OrderType.LIMIT: "LIMIT",
+        OrderType.SL: "STOPLOSS_LIMIT",
+        OrderType.SL_M: "STOPLOSS_MARKET"
+    }
+
+    PRODUCT_MAP = {
+        ProductType.INTRADAY: "INTRADAY",
+        ProductType.DELIVERY: "DELIVERY",
+        ProductType.CARRYFORWARD: "CARRYFORWARD"
+    }
+
+    STATUS_MAP = {
+        "pending": OrderStatus.PENDING,
+        "open": OrderStatus.OPEN,
+        "complete": OrderStatus.COMPLETE,
+        "rejected": OrderStatus.REJECTED,
+        "cancelled": OrderStatus.CANCELLED,
+        "trigger pending": OrderStatus.TRIGGER_PENDING
+    }
+
+    # AngelOne Nifty index token
+    NIFTY_TOKEN = "99926000"
+
+    def __init__(self, credentials: dict, contract_manager=None):
+        """
+        Initialize AngelOne adapter.
+
+        Args:
+            credentials: Dict with api_key, username (client_code), password, totp_token
+            contract_manager: ContractManager for token lookups
+        """
+        super().__init__(credentials, contract_manager)
+        self._smart_api = None
+        self._connection = None
+
+        # Instrument storage
+        self.nfo_instruments = None
+        self.nifty_options = None
+        self.token_map = {}
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # CONNECTION
+    # ══════════════════════════════════════════════════════════════════════════
+
+    def connect(self) -> bool:
+        """Connect to AngelOne API."""
+        try:
+            from paper_trading.legacy.angelone_connection import AngelOneConnection
+
+            self._connection = AngelOneConnection(
+                api_key=self.credentials.get('api_key'),
+                username=self.credentials.get('username'),
+                password=self.credentials.get('password'),
+                totp_token=self.credentials.get('totp_token')
+            )
+
+            session_data = self._connection.connect()
+            if session_data:
+                self._smart_api = self._connection.smart_api
+                self._connected = True
+                logger.info("Connected to AngelOne")
+                return True
+
+            logger.error("Failed to connect to AngelOne")
+            return False
+
+        except Exception as e:
+            logger.error(f"AngelOne connection error: {e}")
+            return False
+
+    def disconnect(self) -> None:
+        """Disconnect from AngelOne API."""
+        if self._connected and self._connection:
+            try:
+                self._connection.logout()
+            except Exception as e:
+                logger.warning(f"Error during logout: {e}")
+        self._connected = False
+        self._smart_api = None
+
+    @property
+    def broker_name(self) -> str:
+        return "angelone"
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # MARKET DATA
+    # ══════════════════════════════════════════════════════════════════════════
+
+    def get_ltp(self, underlying: str, option_type: str,
+                strike: int, expiry: str) -> Optional[float]:
+        """Get LTP using token-based lookup (TOKEN-ONLY, no symbols!)."""
+        if not self._connected:
+            return None
+
+        try:
+            contract = self._resolve_instrument(underlying, option_type, strike, expiry)
+            if not contract:
+                logger.warning(f"Could not resolve instrument: {underlying} {option_type} {strike} {expiry}")
+                return None
+
+            token = contract.get('token')
+            if not token:
+                logger.error(f"No token found for {underlying} {option_type} {strike} {expiry}")
+                return None
+
+            # AngelOne market data call (TOKEN-BASED - no symbol needed!)
+            market_data = self._smart_api.getMarketData(
+                mode="LTP",  # Use LTP mode for faster response
+                exchangeTokens={"NFO": [token]}
+            )
+
+            if market_data and market_data.get('status'):
+                fetched = market_data.get('data', {}).get('fetched', [])
+                if fetched and len(fetched) > 0:
+                    return float(fetched[0].get('ltp', 0))
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting LTP: {e}")
+            return None
+
+    def get_quote(self, underlying: str, option_type: str,
+                  strike: int, expiry: str) -> Optional[Quote]:
+        """Get full quote for instrument (TOKEN-ONLY, no symbols!)."""
+        if not self._connected:
+            return None
+
+        try:
+            contract = self._resolve_instrument(underlying, option_type, strike, expiry)
+            if not contract:
+                return None
+
+            token = contract.get('token')
+            if not token:
+                logger.error(f"No token found in cache")
+                return None
+
+            # AngelOne full market data (TOKEN-BASED - no symbol needed!)
+            market_data = self._smart_api.getMarketData(
+                mode="FULL",
+                exchangeTokens={"NFO": [token]}
+            )
+
+            if market_data and market_data.get('status'):
+                fetched = market_data.get('data', {}).get('fetched', [])
+                if fetched:
+                    q = fetched[0]
+                    return Quote(
+                        ltp=float(q.get('ltp', 0)),
+                        open=float(q.get('open', 0)),
+                        high=float(q.get('high', 0)),
+                        low=float(q.get('low', 0)),
+                        close=float(q.get('close', 0)),
+                        volume=int(q.get('tradeVolume', 0)),
+                        oi=int(q.get('opnInterest', 0)),
+                        bid=float(q.get('totBuyQuan', 0)),
+                        ask=float(q.get('totSellQuan', 0))
+                    )
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting quote: {e}")
+            return None
+
+    def get_quotes(self, instruments: List[tuple]) -> Dict[tuple, Quote]:
+        """Get quotes for multiple instruments."""
+        results = {}
+
+        # Batch requests to avoid rate limits
+        for underlying, option_type, strike, expiry in instruments:
+            quote = self.get_quote(underlying, option_type, strike, expiry)
+            if quote:
+                results[(underlying, option_type, strike, expiry)] = quote
+            time_module.sleep(0.25)  # Rate limit protection
+
+        return results
+
+    def get_option_chain(self, underlying: str, expiry: str,
+                         strikes: List[int]) -> pd.DataFrame:
+        """
+        Get option chain data with 5-minute OHLC candles using TOKEN-BASED lookups.
+
+        Fetches actual candle data for OHLC and merges with quote data for OI.
+        Returns latest complete candle (not current LTP).
+
+        NO SYMBOLS - uses only pre-cached tokens from contracts_cache.json
+        """
+        if not self._connected:
+            return pd.DataFrame()
+
+        try:
+            if not self.contract_manager:
+                logger.error("ContractManager not available - cannot fetch options chain")
+                logger.error("Token-based approach REQUIRES ContractManager")
+                return pd.DataFrame()
+
+            # Convert expiry to string format (YYYY-MM-DD)
+            if isinstance(expiry, datetime):
+                expiry_str = expiry.strftime('%Y-%m-%d')
+            elif isinstance(expiry, date):
+                expiry_str = expiry.strftime('%Y-%m-%d')
+            else:
+                expiry_str = expiry
+
+            # Build token list for batch quote fetching
+            token_list = []
+            strike_map = {}  # Map token -> (strike, option_type)
+
+            for strike in strikes:
+                for option_type in ['CE', 'PE']:
+                    # Get contract from cache (contains universal exchange token)
+                    contract = self.contract_manager.get_option_contract(expiry_str, strike, option_type)
+
+                    if not contract:
+                        logger.warning(f"No contract found in cache: {strike} {option_type} {expiry_str}")
+                        continue
+
+                    # Get universal exchange token (AngelOne uses 'token', not 'zerodha_instrument_token')
+                    token = contract.get('token')
+
+                    if not token:
+                        logger.error(f"No token for {strike} {option_type}")
+                        logger.error("Run: python refresh_contracts.py --broker angelone")
+                        continue
+
+                    token_list.append(token)
+                    strike_map[token] = (strike, option_type)
+
+            if not token_list:
+                logger.error(f"No valid tokens found for strikes: {strikes}")
+                logger.error("Cache may be missing tokens")
+                logger.error("Run: python refresh_contracts.py --broker angelone")
+                return pd.DataFrame()
+
+            logger.info(f"Fetching quotes for {len(token_list)} options (TOKEN-BASED)...")
+
+            # BATCH fetch quotes for OI (optimization)
+            quotes_map = {}  # token -> quote_data
+            chunk_size = 10
+            for i in range(0, len(token_list), chunk_size):
+                chunk_tokens = token_list[i:i+chunk_size]
+
+                try:
+                    market_data = self._smart_api.getMarketData(
+                        mode="FULL",
+                        exchangeTokens={"NFO": chunk_tokens}
+                    )
+
+                    if market_data and market_data.get('status'):
+                        fetched = market_data.get('data', {}).get('fetched', [])
+                        for q in fetched:
+                            token = q.get('symbolToken', '')
+                            quotes_map[token] = q
+
+                    time_module.sleep(0.5)  # Rate limit protection
+
+                except Exception as e:
+                    logger.error(f"Error fetching quote chunk: {e}")
+                    if 'rate' in str(e).lower():
+                        time_module.sleep(2)
+                    continue
+
+            logger.info(f"Fetching 5-min candles for {len(token_list)} options...")
+
+            # INDIVIDUAL fetch candles + merge with quotes
+            result_data = []
+            candle_success = 0
+            candle_fallback = 0
+
+            # Calculate last completed 5-minute boundary (shared for all tokens)
+            # Round DOWN current time to nearest 5-min boundary = end time of last complete candle
+            # Example: 12:37:23 -> 12:35:00 (fetch 12:30-12:35 candle)
+            #          12:35:00 -> 12:35:00 (fetch 12:30-12:35 candle that just completed)
+            now = datetime.now()
+            current_minute = now.minute
+
+            # Round down to nearest 5-minute boundary
+            boundary_minute = (current_minute // 5) * 5
+            last_complete_boundary = now.replace(minute=boundary_minute, second=0, microsecond=0)
+
+            # This boundary is the END time of the last complete candle
+            # Fetch that candle: [boundary - 5 min, boundary]
+            to_date = last_complete_boundary
+            from_date = last_complete_boundary - timedelta(minutes=5)
+
+            for token in token_list:
+                try:
+                    strike, option_type = strike_map[token]
+
+                    candle_response = self._connection.get_candle_data(
+                        exchange="NFO",
+                        symbol_token=token,
+                        interval="FIVE_MINUTE",
+                        from_date=from_date.strftime("%Y-%m-%d %H:%M"),
+                        to_date=to_date.strftime("%Y-%m-%d %H:%M")
+                    )
+
+                    quote = quotes_map.get(token, {})
+
+                    if candle_response and candle_response.get('status'):
+                        candles = candle_response.get('data', [])
+                        if candles and len(candles) > 0:
+                            # Use the LAST candle (should be exactly 1 complete candle)
+                            candle = candles[-1]
+
+                            # AngelOne format: [timestamp, O, H, L, C, V]
+                            result_data.append({
+                                'strike': strike,
+                                'option_type': option_type,
+                                'expiry': expiry_str,
+                                'open': float(candle[1]),
+                                'high': float(candle[2]),
+                                'low': float(candle[3]),
+                                'close': float(candle[4]),
+                                'OI': int(quote.get('opnInterest', 0)),
+                                'volume': int(candle[5]),
+                                'instrument_token': token
+                            })
+                            candle_success += 1
+                        else:
+                            # Fallback to LTP
+                            self._add_ltp_fallback(result_data, strike, option_type,
+                                                  expiry_str, token, quote)
+                            candle_fallback += 1
+                    else:
+                        # Fallback to LTP
+                        self._add_ltp_fallback(result_data, strike, option_type,
+                                              expiry_str, token, quote)
+                        candle_fallback += 1
+
+                    time_module.sleep(0.5)  # Rate limiting between candle fetches
+
+                except Exception as e:
+                    logger.error(f"Error fetching candle for token {token}: {e}")
+                    continue
+
+            result_df = pd.DataFrame(result_data) if result_data else pd.DataFrame()
+            logger.info(f"✓ Retrieved {len(result_df)} option chain records (TOKEN-BASED)")
+            logger.info(f"  Candles: {candle_success} | LTP fallback: {candle_fallback}")
+
+            return result_df
+
+        except Exception as e:
+            logger.error(f"Error getting option chain: {e}")
+            import traceback
+            traceback.print_exc()
+            return pd.DataFrame()
+
+    def _add_ltp_fallback(self, result_data: list, strike: int, option_type: str,
+                          expiry_str: str, token: str, quote: dict):
+        """
+        Helper to add LTP fallback when candle data unavailable.
+
+        Args:
+            result_data: List to append fallback record to
+            strike: Strike price
+            option_type: 'CE' or 'PE'
+            expiry_str: Expiry date string
+            token: Instrument token
+            quote: Quote data dict
+        """
+        ltp = float(quote.get('ltp', 0))
+        logger.warning(f"No candle for {strike} {option_type}, using LTP fallback")
+        result_data.append({
+            'strike': strike,
+            'option_type': option_type,
+            'expiry': expiry_str,
+            'open': ltp,
+            'high': ltp,
+            'low': ltp,
+            'close': ltp,
+            'OI': int(quote.get('opnInterest', 0)),
+            'volume': 0,
+            'instrument_token': token
+        })
+
+    def get_spot_price(self, underlying: str = "NIFTY") -> Optional[float]:
+        """Get spot price for underlying."""
+        if not self._connected:
+            return None
+
+        try:
+            ltp_data = self._smart_api.ltpData("NSE", "NIFTY 50", self.NIFTY_TOKEN)
+
+            if ltp_data and ltp_data.get('status'):
+                return float(ltp_data['data'].get('ltp', 0))
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting spot price: {e}")
+            return None
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ORDER MANAGEMENT
+    # ══════════════════════════════════════════════════════════════════════════
+
+    def place_order(self, order: OrderRequest) -> OrderResponse:
+        """Place order using standard params."""
+        if not self._connected:
+            return OrderResponse(
+                success=False,
+                order_id="",
+                status=OrderStatus.REJECTED,
+                message="Not connected to AngelOne"
+            )
+
+        try:
+            # Resolve instrument
+            contract = self._resolve_instrument(
+                order.underlying, order.option_type, order.strike, order.expiry
+            )
+
+            if not contract:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message=f"Could not resolve instrument"
+                )
+
+            # Build AngelOne order params
+            order_params = {
+                'variety': 'NORMAL',
+                'tradingsymbol': contract['symbol'],
+                'symboltoken': contract['token'],
+                'transactiontype': order.transaction_type.value,
+                'exchange': 'NFO',
+                'ordertype': self.ORDER_TYPE_MAP.get(order.order_type, "MARKET"),
+                'producttype': self.PRODUCT_MAP.get(order.product_type, "INTRADAY"),
+                'duration': 'DAY',
+                'quantity': str(order.quantity)
+            }
+
+            if order.price:
+                order_params['price'] = str(order.price)
+            else:
+                order_params['price'] = "0"
+
+            if order.trigger_price:
+                order_params['triggerprice'] = str(order.trigger_price)
+            else:
+                order_params['triggerprice'] = "0"
+
+            # Place order
+            response = self._smart_api.placeOrder(order_params)
+
+            if response and response.get('status'):
+                return OrderResponse(
+                    success=True,
+                    order_id=str(response.get('data', {}).get('orderid', '')),
+                    status=OrderStatus.PENDING,
+                    timestamp=datetime.now()
+                )
+            else:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message=response.get('message', 'Order placement failed')
+                )
+
+        except Exception as e:
+            logger.error(f"Order placement error: {e}")
+            return OrderResponse(
+                success=False,
+                order_id="",
+                status=OrderStatus.REJECTED,
+                message=str(e)
+            )
+
+    def modify_order(self, order_id: str, changes: dict) -> OrderResponse:
+        """Modify existing order."""
+        if not self._connected:
+            return OrderResponse(
+                success=False,
+                order_id=order_id,
+                status=OrderStatus.REJECTED,
+                message="Not connected"
+            )
+
+        try:
+            modify_params = {
+                'variety': 'NORMAL',
+                'orderid': order_id
+            }
+
+            if 'price' in changes:
+                modify_params['price'] = str(changes['price'])
+            if 'quantity' in changes:
+                modify_params['quantity'] = str(changes['quantity'])
+            if 'trigger_price' in changes:
+                modify_params['triggerprice'] = str(changes['trigger_price'])
+
+            response = self._smart_api.modifyOrder(modify_params)
+
+            if response and response.get('status'):
+                return OrderResponse(
+                    success=True,
+                    order_id=order_id,
+                    status=OrderStatus.PENDING,
+                    message="Order modified"
+                )
+            else:
+                return OrderResponse(
+                    success=False,
+                    order_id=order_id,
+                    status=OrderStatus.REJECTED,
+                    message=response.get('message', 'Modification failed')
+                )
+
+        except Exception as e:
+            logger.error(f"Order modification error: {e}")
+            return OrderResponse(
+                success=False,
+                order_id=order_id,
+                status=OrderStatus.REJECTED,
+                message=str(e)
+            )
+
+    def cancel_order(self, order_id: str) -> OrderResponse:
+        """Cancel existing order."""
+        if not self._connected:
+            return OrderResponse(
+                success=False,
+                order_id=order_id,
+                status=OrderStatus.REJECTED,
+                message="Not connected"
+            )
+
+        try:
+            response = self._smart_api.cancelOrder(order_id, 'NORMAL')
+
+            if response and response.get('status'):
+                return OrderResponse(
+                    success=True,
+                    order_id=order_id,
+                    status=OrderStatus.CANCELLED,
+                    message="Order cancelled"
+                )
+            else:
+                return OrderResponse(
+                    success=False,
+                    order_id=order_id,
+                    status=OrderStatus.REJECTED,
+                    message=response.get('message', 'Cancellation failed')
+                )
+
+        except Exception as e:
+            logger.error(f"Order cancellation error: {e}")
+            return OrderResponse(
+                success=False,
+                order_id=order_id,
+                status=OrderStatus.REJECTED,
+                message=str(e)
+            )
+
+    def get_order(self, order_id: str) -> Optional[OrderResponse]:
+        """Get order by ID."""
+        if not self._connected:
+            return None
+
+        try:
+            orders = self._smart_api.orderBook()
+            if orders and orders.get('status'):
+                for o in orders.get('data', []):
+                    if str(o.get('orderid')) == str(order_id):
+                        return OrderResponse(
+                            success=True,
+                            order_id=str(o['orderid']),
+                            status=self.STATUS_MAP.get(o.get('orderstatus', '').lower(), OrderStatus.PENDING),
+                            filled_quantity=int(o.get('filledshares', 0)),
+                            average_price=float(o.get('averageprice', 0)),
+                            message=o.get('text', '')
+                        )
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting order: {e}")
+            return None
+
+    def get_orders(self) -> List[OrderResponse]:
+        """Get all orders for the day."""
+        if not self._connected:
+            return []
+
+        try:
+            orders = self._smart_api.orderBook()
+            if orders and orders.get('status'):
+                return [
+                    OrderResponse(
+                        success=True,
+                        order_id=str(o['orderid']),
+                        status=self.STATUS_MAP.get(o.get('orderstatus', '').lower(), OrderStatus.PENDING),
+                        filled_quantity=int(o.get('filledshares', 0)),
+                        average_price=float(o.get('averageprice', 0)),
+                        message=o.get('text', '')
+                    )
+                    for o in orders.get('data', [])
+                ]
+            return []
+
+        except Exception as e:
+            logger.error(f"Error getting orders: {e}")
+            return []
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # POSITIONS & ACCOUNT
+    # ══════════════════════════════════════════════════════════════════════════
+
+    def get_positions(self) -> List[Position]:
+        """Get all open positions."""
+        if not self._connected:
+            return []
+
+        try:
+            positions = self._smart_api.position()
+            if positions and positions.get('status'):
+                result = []
+                for p in positions.get('data', []):
+                    qty = int(p.get('netqty', 0))
+                    if qty == 0:
+                        continue
+
+                    symbol = p.get('tradingsymbol', '')
+                    result.append(Position(
+                        underlying='NIFTY',
+                        option_type='CE' if 'CE' in symbol else 'PE' if 'PE' in symbol else 'FUT',
+                        strike=0,
+                        expiry='',
+                        exchange=p.get('exchange', 'NFO'),
+                        quantity=qty,
+                        avg_price=float(p.get('netprice', 0)),
+                        ltp=float(p.get('ltp', 0)),
+                        pnl=float(p.get('unrealised', 0)),
+                        product_type=p.get('producttype', 'INTRADAY'),
+                        symbol=symbol,
+                        token=p.get('symboltoken', '')
+                    ))
+
+                return result
+
+            return []
+
+        except Exception as e:
+            logger.error(f"Error getting positions: {e}")
+            return []
+
+    def get_holdings(self) -> List[Position]:
+        """Get holdings."""
+        if not self._connected:
+            return []
+
+        try:
+            holdings = self._smart_api.holding()
+            if holdings and holdings.get('status'):
+                return [
+                    Position(
+                        underlying=h.get('tradingsymbol', ''),
+                        option_type='EQ',
+                        strike=0,
+                        expiry='',
+                        exchange='NSE',
+                        quantity=int(h.get('quantity', 0)),
+                        avg_price=float(h.get('averageprice', 0)),
+                        ltp=float(h.get('ltp', 0)),
+                        pnl=float(h.get('profitandloss', 0)),
+                        symbol=h.get('tradingsymbol', '')
+                    )
+                    for h in holdings.get('data', [])
+                ]
+            return []
+
+        except Exception as e:
+            logger.error(f"Error getting holdings: {e}")
+            return []
+
+    def get_funds(self) -> Optional[Funds]:
+        """Get account funds."""
+        if not self._connected:
+            return None
+
+        try:
+            rms = self._smart_api.rmsLimit()
+            if rms and rms.get('status'):
+                data = rms.get('data', {})
+                return Funds(
+                    available_cash=float(data.get('availablecash', 0)),
+                    used_margin=float(data.get('utiliseddebits', 0)),
+                    available_margin=float(data.get('availablelimitmargin', 0)),
+                    total_balance=float(data.get('net', 0))
+                )
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting funds: {e}")
+            return None
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # MARKET STATUS
+    # ══════════════════════════════════════════════════════════════════════════
+
+    def is_market_open(self) -> bool:
+        """Check if market is open."""
+        now = datetime.now()
+        current_time = now.time()
+
+        market_open = time(9, 15)
+        market_close = time(15, 30)
+
+        is_weekday = now.weekday() < 5
+        return is_weekday and market_open <= current_time <= market_close
+
+    def load_instruments(self) -> bool:
+        """
+        DEPRECATED: No longer needed in token-based approach.
+        
+        This method is kept for backward compatibility but does nothing.
+        All token lookups now go through ContractManager → contracts_cache.json
+        
+        Returns:
+            bool: Always returns True (no-op)
+        """
+        logger.info("load_instruments() called - SKIPPED (using token-based approach)")
+        logger.info("All lookups use ContractManager → contracts_cache.json")
+        return True
+
+    def logout(self) -> None:
+        """Logout from AngelOne API."""
+        self.disconnect()
+
+    def get_next_expiry(self) -> Optional[str]:
+        """Get next weekly expiry."""
+        # Try contract_manager first
+        if self.contract_manager:
+            return self.contract_manager.get_options_expiry('current_week')
+
+        # Fallback to loaded instruments
+        if self.nifty_options is not None and not self.nifty_options.empty:
+            today = date.today()
+            future_expiries = self.nifty_options[
+                self.nifty_options['expiry'] >= today
+            ]['expiry'].unique()
+
+            if len(future_expiries) > 0:
+                next_exp = sorted(future_expiries)[0]
+                return next_exp.strftime('%Y-%m-%d') if hasattr(next_exp, 'strftime') else str(next_exp)
+
+        return None

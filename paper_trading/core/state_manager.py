@@ -158,12 +158,22 @@ class StateManager:
         """
         order_id = f"PAPER_{self.get_ist_now().strftime('%Y%m%d')}_{len(self.state['active_positions']) + 1:03d}"
 
+        # Handle expiry as either string or datetime
+        from datetime import datetime
+        if isinstance(position.expiry, str):
+            expiry_str = position.expiry
+            expiry_dt = datetime.strptime(position.expiry, '%Y-%m-%d')
+            expiry_symbol = expiry_dt.strftime('%y%b').upper()
+        else:
+            expiry_str = position.expiry.strftime('%Y-%m-%d')
+            expiry_symbol = position.expiry.strftime('%y%b').upper()
+
         position_data = {
             "order_id": order_id,
-            "symbol": f"NIFTY{position.expiry.strftime('%y%b').upper()}{int(position.strike)}{position.option_type}",
+            "symbol": f"NIFTY{expiry_symbol}{int(position.strike)}{position.option_type}",
             "strike": position.strike,
             "option_type": position.option_type,
-            "expiry": position.expiry.strftime('%Y-%m-%d'),
+            "expiry": expiry_str,
 
             "entry": {
                 "price": position.entry_price,
@@ -176,6 +186,7 @@ class StateManager:
                 "initial_stop": position.entry_price * 0.75,
                 "initial_stop_pct": 25,
                 "vwap_stop": None,
+                "vwap_stop_pct": 5,
                 "vwap_stop_active": False,
                 "oi_stop_active": False,
                 "trailing_stop": None,
@@ -284,7 +295,7 @@ class StateManager:
 
         self.save()
 
-    def update_position_price(self, order_id, current_price, vwap, oi, peak_price=None, trailing_stop_active=None):
+    def update_position_price(self, order_id, current_price, vwap, oi, peak_price=None, trailing_stop_active=None, vwap_stop_active=None, oi_stop_active=None):
         """
         Update position price tracking
 
@@ -295,6 +306,8 @@ class StateManager:
             oi: Current OI
             peak_price: Peak price (optional, will be calculated if not provided)
             trailing_stop_active: Whether trailing stop is active (optional)
+            vwap_stop_active: Whether VWAP stop is active (optional)
+            oi_stop_active: Whether OI stop is active (optional)
         """
         if order_id not in self.state["active_positions"]:
             return
@@ -328,6 +341,19 @@ class StateManager:
                 current_peak = pos_data["price_tracking"]["peak_price"]
                 trailing_pct = pos_data["stop_losses"]["trailing_stop_pct"] / 100
                 pos_data["stop_losses"]["trailing_stop"] = current_peak * (1 - trailing_pct)
+
+        # Update VWAP stop (only active when in loss)
+        pnl_pct = (current_price / entry_price - 1)
+        if pnl_pct < 0 and vwap is not None:
+            vwap_stop_pct = pos_data["stop_losses"].get("vwap_stop_pct", 5) / 100
+            pos_data["stop_losses"]["vwap_stop"] = vwap * (1 - vwap_stop_pct)
+            pos_data["stop_losses"]["vwap_stop_active"] = True
+        else:
+            pos_data["stop_losses"]["vwap_stop_active"] = False
+
+        # Update OI stop active status
+        if oi_stop_active is not None:
+            pos_data["stop_losses"]["oi_stop_active"] = oi_stop_active
 
         # Update market data
         pos_data["market_data"]["current_oi"] = oi

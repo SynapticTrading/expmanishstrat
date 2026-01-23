@@ -225,9 +225,18 @@ class PaperBroker:
 
     def sell(self, position, price, vwap, oi, reason):
         """Execute a sell order (close position)"""
+        
+        # DUPLICATE SELL PROTECTION: Check if already sold
+        # This prevents race conditions between strategy loop and exit monitor
+        if hasattr(position, '_sold') and position._sold:
+            print(f"[{datetime.now()}] ⚠️  Position already sold (prevented duplicate)")
+            return False
+        
+        # Mark as sold immediately (before any other checks)
+        position._sold = True
 
         if position not in self.positions:
-            print(f"[{datetime.now()}] ✗ Position not found")
+            print(f"[{datetime.now()}] ✗ Position not found in active positions")
             return False
 
         # Calculate P&L

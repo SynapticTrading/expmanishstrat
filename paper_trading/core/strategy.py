@@ -20,7 +20,7 @@ class IntradayMomentumOIPaper:
     Uses same logic as backtest but with real-time data
     """
 
-    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None, contract_manager=None):
+    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None, contract_manager=None, adapter=None):
         """
         Initialize strategy
 
@@ -30,12 +30,14 @@ class IntradayMomentumOIPaper:
             oi_analyzer: OIAnalyzer instance
             state_manager: StateManager instance (optional)
             contract_manager: ContractManager instance (optional)
+            adapter: BrokerAdapter instance for token-based lookups (optional)
         """
         self.config = config
         self.broker = broker
         self.oi_analyzer = oi_analyzer
         self.state_manager = state_manager
         self.contract_manager = contract_manager
+        self.adapter = adapter  # Broker adapter for unified interface
 
         # Extract config parameters
         entry_cfg = config['entry']
@@ -94,6 +96,38 @@ class IntradayMomentumOIPaper:
         h, m = map(int, time_str.split(':'))
         return time(h, m)
 
+    def _check_global_trades_today(self, current_time):
+        """
+        Check cumulative CSV for any trades today (from ANY broker).
+        This ensures 1 trade/day limit works globally, not per broker.
+        
+        Returns:
+            int: Number of trades today across all brokers
+        """
+        try:
+            from pathlib import Path
+            import pandas as pd
+            
+            cumulative_csv = Path(__file__).parent.parent / "logs" / "trades_cumulative.csv"
+            if not cumulative_csv.exists():
+                return 0
+            
+            df = pd.read_csv(cumulative_csv)
+            if df.empty:
+                return 0
+            
+            # Get today's date
+            today = current_time.date()
+            
+            # Parse entry_time and count trades from today
+            df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
+            trades_today = len(df[df['entry_date'] == today])
+            
+            return trades_today
+        except Exception as e:
+            print(f"[{current_time}] ⚠️  Error checking global trades: {e}")
+            return 0
+
     def on_new_day(self, current_time, spot_price, options_data):
         """
         Called at market open to determine daily direction
@@ -113,16 +147,20 @@ class IntradayMomentumOIPaper:
 
             self.current_date = current_date
 
-            # Only reset daily_trade_taken if there are NO open positions AND no closed trades
-            # (During recovery, we may have restored positions/trades from a crash)
+            # Check for ANY trades today (from ANY broker via cumulative CSV)
+            # This ensures 1 trade/day limit works globally, not per broker
             has_open_positions = len(self.broker.get_open_positions()) > 0
             has_closed_trades = len(self.broker.trade_history) > 0
+            global_trades_today = self._check_global_trades_today(current_time)
 
             if has_open_positions:
                 print(f"[{current_time}] ⚠️  Open positions detected - keeping daily_trade_taken = True")
             elif has_closed_trades:
                 self.daily_trade_taken = True
                 print(f"[{current_time}] ⚠️  Closed trades detected ({len(self.broker.trade_history)} trades) - setting daily_trade_taken = True")
+            elif global_trades_today > 0:
+                self.daily_trade_taken = True
+                print(f"[{current_time}] ⚠️  Global trades detected ({global_trades_today} trade(s) today across all brokers) - setting daily_trade_taken = True")
             else:
                 self.daily_trade_taken = False
 
@@ -175,9 +213,9 @@ class IntradayMomentumOIPaper:
 
                 # Get strike near spot for this direction
                 strikes = options_data['strike'].unique()
-                self.daily_strike = self.oi_analyzer.get_nearest_strike(
+                self.daily_strike = int(self.oi_analyzer.get_nearest_strike(
                     spot_price, self.daily_direction, strikes
-                )
+                ))
 
                 if self.daily_strike is None:
                     print(f"[{current_time}] ✗ Could not find suitable strike")
@@ -270,6 +308,9 @@ class IntradayMomentumOIPaper:
         new_strike = self.oi_analyzer.get_nearest_strike(
             spot_price, self.daily_direction, strikes
         )
+
+        if new_strike is not None:
+            new_strike = int(new_strike)  # Ensure integer
 
         if new_strike != self.daily_strike and new_strike is not None:
             old_strike = self.daily_strike
@@ -656,3 +697,70 @@ class IntradayMomentumOIPaper:
             'open_positions': len(positions),
             'statistics': stats
         }
+
+    def get_instrument_token(self, strike: int, option_type: str, expiry: str = None) -> str:
+        """
+        Get instrument token for an option contract using the adapter.
+
+        Uses ContractManager's token lookup for reliable instrument resolution
+        instead of constructing broker-specific symbols.
+
+        Args:
+            strike: Strike price (e.g., 23000)
+            option_type: 'CE', 'PE', 'CALL', or 'PUT'
+            expiry: Expiry date (YYYY-MM-DD), defaults to daily_expiry
+
+        Returns:
+            str: Instrument token or empty string if not found
+        """
+        if expiry is None:
+            expiry = self.daily_expiry
+
+        if not expiry:
+            return ""
+
+        # Use contract_manager for token lookup
+        if self.contract_manager:
+            token = self.contract_manager.get_instrument_token(expiry, strike, option_type)
+            if token:
+                return token
+
+        # Fallback: try adapter's resolution
+        if self.adapter:
+            contract = self.adapter._resolve_instrument("NIFTY", option_type, strike, expiry)
+            if contract and contract.get('token'):
+                return contract['token']
+
+        return ""
+
+    def get_option_contract(self, strike: int, option_type: str, expiry: str = None) -> dict:
+        """
+        Get full contract info (token + symbol) for an option.
+
+        Args:
+            strike: Strike price
+            option_type: 'CE', 'PE', 'CALL', or 'PUT'
+            expiry: Expiry date (YYYY-MM-DD), defaults to daily_expiry
+
+        Returns:
+            dict: {'token': '...', 'symbol': '...'} or empty dict
+        """
+        if expiry is None:
+            expiry = self.daily_expiry
+
+        if not expiry:
+            return {}
+
+        # Use contract_manager for contract lookup
+        if self.contract_manager:
+            contract = self.contract_manager.get_option_contract(expiry, strike, option_type)
+            if contract:
+                return contract
+
+        # Fallback: try adapter's resolution
+        if self.adapter:
+            contract = self.adapter._resolve_instrument("NIFTY", option_type, strike, expiry)
+            if contract:
+                return contract
+
+        return {}

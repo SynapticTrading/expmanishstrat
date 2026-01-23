@@ -16,15 +16,17 @@ from paper_trading.legacy.zerodha_connection import ZerodhaConnection
 class ZerodhaDataFeed:
     """Manages real-time data feed for paper trading using Zerodha"""
 
-    def __init__(self, connection: ZerodhaConnection):
+    def __init__(self, connection: ZerodhaConnection, contract_manager=None):
         """
         Initialize data feed
 
         Args:
             connection: ZerodhaConnection instance
+            contract_manager: Optional ContractManager for token-based lookups
         """
         self.connection = connection
         self.kite = connection.kite
+        self.contract_manager = contract_manager
 
         # Cache for instruments
         self.nfo_instruments = None
@@ -98,18 +100,33 @@ class ZerodhaDataFeed:
 
     def get_5min_candle(self, instrument_token):
         """
-        Get latest 5-min candle for an instrument
+        Get latest COMPLETE 5-min candle for an instrument
+
+        Fetches data up to the last completed 5-minute boundary and returns
+        the LAST candle only (not second-to-last).
 
         Args:
             instrument_token: Instrument token (numeric)
 
         Returns:
-            dict: Candle data (timestamp, open, high, low, close, volume)
+            dict: Candle data (timestamp, open, high, low, close, volume) or None
         """
         try:
-            # Get last 2 candles (to ensure we have the complete latest one)
-            to_date = datetime.now()
-            from_date = to_date - timedelta(minutes=15)
+            # Calculate last completed 5-minute boundary
+            # Round DOWN current time to nearest 5-min boundary = end time of last complete candle
+            # Example: 12:37:23 -> 12:35:00 (fetch 12:30-12:35 candle)
+            #          12:35:00 -> 12:35:00 (fetch 12:30-12:35 candle that just completed)
+            now = datetime.now()
+            current_minute = now.minute
+
+            # Round down to nearest 5-minute boundary
+            boundary_minute = (current_minute // 5) * 5
+            last_complete_boundary = now.replace(minute=boundary_minute, second=0, microsecond=0)
+
+            # This boundary is the END time of the last complete candle
+            # Fetch that candle: [boundary - 5 min, boundary]
+            to_date = last_complete_boundary
+            from_date = last_complete_boundary - timedelta(minutes=5)
 
             df = self.connection.get_historical_data(
                 instrument_token=instrument_token,
@@ -119,7 +136,7 @@ class ZerodhaDataFeed:
             )
 
             if df is not None and not df.empty:
-                # Get last candle
+                # Use the LAST candle (should be exactly 1 candle)
                 last_candle = df.iloc[-1]
                 return {
                     'timestamp': last_candle['date'],
@@ -138,14 +155,17 @@ class ZerodhaDataFeed:
 
     def get_options_chain(self, expiry, strikes):
         """
-        Get options chain data for specified strikes
+        Get options chain data with 5-minute OHLC candles
+
+        Fetches actual candle data for OHLC and merges with quote data for OI.
+        Returns latest complete candle (not current LTP).
 
         Args:
             expiry: Expiry date (YYYY-MM-DD format or datetime)
             strikes: List of strike prices
 
         Returns:
-            DataFrame: Options data with columns [strike, option_type, expiry, close, oi, volume, instrument_token]
+            DataFrame: Options data with columns [strike, option_type, expiry, open, high, low, close, OI, volume, instrument_token, tradingsymbol]
         """
         try:
             if self.nfo_instruments is None:
@@ -181,11 +201,24 @@ class ZerodhaDataFeed:
                 print(f"[{datetime.now()}] ✗ No options found for strikes: {strikes}")
                 return pd.DataFrame()
 
-            # Get quotes for all options with retry logic
-            instrument_tokens = [f"NFO:{row['tradingsymbol']}" for _, row in options_df.iterrows()]
+            # Build token map for efficient lookup (TOKEN-BASED)
+            token_to_option_map = {}
+            instrument_tokens = []
+            for _, row in options_df.iterrows():
+                token = row['instrument_token']
+                symbol = row['tradingsymbol']
+                # Use tokens directly instead of tradingsymbols
+                instrument_tokens.append(token)
+                token_to_option_map[token] = (
+                    row['strike'],
+                    row['instrument_type'],
+                    symbol,
+                    row['expiry']
+                )
 
-            print(f"[{datetime.now()}] Fetching quotes for {len(instrument_tokens)} options...")
+            print(f"[{datetime.now()}] Fetching quotes for {len(instrument_tokens)} options (TOKEN-BASED)...")
 
+            # BATCH fetch all quotes for OI using TOKENS (optimization)
             quotes = None
             max_retries = 3
             for attempt in range(max_retries):
@@ -202,37 +235,70 @@ class ZerodhaDataFeed:
                         print(f"[{datetime.now()}] ✗ Failed to fetch quotes after {max_retries} attempts: {e}")
                         return pd.DataFrame()
 
-            # Build result DataFrame
             if quotes is None:
                 return pd.DataFrame()
 
+            print(f"[{datetime.now()}] Fetching 5-min candles for {len(token_to_option_map)} options...")
+
+            # INDIVIDUAL fetch candles + merge with quotes
             result_data = []
+            candle_success = 0
+            candle_fallback = 0
 
-            for _, row in options_df.iterrows():
-                instrument_key = f"NFO:{row['tradingsymbol']}"
+            for token, (strike, option_type, symbol, expiry) in token_to_option_map.items():
+                try:
+                    # Fetch 5-min candle using existing method (already token-based)
+                    candle = self.get_5min_candle(token)
 
-                if instrument_key not in quotes:
+                    # Get quote for OI using TOKEN key (not symbol!)
+                    token_key = str(token)
+                    quote = quotes.get(token_key, {})
+
+                    if candle:
+                        # Use candle OHLC
+                        result_data.append({
+                            'strike': strike,
+                            'option_type': option_type,
+                            'expiry': expiry,
+                            'open': candle['open'],
+                            'high': candle['high'],
+                            'low': candle['low'],
+                            'close': candle['close'],  # Candle close, NOT LTP
+                            'OI': quote.get('oi', 0),  # Uppercase to match backtest
+                            'volume': candle['volume'],
+                            'instrument_token': token,
+                            'tradingsymbol': symbol
+                        })
+                        candle_success += 1
+                    else:
+                        # Fallback to LTP if no candle
+                        ltp = quote.get('last_price', 0)
+                        print(f"[{datetime.now()}] ⚠️  No candle for {symbol}, using LTP fallback")
+                        result_data.append({
+                            'strike': strike,
+                            'option_type': option_type,
+                            'expiry': expiry,
+                            'open': ltp,
+                            'high': ltp,
+                            'low': ltp,
+                            'close': ltp,
+                            'OI': quote.get('oi', 0),
+                            'volume': 0,
+                            'instrument_token': token,
+                            'tradingsymbol': symbol
+                        })
+                        candle_fallback += 1
+
+                    time_module.sleep(0.25)  # Rate limiting between candle fetches
+
+                except Exception as e:
+                    print(f"[{datetime.now()}] ✗ Error fetching data for {symbol}: {e}")
                     continue
-
-                quote = quotes[instrument_key]
-
-                # Keep CE/PE format to match backtest (OI analyzer expects 'CE'/'PE')
-                option_type = row['instrument_type']  # CE or PE
-
-                result_data.append({
-                    'strike': row['strike'],
-                    'option_type': option_type,
-                    'expiry': row['expiry'],
-                    'close': quote['last_price'],
-                    'OI': quote.get('oi', 0),  # Uppercase to match backtest
-                    'volume': quote.get('volume', 0),
-                    'instrument_token': row['instrument_token'],
-                    'tradingsymbol': row['tradingsymbol']
-                })
 
             result_df = pd.DataFrame(result_data)
 
-            print(f"[{datetime.now()}] ✓ Retrieved {len(result_df)} option quotes")
+            print(f"[{datetime.now()}] ✓ Retrieved {len(result_df)} option chain records")
+            print(f"[{datetime.now()}]   Candles: {candle_success} | LTP fallback: {candle_fallback}")
 
             return result_df
 

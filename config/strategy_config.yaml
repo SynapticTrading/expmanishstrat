@@ -49,7 +49,11 @@ risk_management:
   
 # Backtesting Configuration
 backtest:
-  commission: 0.0005  # 0.05% commission per trade
+  # Commission: 0.197% round-trip (buy + sell) for Indian Options Trading (NSE)
+  # Breakdown per ₹1,00,000 premium:
+  #   Buy side:  0.0686% (Brokerage ₹20 + SEBI 0.0001% + Exchange 0.03503% + IPFT 0.0005% + Stamp 0.003% + GST 18%)
+  #   Sell side: 0.1281% (Brokerage ₹20 + SEBI 0.0001% + Exchange 0.03503% + IPFT 0.0005% + STT 0.0625% + GST 18%)
+  commission: 0.001  # ~0.1% per trade (average of buy 0.0686% and sell 0.1281%)
   slippage: 0.0  # 0% slippage - removed to test strict 25% stop loss
   
 # Reporting
