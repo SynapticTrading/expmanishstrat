@@ -1,0 +1,350 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_122651.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-23 12:26:51.682400+05:30] Checking for previous session...
+[2026-01-23 12:26:51.682899+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260123.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-23T11:31:00.784343+05:30
+Downtime: ~55 minutes
+Active Positions: 0
+Daily P&L: ₹1,443.00
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-23T11:31:00.784343+05:30
+Recovery Time: 2026-01-23 12:26:51.683301+05:30
+Downtime: 55 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+[2026-01-23 12:26:51.683760+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-23T10:38:03.917443
+  Options lot size: 65 units per lot
+  Loaded 1610 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-23 12:26:51.685476+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-23 12:26:51.685530+05:30] Active Weekly Expiry: 2026-01-27 (4 days)
+[2026-01-23 12:26:51.685570+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-23 12:26:51.691750+05:30] ✓ Adapter created: angelone
+[2026-01-23 12:26:51.691790+05:30] Connecting to angelone...
+[I 260123 12:26:51 smartConnect:124] in pool
+[2026-01-23 12:26:51.967264] Generated TOTP: 299825
+[2026-01-23 12:26:51.967319] Connecting to AngelOne...
+[2026-01-23 12:26:52.106276] ✓ Connection successful!
+[2026-01-23 12:26:52.106394] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-23 12:26:52.106431] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3NjkxNTE0MTIsImV4cCI6MTc2OTIzNzgxMn0.4j0CsLOL5g7Tk7UrMNDCi2BRxuX6481Ienezt32fxb-5RX4Rm3IRzUiAvBQQD6wPkFfmUYJ4Q-6GDlC7x-wllA
+Connected to AngelOne
+[2026-01-23 12:26:52.106496+05:30] ✓ Connected to angelone
+
+[2026-01-23 12:26:52.106545+05:30] Resuming from previous session...
+[2026-01-23 12:26:52.106600+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-23 12:26:52.106679+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-23 12:26:52.106708+05:30] Initializing paper broker...
+[2026-01-23 12:26:52.107151] Paper Broker initialized with capital: ₹95,255.50
+[2026-01-23 12:26:52.107202] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260123_122652.csv
+[2026-01-23 12:26:52.107228] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-23 12:26:52.107259] Restoring 1 closed trade(s)...
+  ✓ Restored trade: PUT 25250 | P&L: ₹+1,443.00
+[2026-01-23 12:26:52.107329] ✓ Restored 1 closed trade(s)
+[2026-01-23 12:26:52.107352+05:30] Initializing OI analyzer...
+[2026-01-23 12:26:52.108121+05:30] Initializing strategy...
+[2026-01-23 12:26:52.108187] Using lot size from contract manager: 65 units/lot
+[2026-01-23 12:26:52.108218] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-23 12:26:52.112443+05:30] 📊 GLOBAL TRADE CHECK: Found 3 trade(s) today across all brokers
+[2026-01-23 12:26:52.112528+05:30] 📊 GLOBAL TRADE LIMIT: 3 trade(s) already taken today (any broker)
+[2026-01-23 12:26:52.112567+05:30] Setting daily_trade_taken = True
+[2026-01-23 12:26:52.112602+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-23
+  Restored expiry from strategy_state: 2026-01-27
+[2026-01-23 12:26:52.114914+05:30] 📊 GLOBAL TRADE CHECK: Found 3 trade(s) today across all brokers
+  Restored daily_trade_taken: True (has closed trades, trades_today=1, global_trades_today=3)
+  Restored direction: PUT
+  Restored strike: 25200
+  Restored expiry: 2026-01-27
+[2026-01-23 12:26:52.115484+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-23 12:26:52.115547+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-23 12:26:52.115767+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:26:52.115830+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:26:52.115915+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-23 12:26:52.115974+05:30] ✓ Exit monitor loop started
+[2026-01-23 12:26:52.116266+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-23 12:26:52.116300+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:26:52.116300+05:30] Nifty Spot: 25200.60
+[2026-01-23 12:26:52.116300+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-23 12:26:52.116300+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+Fetching 5-min candles for 22 options...
+[2026-01-23 12:26:53.880767] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58651
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:53 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58651', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:53.954729] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 24950 CE, using LTP fallback
+[2026-01-23 12:26:54.455774] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58652
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:54 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58652', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:54.513223] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 24950 PE, using LTP fallback
+[2026-01-23 12:26:55.013988] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58661
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:55 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58661', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:55.068296] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25000 CE, using LTP fallback
+[2026-01-23 12:26:55.572922] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58662
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:55 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58662', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:55.640520] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25000 PE, using LTP fallback
+[2026-01-23 12:26:56.140790] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58663
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:56 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58663', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:56.205303] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25050 CE, using LTP fallback
+[2026-01-23 12:26:56.710451] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58664
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:56 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58664', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:56.761642] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25050 PE, using LTP fallback
+[2026-01-23 12:26:57.263979] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58665
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:57 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58665', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:57.321937] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25100 CE, using LTP fallback
+[2026-01-23 12:26:57.824303] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58666
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:57 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58666', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:57.884170] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25100 PE, using LTP fallback
+[2026-01-23 12:26:58.388948] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58667
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:58 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58667', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:58.446169] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25150 CE, using LTP fallback
+[2026-01-23 12:26:58.947244] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58675
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:59 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58675', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:59.003766] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25150 PE, using LTP fallback
+[2026-01-23 12:26:59.508846] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58689
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[E 260123 12:26:59 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '58689', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-23 12:19', 'todate': '2026-01-23 12:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-23 12:26:59.567923] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25200 CE, using LTP fallback
+[2026-01-23 12:27:00.072296] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58690
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:00.140375] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:00.642175] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58693
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:00.732094] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:01.233783] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58694
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:01.309103] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:01.813989] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58695
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:01.874413] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:02.377046] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58702
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:02.447063] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:02.952332] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58703
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:03.013661] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:03.515894] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58704
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:03.584679] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:04.088873] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58705
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:04.151305] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:04.655577] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58706
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:04.720521] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:05.222206] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58707
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:05.286392] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-23 12:27:05.788853] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 58710
+  Interval: FIVE_MINUTE
+  From: 2026-01-23 12:19
+  To: 2026-01-23 12:25
+[2026-01-23 12:27:05.849656] ✓ Candle data retrieved successfully
+  Data points: 2
+✓ Retrieved 22 option chain records (TOKEN-BASED)
+  Candles: 11 | LTP fallback: 11
+[2026-01-23 12:26:52.116300+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-23
+[2026-01-23 12:26:52.116300+05:30] 🎯 Initialized VWAP for PUT 25200: 39 bars from 9:15 AM
+[2026-01-23 12:26:52.116300+05:30] Checking entry: PUT 25200, Expiry=2026-01-27
+[2026-01-23 12:26:52.116300+05:30] PUT 25200: OI=16,581,175, Change=0 (+0.00%) - BUILDING
+[2026-01-23 12:26:52.116300+05:30] PUT 25200: Price=₹92.50, VWAP=₹92.50 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-23
+Broker: angelone
+Daily Direction: PUT @ 25200
+Open Positions: 0
+Total P&L: ₹1,443.00
+ROI: +1.51%
+--------------------------------------------------------------------------------
+Waiting 174s for next candle at 12:30:00
+
+[2026-01-23 12:29:16.443781+05:30] Shutting down gracefully...
+
+================================================================================
+[2026-01-23 12:30:00.003909+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 1
+  Win Rate: 100.0%
+  Total P&L: ₹1,443.00
+  ROI: +1.51%
+[2026-01-23 12:30:00.009232] Logging out...
+[2026-01-23 12:30:00.067381] ✗ Error during logout: Couldn't parse the JSON response received from the server: b'Access denied because of exceeding access rate'
+
+[2026-01-23 12:30:00.068046+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_122651.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_122651.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

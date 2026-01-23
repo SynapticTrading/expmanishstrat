@@ -1,0 +1,155 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_120903.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-23 12:09:03.476500+05:30] Checking for previous session...
+[2026-01-23 12:09:03.476911+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-23T12:06:32.085802+05:30
+Downtime: ~2 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-23T12:06:32.085802+05:30
+Recovery Time: 2026-01-23 12:09:03.477315+05:30
+Downtime: 2 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+[2026-01-23 12:09:03.477805+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-23T10:38:03.917443
+  Options lot size: 65 units per lot
+  Loaded 1610 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-23 12:09:03.479419+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-23 12:09:03.479464+05:30] Active Weekly Expiry: 2026-01-27 (4 days)
+[2026-01-23 12:09:03.479502+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-23 12:09:03.481053+05:30] ✓ Adapter created: zerodha
+[2026-01-23 12:09:03.481088+05:30] Connecting to zerodha...
+[2026-01-23 12:09:03.481710] Connecting to Zerodha...
+[2026-01-23 12:09:03.755187] Generated TOTP: 065926
+[2026-01-23 12:09:03.855453] ✓ Request token extracted from redirect
+[2026-01-23 12:09:03.855560] Request token obtained: dBYcxzig1RT278mu5IGe...
+[2026-01-23 12:09:03.930956] ✓ Connection successful!
+[2026-01-23 12:09:03.931059] Access Token: 9qjz0kzBZuihdUTDuaC7...
+[2026-01-23 12:09:03.931112] Zerodha data feed initialized
+Connected to Zerodha
+✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+✓ ContractManager ready with cached tokens
+[2026-01-23 12:09:03.931215+05:30] ✓ Connected to zerodha
+
+[2026-01-23 12:09:03.931255+05:30] Resuming from previous session...
+[2026-01-23 12:09:03.931296+05:30] Loading instruments...
+[2026-01-23 12:09:03.931325] Loading instruments...
+[2026-01-23 12:09:03.931349] Fetching instruments for NFO...
+[2026-01-23 12:09:05.251409] ✓ Retrieved 46157 instruments
+[2026-01-23 12:09:05.256817] Fetching instruments for NSE...
+[2026-01-23 12:09:05.367446] ✓ Retrieved 9165 instruments
+[2026-01-23 12:09:05.369743] ✓ Nifty 50 token: 256265
+[2026-01-23 12:09:05.369819] ✓ Instruments loaded
+[2026-01-23 12:09:05.369859+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-23 12:09:05.369905+05:30] Initializing paper broker...
+[2026-01-23 12:09:05.370349] Paper Broker initialized with capital: ₹87,260.50
+[2026-01-23 12:09:05.370386] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260123_120905.csv
+[2026-01-23 12:09:05.370411] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-23 12:09:05.370442] Restoring 1 position(s)...
+  ✓ Restored: PUT 25200.0 @ ₹86.50
+     Size: 65, Peak: ₹86.50, Trailing: False
+[2026-01-23 12:09:05.370527] ✓ Restored 1 position(s)
+[2026-01-23 12:09:05.370550] Available cash: ₹87,260.50
+[2026-01-23 12:09:05.370573+05:30] Initializing OI analyzer...
+[2026-01-23 12:09:05.370874+05:30] Initializing strategy...
+[2026-01-23 12:09:05.370930] Using lot size from contract manager: 65 units/lot
+[2026-01-23 12:09:05.370960] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-23 12:09:05.375055+05:30] 📊 GLOBAL TRADE CHECK: Found 1 trade(s) today across all brokers
+[2026-01-23 12:09:05.375186+05:30] 📊 GLOBAL TRADE LIMIT: 1 trade(s) already taken today (any broker)
+[2026-01-23 12:09:05.375268+05:30] Setting daily_trade_taken = True
+[2026-01-23 12:09:05.375308+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-23
+  Restored expiry from strategy_state: 2026-01-27
+[2026-01-23 12:09:05.377930+05:30] 📊 GLOBAL TRADE CHECK: Found 1 trade(s) today across all brokers
+  Restored daily_trade_taken: True (has open positions, global_trades_today=1)
+  Restored direction: PUT
+  Restored strike: 25200.0
+  Restored expiry: 2026-01-27
+[2026-01-23 12:09:05.378498+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-23 12:09:05.378635+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-23 12:09:05.378932+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:09:05.378978+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:09:05.379062+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-23 12:09:05.379108+05:30] ✓ Exit monitor loop started
+[2026-01-23 12:09:05.380010+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-23 12:09:05.380057+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:09:05.379281+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[2026-01-23 12:09:05.379281+05:30] ✓ LTP fetched: ₹103.35
+[2026-01-23 12:09:05.379281+05:30] 🎯 Trailing stop ACTIVATED for 25200.0 PUT
+[2026-01-23 12:09:05.379281+05:30] 📊 LTP CHECK: 25200.0 PUT
+    Current LTP: ₹103.35 | Entry: ₹86.50 | P&L: +19.48%
+    Initial Stop: ₹64.88 (distance: 59.31%)
+    🎯 Trailing: Active | Peak: ₹103.35 | Stop: ₹93.02
+[2026-01-23 12:09:05.380057+05:30] Nifty Spot: 25189.35
+[2026-01-23 12:09:05.380057+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:09:05.380057+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 55s for next candle at 12:10:00
+
+================================================================================
+[2026-01-23 12:10:00.001046+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:10:00.001046+05:30] Nifty Spot: 25189.55
+[2026-01-23 12:10:00.001046+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:10:00.001046+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 12:15:00
+[2026-01-23 12:10:05.437655+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[2026-01-23 12:10:05.437655+05:30] ✓ LTP fetched: ₹101.80
+[2026-01-23 12:10:05.437655+05:30] 📊 LTP CHECK: 25200.0 PUT
+    Current LTP: ₹101.80 | Entry: ₹86.50 | P&L: +17.69%
+    Initial Stop: ₹64.88 (distance: 56.92%)
+    🎯 Trailing: Active | Peak: ₹103.35 | Stop: ₹93.02
+
+[2026-01-23 12:10:45.615540+05:30] Shutting down gracefully...
+
+[2026-01-23 12:11:35.298168+05:30] Shutting down gracefully...
+[2026-01-23 12:14:05.384256+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:14:05.386000+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)

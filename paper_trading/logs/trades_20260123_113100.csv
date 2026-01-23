@@ -1,0 +1,2 @@
+entry_time,exit_time,broker,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-23 11:05:14,2026-01-23 12:04:07,angelone,25250,PUT,2026-01-27,88.1,110.3,65,1443.0,25.19863791146426,85.20262496338962,109.87536198262767,11384945,-0.013131376567909747,7992400,Trailing Stop (10%)

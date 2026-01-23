@@ -1,0 +1,256 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_124830.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-20 12:48:30.706709+05:30] Checking for previous session...
+[2026-01-20 12:48:30.706863+05:30] No previous state found - starting fresh
+[2026-01-20 12:48:30.706906+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-20T12:04:13.947759
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 12:48:30.708495+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 12:48:30.708541+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 12:48:30.708605+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 12:48:30.708631+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-20 12:48:30.709515+05:30] ✓ Adapter created: zerodha
+[2026-01-20 12:48:30.709550+05:30] Connecting to zerodha...
+[2026-01-20 12:48:30.709786] Connecting to Zerodha...
+[2026-01-20 12:48:30.926271] Generated TOTP: 320198
+[2026-01-20 12:48:31.030179] ✓ Request token extracted from redirect
+[2026-01-20 12:48:31.030301] Request token obtained: OsspJPskxdtT3v1HrhVb...
+[2026-01-20 12:48:31.088243] ✓ Connection successful!
+[2026-01-20 12:48:31.088355] Access Token: BYkBs0wGQf6FCYQh2mwM...
+[2026-01-20 12:48:31.088405] Zerodha data feed initialized (TOKEN-BASED MODE)
+[2026-01-20 12:48:31.088433] ✓ Using ContractManager for token lookups (cache-based)
+Connected to Zerodha
+✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+✓ ContractManager ready with cached tokens
+[2026-01-20 12:48:31.088528+05:30] ✓ Connected to zerodha
+
+[2026-01-20 12:48:31.088566+05:30] Initializing new session...
+[2026-01-20 12:48:31.089015+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-19
+  Starting Capital: ₹92,883.00
+  Previous P&L: ₹+1,020.50
+  Previous Trades: 1
+  Previous Win Rate: 100.0%
+[2026-01-20 12:48:31.089560+05:30] Session initialized: SESSION_20260120_1248
+[2026-01-20 12:48:31.089601+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260120.json
+[2026-01-20 12:48:31.089643+05:30] Loading instruments...
+[2026-01-20 12:48:31.089673] load_instruments() called - SKIPPED (using token-based approach)
+[2026-01-20 12:48:31.089698] All lookups use ContractManager → contracts_cache.json
+[2026-01-20 12:48:31.089722+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 12:48:31.089753+05:30] Initializing paper broker...
+[2026-01-20 12:48:31.090148] Paper Broker initialized with capital: ₹92,883.00
+[2026-01-20 12:48:31.090204] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_124831.csv
+[2026-01-20 12:48:31.090230] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 12:48:31.090259+05:30] Initializing OI analyzer...
+[2026-01-20 12:48:31.090745+05:30] Initializing strategy...
+[2026-01-20 12:48:31.090805] Using lot size from contract manager: 65 units/lot
+[2026-01-20 12:48:31.090836] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 12:48:31.091206+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 12:48:31.091267+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-20 12:48:31.091470+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:48:31.091555+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:48:31.091650+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 12:48:31.091697+05:30] ✓ Exit monitor loop started
+[2026-01-20 12:48:31.092019+05:30] ✓ Strategy loop started
+[2026-01-20 12:48:31.092061+05:30] ⏳ Waiting for next 5-min candle boundary before starting...
+Waiting 89s for next candle at 12:50:00
+
+================================================================================
+[2026-01-20 12:50:00.005105+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:50:00.005105+05:30] Nifty Spot: 25423.05
+[2026-01-20 12:50:00.005105+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+[2026-01-20 12:50:00.055068] Fetching 5-min candles for 22 options (TOKEN-BASED)...
+[2026-01-20 12:50:00.055187] Waiting 10s for candle to complete...
+[2026-01-20 12:50:10.056437] Fetching quotes at 5-min boundary (candle-aligned)...
+[2026-01-20 12:50:10.119179] ✓ Batch quote successful, received 22 quotes
+[2026-01-20 12:50:10.119838] ✓ Retrieved 22 options (CANDLE-ALIGNED QUOTES, TOKEN-BASED)
+[2026-01-20 12:50:10.119891] Note: Using batch quote() at candle boundary (avoids 22 individual API calls)
+
+================================================================================
+[2026-01-20 12:50:00.005105+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-20 12:50:00.005105+05:30] Determining direction using CURRENT OI data...
+[2026-01-20 12:50:00.005105+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-20 12:50:00.005105+05:30] NEW TRADING DAY: 2026-01-20
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25423.05)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25150.0             51,610            -273.05
+25200.0            458,705            -223.05
+25250.0            446,745            -173.05
+25300.0          2,719,275            -123.05
+25350.0          3,455,465             -73.05
+25400.0         20,508,865             -23.05
+25450.0         34,492,835              26.95
+25500.0         46,566,975              76.95 👈 MAX
+25550.0         27,510,535             126.95
+25600.0         33,646,145             176.95
+25650.0         11,896,170             226.95
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25150.0          5,842,070             273.05
+25200.0          8,698,170             223.05
+25250.0          9,952,345             173.05
+25300.0         15,970,565             123.05
+25350.0         20,443,800              73.05
+25400.0         33,591,090              23.05 👈 MAX
+25450.0         19,307,925             -26.95
+25500.0         12,700,025             -76.95
+25550.0          4,840,875            -126.95
+25600.0          4,056,195            -176.95
+25650.0          1,392,755            -226.95
+================================================================================
+[2026-01-20 12:50:00.005105+05:30] Max Call OI: 46,566,975 @ 25500, Max Put OI: 33,591,090 @ 25400
+[2026-01-20 12:50:00.005105+05:30] Direction determined: PUT (Call dist: 76.95, Put dist: 23.05)
+[2026-01-20 12:50:00.005105+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25400, Expiry=2026-01-20, Spot=25423.05
+[2026-01-20 12:50:00.005105+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-20
+[2026-01-20 12:50:00.005105+05:30] 🎯 Initialized VWAP for PUT 25400: 44 bars from 9:15 AM
+[2026-01-20 12:50:00.005105+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 12:50:00.005105+05:30] PUT 25400: OI=33,591,090, Change=0 (+0.00%) - BUILDING
+[2026-01-20 12:50:00.005105+05:30] PUT 25400: Price=₹23.30, VWAP=₹23.30 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: zerodha
+Daily Direction: PUT @ 25400
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 290s for next candle at 12:55:00
+[2026-01-20 12:53:31.096040+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-20 12:53:31.096496+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 0 days)
+
+================================================================================
+[2026-01-20 12:55:00.002977+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:55:30.006922] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-20 12:55:30.007085] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-20 12:55:00.002977+05:30] Nifty Spot: 25426.25
+[2026-01-20 12:55:00.002977+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+[2026-01-20 12:55:31.067636] Fetching 5-min candles for 22 options (TOKEN-BASED)...
+[2026-01-20 12:55:31.067674] Fetching quotes at 5-min boundary (candle-aligned)...
+[2026-01-20 12:55:31.098282] ✓ Batch quote successful, received 22 quotes
+[2026-01-20 12:55:31.098867] ✓ Retrieved 22 options (CANDLE-ALIGNED QUOTES, TOKEN-BASED)
+[2026-01-20 12:55:31.098921] Note: Using batch quote() at candle boundary (avoids 22 individual API calls)
+[2026-01-20 12:55:00.002977+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 12:55:00.002977+05:30] PUT 25400: OI=34,914,945, Change=1,323,855 (+3.94%) - BUILDING
+[2026-01-20 12:55:00.002977+05:30] PUT 25400: Price=₹21.30, VWAP=₹22.29 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: zerodha
+Daily Direction: PUT @ 25400
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 269s for next candle at 13:00:00
+[2026-01-20 12:58:31.102611+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-20 12:58:31.102927+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 0 days)
+
+================================================================================
+[2026-01-20 13:00:00.006100+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 13:00:23.445943] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-20 13:00:23.446081] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-20 13:00:00.006100+05:30] Nifty Spot: 25431.25
+[2026-01-20 13:00:00.006100+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+[2026-01-20 13:00:24.503225] Fetching 5-min candles for 22 options (TOKEN-BASED)...
+[2026-01-20 13:00:24.503264] Fetching quotes at 5-min boundary (candle-aligned)...
+[2026-01-20 13:00:24.526666] ✓ Batch quote successful, received 22 quotes
+[2026-01-20 13:00:24.527285] ✓ Retrieved 22 options (CANDLE-ALIGNED QUOTES, TOKEN-BASED)
+[2026-01-20 13:00:24.527338] Note: Using batch quote() at candle boundary (avoids 22 individual API calls)
+[2026-01-20 13:00:00.006100+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 13:00:00.006100+05:30] PUT 25400: OI=35,836,905, Change=2,245,815 (+6.69%) - BUILDING
+[2026-01-20 13:00:00.006100+05:30] PUT 25400: Price=₹16.35, VWAP=₹20.26 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: zerodha
+Daily Direction: PUT @ 25400
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 275s for next candle at 13:05:00
+[2026-01-20 13:03:31.105291+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-20 13:03:31.106197+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 0 days)
+
+================================================================================
+[2026-01-20 13:05:00.005124+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 13:05:18.191519] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-20 13:05:18.191627] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-20 13:05:00.005124+05:30] Nifty Spot: 25426.50
+[2026-01-20 13:05:00.005124+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+[2026-01-20 13:05:19.253109] Fetching 5-min candles for 22 options (TOKEN-BASED)...
+[2026-01-20 13:05:19.253146] Fetching quotes at 5-min boundary (candle-aligned)...
+[2026-01-20 13:05:19.287844] ✓ Batch quote successful, received 22 quotes
+[2026-01-20 13:05:19.288341] ✓ Retrieved 22 options (CANDLE-ALIGNED QUOTES, TOKEN-BASED)
+[2026-01-20 13:05:19.288385] Note: Using batch quote() at candle boundary (avoids 22 individual API calls)
+[2026-01-20 13:05:00.005124+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 13:05:00.005124+05:30] PUT 25400: OI=37,651,965, Change=4,060,875 (+12.09%) - BUILDING
+[2026-01-20 13:05:00.005124+05:30] PUT 25400: Price=₹18.65, VWAP=₹19.84 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: zerodha
+Daily Direction: PUT @ 25400
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 281s for next candle at 13:10:00

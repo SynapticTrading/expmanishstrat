@@ -1,0 +1,6 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+usage: runner.py [-h] [--broker {zerodha,angelone}] [--config CONFIG]
+                 [--credentials CREDENTIALS]
+runner.py: error: argument --broker: invalid choice: 'anelone' (choose from 'zerodha', 'angelone')

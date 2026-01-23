@@ -1,0 +1,254 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260114_144739.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-14 14:47:39.380145+05:30] Checking for previous session...
+[2026-01-14 14:47:39.380330+05:30] No previous state found - starting fresh
+
+[2026-01-14 14:47:39.380369+05:30] Connecting to Zerodha...
+[2026-01-14 14:47:39.380409] Connecting to Zerodha...
+[2026-01-14 14:47:39.565345] Generated TOTP: 054285
+[2026-01-14 14:47:39.678309] ✓ Request token extracted from redirect
+[2026-01-14 14:47:39.678473] Request token obtained: 1Rgs7B4qK37kmXCBt9K2...
+[2026-01-14 14:47:39.750784] ✓ Connection successful!
+[2026-01-14 14:47:39.750943] Access Token: uzdDnaDw6z4pKs4Qr3Od...
+[2026-01-14 14:47:39.751014] Zerodha data feed initialized
+[2026-01-14 14:47:39.751069+05:30] ✓ Connected to Zerodha
+
+[2026-01-14 14:47:39.751193+05:30] Initializing new session...
+[2026-01-14 14:47:39.754775+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-12
+  Starting Capital: ₹91,862.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 1
+  Previous Win Rate: 0.0%
+[2026-01-14 14:47:39.759516+05:30] Session initialized: SESSION_20260114_1447
+[2026-01-14 14:47:39.759625+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260114.json
+[2026-01-14 14:47:39.759798+05:30] Loading instruments...
+[2026-01-14 14:47:39.759880] Loading instruments...
+[2026-01-14 14:47:39.759927] Fetching instruments for NFO...
+[2026-01-14 14:47:40.988508] ✓ Retrieved 41699 instruments
+[2026-01-14 14:47:40.995627] Fetching instruments for NSE...
+[2026-01-14 14:47:41.111662] ✓ Retrieved 9120 instruments
+[2026-01-14 14:47:41.114410] ✓ Nifty 50 token: 256265
+[2026-01-14 14:47:41.114514] ✓ Instruments loaded
+[2026-01-14 14:47:41.114552+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-12T23:23:58.208070)
+Options lot size: 65 units per lot
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-14 14:47:41.118071+05:30] ✓ Contract manager initialized
+[2026-01-14 14:47:41.118124+05:30] Active Weekly Expiry: 2026-01-20 (6 days)
+[2026-01-14 14:47:41.118177+05:30] Initializing paper broker...
+[2026-01-14 14:47:41.118600] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-14 14:47:41.118638] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260114_144741.csv
+[2026-01-14 14:47:41.118663] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-14 14:47:41.118694+05:30] Initializing OI analyzer...
+[2026-01-14 14:47:41.119043+05:30] Initializing strategy...
+[2026-01-14 14:47:41.119101] Using lot size from contract manager: 65 units/lot
+[2026-01-14 14:47:41.119132] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-14 14:47:41.119540+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-14 14:47:41.119644+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-14 14:47:41.119939+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-14 14:47:41.120021+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-14 14:47:41.120119+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-14 14:47:41.120179+05:30] ✓ Exit monitor loop started
+[2026-01-14 14:47:41.120412+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-14 14:47:41.120445+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 14:47:41.120445+05:30] Nifty Spot: 25697.45
+[2026-01-14 14:47:41.161281] Fetching quotes for 22 options...
+[2026-01-14 14:47:41.196266] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-14 14:47:41.120445+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-14 14:47:41.120445+05:30] Determining direction using CURRENT OI data...
+[2026-01-14 14:47:41.120445+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-14 14:47:41.120445+05:30] NEW TRADING DAY: 2026-01-14
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25697.45)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25450.0            130,845            -247.45
+25500.0          1,165,515            -197.45
+25550.0            522,535            -147.45
+25600.0          3,121,495             -97.45
+25650.0          3,852,420             -47.45
+25700.0          9,408,945               2.55
+25750.0          6,194,825              52.55
+25800.0         11,233,430             102.55 👈 MAX
+25850.0          4,014,075             152.55
+25900.0          6,351,735             202.55
+25950.0          3,040,505             252.55
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25450.0          1,667,185             247.45
+25500.0          5,447,260             197.45
+25550.0          2,427,295             147.45
+25600.0          5,738,135              97.45
+25650.0          3,836,950              47.45
+25700.0          6,090,370              -2.55 👈 MAX
+25750.0          2,751,645             -52.55
+25800.0          3,522,740            -102.55
+25850.0            772,590            -152.55
+25900.0          1,274,650            -202.55
+25950.0            277,095            -252.55
+================================================================================
+[2026-01-14 14:47:41.120445+05:30] Max Call OI: 11,233,430 @ 25800.0, Max Put OI: 6,090,370 @ 25700.0
+[2026-01-14 14:47:41.120445+05:30] Direction determined: PUT (Call dist: 102.55, Put dist: -2.55)
+[2026-01-14 14:47:41.120445+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25650.0, Expiry=2026-01-20, Spot=25697.45
+[2026-01-14 14:47:41.120445+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-14
+[2026-01-14 14:47:41.120445+05:30] 🎯 Initialized VWAP for PUT 25650.0: 67 bars from 9:15 AM
+[2026-01-14 14:47:41.120445+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-20
+[2026-01-14 14:47:41.120445+05:30] PUT 25650.0: OI=3,836,950, Change=0 (+0.00%) - BUILDING
+[2026-01-14 14:47:41.120445+05:30] PUT 25650.0: Price=₹94.85, VWAP=₹94.85 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-14
+Broker: Zerodha
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:47:41] Waiting 139s for next candle at 14:50:00
+
+================================================================================
+[2026-01-14 14:50:00.005356+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 14:50:00.005356+05:30] Nifty Spot: 25696.45
+[2026-01-14 14:50:00.119364] Fetching quotes for 22 options...
+[2026-01-14 14:50:00.175320] ✓ Retrieved 22 option quotes
+[2026-01-14 14:50:00.005356+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-20
+[2026-01-14 14:50:00.005356+05:30] PUT 25650.0: OI=3,836,950, Change=0 (+0.00%) - BUILDING
+[2026-01-14 14:50:00.005356+05:30] PUT 25650.0: Price=₹91.90, VWAP=₹93.37 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-14
+Broker: Zerodha
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:50:00] Waiting 300s for next candle at 14:55:00
+[2026-01-14 14:52:41.125548+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-14 14:52:41.126323+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 6 days)
+
+================================================================================
+[2026-01-14 14:55:00.005592+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 14:55:30.014806] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-14 14:55:30.015234] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-14 14:55:00.005592+05:30] Nifty Spot: 25695.30
+[2026-01-14 14:55:31.108757] Fetching quotes for 22 options...
+[2026-01-14 14:55:31.161356] ✓ Retrieved 22 option quotes
+[2026-01-14 14:55:00.005592+05:30] Checking entry: PUT 25650.0, Expiry=2026-01-20
+[2026-01-14 14:55:00.005592+05:30] PUT 25650.0: OI=4,024,150, Change=187,200 (+4.88%) - BUILDING
+[2026-01-14 14:55:00.005592+05:30] PUT 25650.0: Price=₹94.10, VWAP=₹93.61 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-14
+Broker: Zerodha
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:55:31] Waiting 269s for next candle at 15:00:00
+[2026-01-14 14:57:41.131677+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-14 14:57:41.132434+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 6 days)
+
+================================================================================
+[2026-01-14 15:00:00.005539+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 15:00:30.025695] ⚠️  Error getting LTP: HTTPSConnectionPool(host='api.kite.trade', port=443): Read timed out. (read timeout=30)
+[2026-01-14 15:00:30.026098] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-14 15:00:31.355160] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:31.355424] ⚠️  Retrying in 2s... (attempt 2/3)
+[2026-01-14 15:00:33.388151] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:33.388436] ⚠️  Spot price returned None, retrying in 1s... (attempt 1/3)
+[2026-01-14 15:00:34.458798] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:34.459175] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-14 15:00:35.489299] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:35.489665] ⚠️  Retrying in 2s... (attempt 2/3)
+[2026-01-14 15:00:37.520950] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:37.521249] ⚠️  Spot price returned None, retrying in 2s... (attempt 2/3)
+[2026-01-14 15:00:39.564079] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:39.564408] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-14 15:00:40.595076] ⚠️  Error getting LTP: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:40.595323] ⚠️  Retrying in 2s... (attempt 2/3)
+[2026-01-14 15:00:42.636503] ✗ Failed to get LTP after 3 attempts: Incorrect `api_key` or `access_token`.
+[2026-01-14 15:00:00.005539+05:30] ✗ Failed to get spot price, skipping...
+[15:00:42] Waiting 257s for next candle at 15:05:00
+[2026-01-14 15:02:41.137486+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-14 15:02:41.140806+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 6 days)
+
+[2026-01-14 15:04:20.018137+05:30] Shutting down gracefully...
+
+================================================================================
+[2026-01-14 15:05:00.008801+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 0
+  Win Rate: 0.0%
+  Total P&L: ₹0.00
+  ROI: +0.00%
+[2026-01-14 15:05:00.010309] Logging out...
+[2026-01-14 15:05:27.794804] ✗ Error during logout: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+
+[2026-01-14 15:05:27.795252+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260114_144739.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260114_144739.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260114.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

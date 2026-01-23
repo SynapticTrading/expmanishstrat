@@ -1,0 +1,219 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_124126.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-20 12:41:26.659677+05:30] Checking for previous session...
+[2026-01-20 12:41:26.659836+05:30] No previous state found - starting fresh
+[2026-01-20 12:41:26.659878+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-20T12:04:13.947759
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 12:41:26.661452+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 12:41:26.661499+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 12:41:26.661561+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 12:41:26.661588+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-20 12:41:26.662471+05:30] ✓ Adapter created: angelone
+[2026-01-20 12:41:26.662508+05:30] Connecting to angelone...
+[I 260120 12:41:26 smartConnect:124] in pool
+[2026-01-20 12:41:26.954325] Generated TOTP: 035665
+[2026-01-20 12:41:26.954375] Connecting to AngelOne...
+[2026-01-20 12:41:27.084991] ✓ Connection successful!
+[2026-01-20 12:41:27.085101] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-20 12:41:27.085140] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg4OTMwODcsImV4cCI6MTc2ODk3OTQ4N30.rGe1vFF2GyaOJXmmcTv1N2RKOoBBFgcQ68wgfxHnFvbO6tOhVrGLD5ShEglebcLO-59fKMAuFxggu-P3NiiJUQ
+Connected to AngelOne
+[2026-01-20 12:41:27.085210+05:30] ✓ Connected to angelone
+
+[2026-01-20 12:41:27.085255+05:30] Initializing new session...
+[2026-01-20 12:41:27.088466+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-12
+  Starting Capital: ₹91,862.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 1
+  Previous Win Rate: 0.0%
+[2026-01-20 12:41:27.088996+05:30] Session initialized: SESSION_20260120_1241
+[2026-01-20 12:41:27.089039+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+[2026-01-20 12:41:27.089082+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-20 12:41:27.089150+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 12:41:27.089178+05:30] Initializing paper broker...
+[2026-01-20 12:41:27.089432] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-20 12:41:27.089465] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_124127.csv
+[2026-01-20 12:41:27.089490] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 12:41:27.089519+05:30] Initializing OI analyzer...
+[2026-01-20 12:41:27.090083+05:30] Initializing strategy...
+[2026-01-20 12:41:27.090143] Using lot size from contract manager: 65 units/lot
+[2026-01-20 12:41:27.090173] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 12:41:27.090773+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 12:41:27.090849+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-20 12:41:27.091055+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:41:27.091117+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:41:27.091268+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 12:41:27.091307+05:30] ✓ Exit monitor loop started
+[2026-01-20 12:41:27.091616+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 12:41:27.091655+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:41:27.091655+05:30] Nifty Spot: 25420.30
+[2026-01-20 12:41:27.091655+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+Fetching quotes for 22 options (TOKEN-BASED)...
+[2026-01-20 12:41:27.162302] 📊 Fetching quotes at 5-min boundary (candle-aligned)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+
+================================================================================
+[2026-01-20 12:41:27.091655+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-20 12:41:27.091655+05:30] Determining direction using CURRENT OI data...
+[2026-01-20 12:41:27.091655+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-20 12:41:27.091655+05:30] NEW TRADING DAY: 2026-01-20
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25420.30)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25150.0             54,925            -270.30
+25200.0            416,975            -220.30
+25250.0            404,885            -170.30
+25300.0          2,418,520            -120.30
+25350.0          3,109,600             -70.30
+25400.0         18,586,360             -20.30
+25450.0         33,182,760              29.70
+25500.0         47,399,040              79.70 👈 MAX
+25550.0         28,265,055             129.70
+25600.0         34,159,060             179.70
+25650.0         12,388,155             229.70
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25150.0          5,910,905             270.30
+25200.0          9,108,190             220.30
+25250.0          9,652,955             170.30
+25300.0         15,288,780             120.30
+25350.0         20,325,760              70.30
+25400.0         35,547,395              20.30 👈 MAX
+25450.0         22,357,400             -29.70
+25500.0         14,165,125             -79.70
+25550.0          5,542,355            -129.70
+25600.0          4,942,665            -179.70
+25650.0          1,440,725            -229.70
+================================================================================
+[2026-01-20 12:41:27.091655+05:30] Max Call OI: 47,399,040 @ 25500, Max Put OI: 35,547,395 @ 25400
+[2026-01-20 12:41:27.091655+05:30] Direction determined: PUT (Call dist: 79.70, Put dist: 20.30)
+[2026-01-20 12:41:27.091655+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25400, Expiry=2026-01-20, Spot=25420.30
+[2026-01-20 12:41:27.091655+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-20
+[2026-01-20 12:41:27.091655+05:30] 🎯 Initialized VWAP for PUT 25400: 42 bars from 9:15 AM
+[2026-01-20 12:41:27.091655+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 12:41:27.091655+05:30] PUT 25400: OI=35,547,395, Change=0 (+0.00%) - BUILDING
+[2026-01-20 12:41:27.091655+05:30] PUT 25400: Price=₹22.80, VWAP=₹22.80 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: angelone
+Daily Direction: PUT @ 25400
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 211s for next candle at 12:45:00
+
+================================================================================
+[2026-01-20 12:45:00.003742+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:45:00.003742+05:30] Nifty Spot: 25409.75
+[2026-01-20 12:45:00.003742+05:30] 🔍 ENTRY SCAN: Fetching 5-min candles...
+Fetching quotes for 22 options (TOKEN-BASED)...
+[2026-01-20 12:45:00.079094] ⏳ Waiting 10s for 5-min candle to complete...
+[2026-01-20 12:45:10.082883] 📊 Fetching quotes at 5-min boundary (candle-aligned)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-20 12:45:00.003742+05:30] Checking entry: PUT 25400, Expiry=2026-01-20
+[2026-01-20 12:45:00.003742+05:30] PUT 25400: OI=34,899,280, Change=-648,115 (-1.82%) - UNWINDING ✓
+[2026-01-20 12:45:00.003742+05:30] PUT 25400: Price=₹28.10, VWAP=₹25.51 - ABOVE ✓
+[2026-01-20 12:45:00.003742+05:30] 🎯 ENTRY SIGNAL: PUT 25400 - Price: 28.10, VWAP: 25.51, OI Change: -648,115 (-1.82%)
+[2026-01-20 12:45:00.003742+05:30] 📈 PLACING BUY ORDER: size=1, expected_price=28.10
+[2026-01-20 12:45:11.815076+05:30] ✗ Error in strategy loop: 'str' object has no attribute 'strftime'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 578, in _strategy_loop
+    self.strategy.on_candle(current_time, spot_price, options_data)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/strategy.py", line 240, in on_candle
+    self._check_entry(current_time, spot_price, options_data)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/strategy.py", line 386, in _check_entry
+    position = self.broker.buy(
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/broker.py", line 206, in buy
+    order_id = self.state_manager.update_position_entry(position)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/state_manager.py", line 163, in update_position_entry
+    "symbol": f"NIFTY{position.expiry.strftime('%y%b').upper()}{int(position.strike)}{position.option_type}",
+AttributeError: 'str' object has no attribute 'strftime'
+[2026-01-20 12:45:27.106866+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-20 12:45:27.173432+05:30] ✗ Error in exit monitor loop: get_options_ltp() missing 1 required positional argument: 'strikes'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 633, in _exit_monitor_loop
+    options_data = self._get_options_data_ltp(current_time, spot_price)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 757, in _get_options_data_ltp
+    options_df = self.adapter.get_options_ltp(expiry, strikes)
+TypeError: get_options_ltp() missing 1 required positional argument: 'strikes'
+
+================================================================================
+[2026-01-20 12:46:11.823633+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:46:11.823633+05:30] 📊 POSITION ACTIVE: 1 open position(s)
+[2026-01-20 12:46:11.823633+05:30] ⏭️  SKIPPING 5-min candle fetch (entry loop paused)
+[2026-01-20 12:46:11.823633+05:30] Exit monitor will handle position management
+Waiting 228s for next candle at 12:50:00
+[2026-01-20 12:46:27.096255+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-20 12:46:27.096737+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 0 days)
+[2026-01-20 12:46:27.179118+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-20 12:46:27.252974+05:30] ✗ Error in exit monitor loop: get_options_ltp() missing 1 required positional argument: 'strikes'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 633, in _exit_monitor_loop
+    time_module.sleep(60)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 757, in _get_options_data_ltp
+    strikes = []
+TypeError: get_options_ltp() missing 1 required positional argument: 'strikes'
+[2026-01-20 12:47:27.256290+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+[2026-01-20 12:47:27.317352+05:30] ✗ Error in exit monitor loop: get_options_ltp() missing 1 required positional argument: 'strikes'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 633, in _exit_monitor_loop
+    time_module.sleep(60)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 757, in _get_options_data_ltp
+    strikes = []
+TypeError: get_options_ltp() missing 1 required positional argument: 'strikes'

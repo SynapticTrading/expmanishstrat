@@ -1,0 +1,178 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_120428.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-20 12:04:28.479249+05:30] Checking for previous session...
+[2026-01-20 12:04:28.479488+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+[2026-01-20 12:04:28.479545+05:30] Previous state found but nothing to recover - starting fresh
+[2026-01-20 12:04:28.479581+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-20T12:04:13.947759
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 12:04:28.481193+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 12:04:28.481239+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 12:04:28.481303+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 12:04:28.481330+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-20 12:04:28.482105+05:30] ✓ Adapter created: angelone
+[2026-01-20 12:04:28.482141+05:30] Connecting to angelone...
+[I 260120 12:04:28 smartConnect:124] in pool
+[2026-01-20 12:04:28.962668] Generated TOTP: 340875
+[2026-01-20 12:04:28.962718] Connecting to AngelOne...
+[2026-01-20 12:04:29.104110] ✓ Connection successful!
+[2026-01-20 12:04:29.104261] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-20 12:04:29.104301] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg4OTA4NjksImV4cCI6MTc2ODk3NzI2OX0.9Xr5C_gr1Gn9KewGOrselW2lcvU3FhteO_MsPJDtwfJU06Vk-BIUYdRnjlAFn4SsNfxQrrhqfW-574WCUFFR3Q
+Connected to AngelOne
+[2026-01-20 12:04:29.104374+05:30] ✓ Connected to angelone
+
+[2026-01-20 12:04:29.104423+05:30] Initializing new session...
+[2026-01-20 12:04:29.104847+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-20
+  Starting Capital: ₹91,862.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 0
+  Previous Win Rate: 0.0%
+[2026-01-20 12:04:29.105398+05:30] Session initialized: SESSION_20260120_1204
+[2026-01-20 12:04:29.105437+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+[2026-01-20 12:04:29.105479+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-20 12:04:29.105550+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 12:04:29.105578+05:30] Initializing paper broker...
+[2026-01-20 12:04:29.105879] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-20 12:04:29.105914] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_120429.csv
+[2026-01-20 12:04:29.105938] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 12:04:29.105967+05:30] Initializing OI analyzer...
+[2026-01-20 12:04:29.106598+05:30] Initializing strategy...
+[2026-01-20 12:04:29.106668] Using lot size from contract manager: 65 units/lot
+[2026-01-20 12:04:29.106701] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 12:04:29.107066+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 12:04:29.107123+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-20 12:04:29.107345+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:04:29.107413+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:04:29.107609+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 12:04:29.107643+05:30] ✓ Exit monitor loop started
+[2026-01-20 12:04:29.108005+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 12:04:29.108053+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:04:29.108053+05:30] Nifty Spot: 25456.50
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+
+================================================================================
+[2026-01-20 12:04:29.108053+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-20 12:04:29.108053+05:30] Determining direction using CURRENT OI data...
+[2026-01-20 12:04:29.108053+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-20 12:04:29.108053+05:30] NEW TRADING DAY: 2026-01-20
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25456.50)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25200.0            395,590            -256.50
+25250.0            202,150            -206.50
+25300.0          1,323,400            -156.50
+25350.0          1,556,685            -106.50
+25400.0         10,087,610             -56.50
+25450.0         18,744,765              -6.50
+25500.0         46,769,515              43.50 👈 MAX
+25550.0         31,219,565              93.50
+25600.0         39,997,490             143.50
+25650.0         16,111,875             193.50
+25700.0         17,750,200             243.50
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25200.0          9,347,455             256.50
+25250.0          8,431,410             206.50
+25300.0         13,109,460             156.50
+25350.0         18,204,680             106.50
+25400.0         30,705,805              56.50 👈 MAX
+25450.0         29,444,025               6.50
+25500.0         20,995,780             -43.50
+25550.0          7,479,030             -93.50
+25600.0          5,711,875            -143.50
+25650.0          1,850,940            -193.50
+25700.0          2,546,245            -243.50
+================================================================================
+[2026-01-20 12:04:29.108053+05:30] Max Call OI: 46,769,515 @ 25500, Max Put OI: 30,705,805 @ 25400
+[2026-01-20 12:04:29.108053+05:30] Direction determined: CALL (Call dist: 43.50, Put dist: 56.50)
+[2026-01-20 12:04:29.108053+05:30] ✓ Daily Analysis Complete: Direction=CALL, Strike=25500, Expiry=2026-01-20, Spot=25456.50
+[2026-01-20 12:04:29.108053+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-20
+[2026-01-20 12:04:29.108053+05:30] 🎯 Initialized VWAP for CALL 25500: 34 bars from 9:15 AM
+[2026-01-20 12:04:29.108053+05:30] Checking entry: CALL 25500, Expiry=2026-01-20
+[2026-01-20 12:04:29.108053+05:30] CALL 25500: OI=46,769,515, Change=0 (+0.00%) - BUILDING
+[2026-01-20 12:04:29.108053+05:30] CALL 25500: Price=₹19.55, VWAP=₹19.55 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: angelone
+Daily Direction: CALL @ 25500
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 29s for next candle at 12:05:00
+
+================================================================================
+[2026-01-20 12:05:00.005674+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:05:00.005674+05:30] Nifty Spot: 25454.95
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-20 12:05:00.005674+05:30] Checking entry: CALL 25500, Expiry=2026-01-20
+[2026-01-20 12:05:00.005674+05:30] CALL 25500: OI=46,769,515, Change=0 (+0.00%) - BUILDING
+[2026-01-20 12:05:00.005674+05:30] CALL 25500: Price=₹19.65, VWAP=₹19.60 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: angelone
+Daily Direction: CALL @ 25500
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:10:00

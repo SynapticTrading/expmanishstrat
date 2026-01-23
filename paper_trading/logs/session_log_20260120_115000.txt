@@ -1,0 +1,141 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_115000.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-20 11:50:00.819718+05:30] Checking for previous session...
+[2026-01-20 11:50:00.819866+05:30] No previous state found - starting fresh
+[2026-01-20 11:50:00.819906+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: angelone, cached at: 2026-01-20T11:32:22.837709
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 11:50:00.821215+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 11:50:00.821262+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 11:50:00.821331+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 11:50:00.821358+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-20 11:50:00.829399+05:30] ✓ Adapter created: zerodha
+[2026-01-20 11:50:00.829452+05:30] Connecting to zerodha...
+[2026-01-20 11:50:00.831587] Connecting to Zerodha...
+[2026-01-20 11:50:01.020480] Generated TOTP: 349175
+[2026-01-20 11:50:01.099115] ✓ Request token extracted from redirect
+[2026-01-20 11:50:01.099237] Request token obtained: vkYZBTd0q3FK6tVbxO7R...
+[2026-01-20 11:50:01.159456] ✓ Connection successful!
+[2026-01-20 11:50:01.159594] Access Token: x3RciGQGzfEMOUhwonDZ...
+[2026-01-20 11:50:01.159651] Zerodha data feed initialized (TOKEN-BASED MODE)
+[2026-01-20 11:50:01.159681] ✓ Using ContractManager for token lookups (cache-based)
+Connected to Zerodha
+✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+✓ ContractManager ready with cached tokens
+[2026-01-20 11:50:01.159779+05:30] ✓ Connected to zerodha
+
+[2026-01-20 11:50:01.159821+05:30] Initializing new session...
+[2026-01-20 11:50:01.160298+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-19
+  Starting Capital: ₹92,883.00
+  Previous P&L: ₹+1,020.50
+  Previous Trades: 1
+  Previous Win Rate: 100.0%
+[2026-01-20 11:50:01.160880+05:30] Session initialized: SESSION_20260120_1150
+[2026-01-20 11:50:01.160920+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260120.json
+[2026-01-20 11:50:01.160964+05:30] Loading instruments...
+[2026-01-20 11:50:01.160994] load_instruments() called - SKIPPED (using token-based approach)
+[2026-01-20 11:50:01.161021] All lookups use ContractManager → contracts_cache.json
+[2026-01-20 11:50:01.161043+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 11:50:01.161073+05:30] Initializing paper broker...
+[2026-01-20 11:50:01.161345] Paper Broker initialized with capital: ₹92,883.00
+[2026-01-20 11:50:01.161377] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_115001.csv
+[2026-01-20 11:50:01.161401] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 11:50:01.161430+05:30] Initializing OI analyzer...
+[2026-01-20 11:50:01.161974+05:30] Initializing strategy...
+[2026-01-20 11:50:01.162042] Using lot size from contract manager: 65 units/lot
+[2026-01-20 11:50:01.162074] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 11:50:01.162468+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 11:50:01.162525+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-20 11:50:01.162739+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 11:50:01.162783+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 11:50:01.162925+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 11:50:01.163009+05:30] ✓ Exit monitor loop started
+[2026-01-20 11:50:01.163339+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 11:50:01.163381+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 11:50:01.163381+05:30] Nifty Spot: 25471.55
+[2026-01-20 11:50:01.190142] ✗ No zerodha_instrument_token for 25200 CE
+[2026-01-20 11:50:01.190183] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190211] ✗ No zerodha_instrument_token for 25200 PE
+[2026-01-20 11:50:01.190233] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190258] ✗ No zerodha_instrument_token for 25250 CE
+[2026-01-20 11:50:01.190280] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190301] ✗ No zerodha_instrument_token for 25250 PE
+[2026-01-20 11:50:01.190322] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190346] ✗ No zerodha_instrument_token for 25300 CE
+[2026-01-20 11:50:01.190366] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190386] ✗ No zerodha_instrument_token for 25300 PE
+[2026-01-20 11:50:01.190405] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190428] ✗ No zerodha_instrument_token for 25350 CE
+[2026-01-20 11:50:01.190449] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190469] ✗ No zerodha_instrument_token for 25350 PE
+[2026-01-20 11:50:01.190489] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190509] ✗ No zerodha_instrument_token for 25400 CE
+[2026-01-20 11:50:01.190528] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190550] ✗ No zerodha_instrument_token for 25400 PE
+[2026-01-20 11:50:01.190568] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190589] ✗ No zerodha_instrument_token for 25450 CE
+[2026-01-20 11:50:01.190608] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190628] ✗ No zerodha_instrument_token for 25450 PE
+[2026-01-20 11:50:01.190647] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190666] ✗ No zerodha_instrument_token for 25500 CE
+[2026-01-20 11:50:01.190684] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190704] ✗ No zerodha_instrument_token for 25500 PE
+[2026-01-20 11:50:01.190722] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190743] ✗ No zerodha_instrument_token for 25550 CE
+[2026-01-20 11:50:01.190762] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190781] ✗ No zerodha_instrument_token for 25550 PE
+[2026-01-20 11:50:01.190801] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190821] ✗ No zerodha_instrument_token for 25600 CE
+[2026-01-20 11:50:01.190841] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190861] ✗ No zerodha_instrument_token for 25600 PE
+[2026-01-20 11:50:01.190893] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190916] ✗ No zerodha_instrument_token for 25650 CE
+[2026-01-20 11:50:01.190934] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190953] ✗ No zerodha_instrument_token for 25650 PE
+[2026-01-20 11:50:01.190972] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.190993] ✗ No zerodha_instrument_token for 25700 CE
+[2026-01-20 11:50:01.191014] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.191063] ✗ No zerodha_instrument_token for 25700 PE
+[2026-01-20 11:50:01.191151] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.191186] ✗ No valid tokens found for strikes: [25200, 25250, 25300, 25350, 25400, 25450, 25500, 25550, 25600, 25650, 25700]
+[2026-01-20 11:50:01.191215] ✗ Cache may be missing zerodha_instrument_token
+[2026-01-20 11:50:01.191236] ✗ Run: python refresh_contracts.py --broker zerodha
+[2026-01-20 11:50:01.163381+05:30] ✗ No options data, skipping...
+Waiting 299s for next candle at 11:55:00

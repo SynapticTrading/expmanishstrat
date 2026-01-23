@@ -1,0 +1,2 @@
+entry_time,exit_time,broker,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-16 11:35:28,2026-01-16 12:04:37,Zerodha,25800.0,PUT,2026-01-20,88.55,92.75,65,273.0,4.743083003952564,86.61410184188382,94.01294087245837,17645485,0.0,16678610,Trailing Stop (10%)

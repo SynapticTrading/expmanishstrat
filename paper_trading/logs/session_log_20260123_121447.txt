@@ -1,0 +1,515 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_121447.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-23 12:14:47.092226+05:30] Checking for previous session...
+[2026-01-23 12:14:47.092696+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-23T12:11:47.240576+05:30
+Downtime: ~2 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-23T12:11:47.240576+05:30
+Recovery Time: 2026-01-23 12:14:47.093504+05:30
+Downtime: 2 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+[2026-01-23 12:14:47.094004+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-23T10:38:03.917443
+  Options lot size: 65 units per lot
+  Loaded 1610 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-23 12:14:47.095676+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-23 12:14:47.095722+05:30] Active Weekly Expiry: 2026-01-27 (4 days)
+[2026-01-23 12:14:47.095759+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-23 12:14:47.097679+05:30] ✓ Adapter created: zerodha
+[2026-01-23 12:14:47.097729+05:30] Connecting to zerodha...
+[2026-01-23 12:14:47.098145] Connecting to Zerodha...
+[2026-01-23 12:14:47.274014] Generated TOTP: 102055
+[2026-01-23 12:14:47.368987] ✓ Request token extracted from redirect
+[2026-01-23 12:14:47.369100] Request token obtained: ceUguYvv4YDmXVdQ7b8C...
+[2026-01-23 12:14:47.424304] ✓ Connection successful!
+[2026-01-23 12:14:47.424454] Access Token: 9qjz0kzBZuihdUTDuaC7...
+[2026-01-23 12:14:47.424530] Zerodha data feed initialized
+Connected to Zerodha
+✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+✓ ContractManager ready with cached tokens
+[2026-01-23 12:14:47.424653+05:30] ✓ Connected to zerodha
+
+[2026-01-23 12:14:47.424699+05:30] Resuming from previous session...
+[2026-01-23 12:14:47.424750+05:30] Loading instruments...
+[2026-01-23 12:14:47.424781] Loading instruments...
+[2026-01-23 12:14:47.424810] Fetching instruments for NFO...
+[2026-01-23 12:14:48.754783] ✓ Retrieved 46315 instruments
+[2026-01-23 12:14:48.760249] Fetching instruments for NSE...
+[2026-01-23 12:14:48.863129] ✓ Retrieved 9165 instruments
+[2026-01-23 12:14:48.865586] ✓ Nifty 50 token: 256265
+[2026-01-23 12:14:48.865666] ✓ Instruments loaded
+[2026-01-23 12:14:48.865702+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-23 12:14:48.865743+05:30] Initializing paper broker...
+[2026-01-23 12:14:48.866192] Paper Broker initialized with capital: ₹87,260.50
+[2026-01-23 12:14:48.866233] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260123_121448.csv
+[2026-01-23 12:14:48.866260] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-23 12:14:48.866290] Restoring 1 position(s)...
+  ✓ Restored: PUT 25200.0 @ ₹86.50
+     Size: 65, Peak: ₹103.35, Trailing: True
+[2026-01-23 12:14:48.866370] ✓ Restored 1 position(s)
+[2026-01-23 12:14:48.866392] Available cash: ₹87,260.50
+[2026-01-23 12:14:48.866415+05:30] Initializing OI analyzer...
+[2026-01-23 12:14:48.866719+05:30] Initializing strategy...
+[2026-01-23 12:14:48.866771] Using lot size from contract manager: 65 units/lot
+[2026-01-23 12:14:48.866803] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-23 12:14:48.870497+05:30] 📊 GLOBAL TRADE CHECK: Found 1 trade(s) today across all brokers
+[2026-01-23 12:14:48.870560+05:30] 📊 GLOBAL TRADE LIMIT: 1 trade(s) already taken today (any broker)
+[2026-01-23 12:14:48.870594+05:30] Setting daily_trade_taken = True
+[2026-01-23 12:14:48.870624+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-23
+  Restored expiry from strategy_state: 2026-01-27
+[2026-01-23 12:14:48.872518+05:30] 📊 GLOBAL TRADE CHECK: Found 1 trade(s) today across all brokers
+  Restored daily_trade_taken: True (has open positions, global_trades_today=1)
+  Restored direction: PUT
+  Restored strike: 25200.0
+  Restored expiry: 2026-01-27
+[2026-01-23 12:14:48.873031+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-23 12:14:48.873089+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-23 12:14:48.873303+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:14:48.873347+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 12:14:48.873492+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-23 12:14:48.873527+05:30] ✓ Exit monitor loop started
+[2026-01-23 12:14:48.874437+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-23 12:14:48.874495+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:14:48.873584+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[2026-01-23 12:14:48.873584+05:30] ✓ LTP fetched: ₹102.20
+[2026-01-23 12:14:48.873584+05:30] 📊 LTP CHECK: 25200.0 PUT
+    Current LTP: ₹102.20 | Entry: ₹86.50 | P&L: +18.15%
+    Initial Stop: ₹64.88 (distance: 57.53%)
+    🎯 Trailing: Active | Peak: ₹103.35 | Stop: ₹93.02
+[2026-01-23 12:14:48.874495+05:30] Nifty Spot: 25184.80
+[2026-01-23 12:14:48.874495+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:14:48.874495+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 11s for next candle at 12:15:00
+
+================================================================================
+[2026-01-23 12:15:00.000502+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:15:00.000502+05:30] Nifty Spot: 25185.20
+[2026-01-23 12:15:00.000502+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:15:00.000502+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 12:20:00
+[2026-01-23 12:15:48.929433+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[2026-01-23 12:15:48.929433+05:30] ✓ LTP fetched: ₹98.10
+[2026-01-23 12:15:48.929433+05:30] 📊 LTP CHECK: 25200.0 PUT
+    Current LTP: ₹98.10 | Entry: ₹86.50 | P&L: +13.41%
+    Initial Stop: ₹64.88 (distance: 51.21%)
+    🎯 Trailing: Active | Peak: ₹103.35 | Stop: ₹93.02
+[2026-01-23 12:16:48.991268+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[2026-01-23 12:16:48.991268+05:30] ✓ LTP fetched: ₹88.45
+[2026-01-23 12:16:48.991268+05:30] 📊 LTP CHECK: 25200.0 PUT
+    Current LTP: ₹88.45 | Entry: ₹86.50 | P&L: +2.25%
+    Initial Stop: ₹64.88 (distance: 36.34%)
+    🎯 Trailing: Active | Peak: ₹103.35 | Stop: ₹93.02
+[2026-01-23 12:16:48.991268+05:30] EXIT SIGNAL: Trailing Stop (10%)
+[2026-01-23 12:16:49.058821] ✓ SELL ORDER EXECUTED
+  Strike: 25200.0 PUT
+  Exit Price: ₹88.45
+  P&L: ₹+126.75 (+2.25%)
+  Exit Reason: Trailing Stop (10%)
+  Cash: ₹93,009.75
+[2026-01-23 12:19:48.876165+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:19:48.881142+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+
+================================================================================
+[2026-01-23 12:20:00.006990+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:20:00.006990+05:30] Nifty Spot: 25219.60
+[2026-01-23 12:20:00.006990+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-23 12:20:00.006990+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-23 12:20:00.071279] Fetching quotes for 22 options...
+[2026-01-23 12:20:00.107995] Fetching 5-min candles for 22 options...
+[2026-01-23 12:20:00.108162] Fetching historical data...
+  Instrument: 15025922
+  From: 2026-01-23 12:05:00.108142
+  To: 2026-01-23 12:20:00.108142
+  Interval: 5minute
+[2026-01-23 12:20:00.169912] ✓ Retrieved 3 candles
+[2026-01-23 12:20:00.422188] Fetching historical data...
+  Instrument: 15027714
+  From: 2026-01-23 12:05:00.422160
+  To: 2026-01-23 12:20:00.422160
+  Interval: 5minute
+[2026-01-23 12:20:00.454923] ✓ Retrieved 3 candles
+[2026-01-23 12:20:00.709271] Fetching historical data...
+  Instrument: 15025410
+  From: 2026-01-23 12:05:00.709254
+  To: 2026-01-23 12:20:00.709254
+  Interval: 5minute
+[2026-01-23 12:20:00.739980] ✓ Retrieved 3 candles
+[2026-01-23 12:20:00.991745] Fetching historical data...
+  Instrument: 15025666
+  From: 2026-01-23 12:05:00.991720
+  To: 2026-01-23 12:20:00.991720
+  Interval: 5minute
+[2026-01-23 12:20:01.026408] ✓ Retrieved 3 candles
+[2026-01-23 12:20:01.281748] Fetching historical data...
+  Instrument: 15027970
+  From: 2026-01-23 12:05:01.281725
+  To: 2026-01-23 12:20:01.281725
+  Interval: 5minute
+[2026-01-23 12:20:01.309661] ✓ Retrieved 3 candles
+[2026-01-23 12:20:01.564975] Fetching historical data...
+  Instrument: 15028226
+  From: 2026-01-23 12:05:01.564954
+  To: 2026-01-23 12:20:01.564954
+  Interval: 5minute
+[2026-01-23 12:20:01.593063] ✓ Retrieved 3 candles
+[2026-01-23 12:20:01.848437] Fetching historical data...
+  Instrument: 15024386
+  From: 2026-01-23 12:05:01.848422
+  To: 2026-01-23 12:20:01.848422
+  Interval: 5minute
+[2026-01-23 12:20:01.879829] ✓ Retrieved 3 candles
+[2026-01-23 12:20:02.135172] Fetching historical data...
+  Instrument: 15024642
+  From: 2026-01-23 12:05:02.135153
+  To: 2026-01-23 12:20:02.135153
+  Interval: 5minute
+[2026-01-23 12:20:02.174697] ✓ Retrieved 3 candles
+[2026-01-23 12:20:02.429283] Fetching historical data...
+  Instrument: 15028482
+  From: 2026-01-23 12:05:02.429271
+  To: 2026-01-23 12:20:02.429271
+  Interval: 5minute
+[2026-01-23 12:20:02.461881] ✓ Retrieved 3 candles
+[2026-01-23 12:20:02.716728] Fetching historical data...
+  Instrument: 15028738
+  From: 2026-01-23 12:05:02.716706
+  To: 2026-01-23 12:20:02.716706
+  Interval: 5minute
+[2026-01-23 12:20:02.749737] ✓ Retrieved 3 candles
+[2026-01-23 12:20:03.002105] Fetching historical data...
+  Instrument: 15018754
+  From: 2026-01-23 12:05:03.002080
+  To: 2026-01-23 12:20:03.002080
+  Interval: 5minute
+[2026-01-23 12:20:03.046177] ✓ Retrieved 3 candles
+[2026-01-23 12:20:03.300819] Fetching historical data...
+  Instrument: 15020802
+  From: 2026-01-23 12:05:03.300801
+  To: 2026-01-23 12:20:03.300801
+  Interval: 5minute
+[2026-01-23 12:20:03.327423] ✓ Retrieved 3 candles
+[2026-01-23 12:20:03.582745] Fetching historical data...
+  Instrument: 15028994
+  From: 2026-01-23 12:05:03.582724
+  To: 2026-01-23 12:20:03.582724
+  Interval: 5minute
+[2026-01-23 12:20:03.611340] ✓ Retrieved 3 candles
+[2026-01-23 12:20:03.866726] Fetching historical data...
+  Instrument: 15029762
+  From: 2026-01-23 12:05:03.866677
+  To: 2026-01-23 12:20:03.866677
+  Interval: 5minute
+[2026-01-23 12:20:03.894577] ✓ Retrieved 3 candles
+[2026-01-23 12:20:04.149915] Fetching historical data...
+  Instrument: 15018242
+  From: 2026-01-23 12:05:04.149890
+  To: 2026-01-23 12:20:04.149890
+  Interval: 5minute
+[2026-01-23 12:20:04.174201] ✓ Retrieved 3 candles
+[2026-01-23 12:20:04.427107] Fetching historical data...
+  Instrument: 15018498
+  From: 2026-01-23 12:05:04.427094
+  To: 2026-01-23 12:20:04.427094
+  Interval: 5minute
+[2026-01-23 12:20:04.456511] ✓ Retrieved 3 candles
+[2026-01-23 12:20:04.711811] Fetching historical data...
+  Instrument: 15017730
+  From: 2026-01-23 12:05:04.711796
+  To: 2026-01-23 12:20:04.711796
+  Interval: 5minute
+[2026-01-23 12:20:04.742654] ✓ Retrieved 3 candles
+[2026-01-23 12:20:04.997962] Fetching historical data...
+  Instrument: 15017986
+  From: 2026-01-23 12:05:04.997944
+  To: 2026-01-23 12:20:04.997944
+  Interval: 5minute
+[2026-01-23 12:20:05.041643] ✓ Retrieved 3 candles
+[2026-01-23 12:20:05.297039] Fetching historical data...
+  Instrument: 15017218
+  From: 2026-01-23 12:05:05.297025
+  To: 2026-01-23 12:20:05.297025
+  Interval: 5minute
+[2026-01-23 12:20:05.325202] ✓ Retrieved 3 candles
+[2026-01-23 12:20:05.580588] Fetching historical data...
+  Instrument: 15017474
+  From: 2026-01-23 12:05:05.580568
+  To: 2026-01-23 12:20:05.580568
+  Interval: 5minute
+[2026-01-23 12:20:05.610167] ✓ Retrieved 3 candles
+[2026-01-23 12:20:05.865712] Fetching historical data...
+  Instrument: 15014658
+  From: 2026-01-23 12:05:05.865700
+  To: 2026-01-23 12:20:05.865700
+  Interval: 5minute
+[2026-01-23 12:20:05.896421] ✓ Retrieved 3 candles
+[2026-01-23 12:20:06.150037] Fetching historical data...
+  Instrument: 15014914
+  From: 2026-01-23 12:05:06.150018
+  To: 2026-01-23 12:20:06.150018
+  Interval: 5minute
+[2026-01-23 12:20:06.179648] ✓ Retrieved 3 candles
+[2026-01-23 12:20:06.435141] ✓ Retrieved 22 option chain records
+[2026-01-23 12:20:06.435268]   Candles: 22 | LTP fallback: 0
+[2026-01-23 12:20:00.006990+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-23
+[2026-01-23 12:20:00.006990+05:30] 🎯 Initialized VWAP for PUT 25200.0: 38 bars from 9:15 AM
+[2026-01-23 12:20:00.006990+05:30] Checking entry: PUT 25200.0, Expiry=2026-01-27
+[2026-01-23 12:20:00.006990+05:30] PUT 25200.0: OI=15,016,625, Change=0 (+0.00%) - BUILDING
+[2026-01-23 12:20:00.006990+05:30] PUT 25200.0: Price=₹100.30, VWAP=₹96.24 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-23
+Broker: zerodha
+Daily Direction: PUT @ 25200.0
+Open Positions: 0
+Total P&L: ₹126.75
+ROI: +0.15%
+--------------------------------------------------------------------------------
+Waiting 294s for next candle at 12:25:00
+[2026-01-23 12:24:48.886493+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:24:48.892134+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+
+================================================================================
+[2026-01-23 12:25:00.005322+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:25:18.414191] ⚠️  Error getting LTP: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+[2026-01-23 12:25:18.414626] ⚠️  Retrying in 1s... (attempt 1/3)
+[2026-01-23 12:25:00.005322+05:30] Nifty Spot: 25200.85
+[2026-01-23 12:25:00.005322+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-23 12:25:00.005322+05:30] System will continue monitoring but will NOT enter new trades
+[2026-01-23 12:25:19.489185] Fetching quotes for 22 options...
+[2026-01-23 12:25:19.528098] Fetching 5-min candles for 22 options...
+[2026-01-23 12:25:19.528191] Fetching historical data...
+  Instrument: 15025922
+  From: 2026-01-23 12:10:19.528178
+  To: 2026-01-23 12:25:19.528178
+  Interval: 5minute
+[2026-01-23 12:25:19.551891] ✓ Retrieved 3 candles
+[2026-01-23 12:25:19.807302] Fetching historical data...
+  Instrument: 15027714
+  From: 2026-01-23 12:10:19.807281
+  To: 2026-01-23 12:25:19.807281
+  Interval: 5minute
+[2026-01-23 12:25:19.833812] ✓ Retrieved 3 candles
+[2026-01-23 12:25:20.089144] Fetching historical data...
+  Instrument: 15025410
+  From: 2026-01-23 12:10:20.089126
+  To: 2026-01-23 12:25:20.089126
+  Interval: 5minute
+[2026-01-23 12:25:20.114972] ✓ Retrieved 3 candles
+[2026-01-23 12:25:20.370264] Fetching historical data...
+  Instrument: 15025666
+  From: 2026-01-23 12:10:20.370240
+  To: 2026-01-23 12:25:20.370240
+  Interval: 5minute
+[2026-01-23 12:25:20.405758] ✓ Retrieved 3 candles
+[2026-01-23 12:25:20.660866] Fetching historical data...
+  Instrument: 15027970
+  From: 2026-01-23 12:10:20.660833
+  To: 2026-01-23 12:25:20.660833
+  Interval: 5minute
+[2026-01-23 12:25:20.692351] ✓ Retrieved 3 candles
+[2026-01-23 12:25:20.947714] Fetching historical data...
+  Instrument: 15028226
+  From: 2026-01-23 12:10:20.947690
+  To: 2026-01-23 12:25:20.947690
+  Interval: 5minute
+[2026-01-23 12:25:20.975901] ✓ Retrieved 3 candles
+[2026-01-23 12:25:21.231237] Fetching historical data...
+  Instrument: 15024386
+  From: 2026-01-23 12:10:21.231199
+  To: 2026-01-23 12:25:21.231199
+  Interval: 5minute
+[2026-01-23 12:25:21.255563] ✓ Retrieved 3 candles
+[2026-01-23 12:25:21.506230] Fetching historical data...
+  Instrument: 15024642
+  From: 2026-01-23 12:10:21.506206
+  To: 2026-01-23 12:25:21.506206
+  Interval: 5minute
+[2026-01-23 12:25:21.542535] ✓ Retrieved 3 candles
+[2026-01-23 12:25:21.797907] Fetching historical data...
+  Instrument: 15028482
+  From: 2026-01-23 12:10:21.797881
+  To: 2026-01-23 12:25:21.797881
+  Interval: 5minute
+[2026-01-23 12:25:21.836200] ✓ Retrieved 3 candles
+[2026-01-23 12:25:22.089522] Fetching historical data...
+  Instrument: 15028738
+  From: 2026-01-23 12:10:22.089503
+  To: 2026-01-23 12:25:22.089503
+  Interval: 5minute
+[2026-01-23 12:25:22.122701] ✓ Retrieved 3 candles
+[2026-01-23 12:25:22.378259] Fetching historical data...
+  Instrument: 15018754
+  From: 2026-01-23 12:10:22.378222
+  To: 2026-01-23 12:25:22.378222
+  Interval: 5minute
+[2026-01-23 12:25:22.406391] ✓ Retrieved 3 candles
+[2026-01-23 12:25:22.657960] Fetching historical data...
+  Instrument: 15020802
+  From: 2026-01-23 12:10:22.657937
+  To: 2026-01-23 12:25:22.657937
+  Interval: 5minute
+[2026-01-23 12:25:22.683937] ✓ Retrieved 3 candles
+[2026-01-23 12:25:22.934929] Fetching historical data...
+  Instrument: 15028994
+  From: 2026-01-23 12:10:22.934910
+  To: 2026-01-23 12:25:22.934910
+  Interval: 5minute
+[2026-01-23 12:25:22.968303] ✓ Retrieved 3 candles
+[2026-01-23 12:25:23.220068] Fetching historical data...
+  Instrument: 15029762
+  From: 2026-01-23 12:10:23.220047
+  To: 2026-01-23 12:25:23.220047
+  Interval: 5minute
+[2026-01-23 12:25:23.249822] ✓ Retrieved 3 candles
+[2026-01-23 12:25:23.505161] Fetching historical data...
+  Instrument: 15018242
+  From: 2026-01-23 12:10:23.505142
+  To: 2026-01-23 12:25:23.505142
+  Interval: 5minute
+[2026-01-23 12:25:23.530665] ✓ Retrieved 3 candles
+[2026-01-23 12:25:23.781190] Fetching historical data...
+  Instrument: 15018498
+  From: 2026-01-23 12:10:23.781169
+  To: 2026-01-23 12:25:23.781169
+  Interval: 5minute
+[2026-01-23 12:25:23.809118] ✓ Retrieved 3 candles
+[2026-01-23 12:25:24.064512] Fetching historical data...
+  Instrument: 15017730
+  From: 2026-01-23 12:10:24.064481
+  To: 2026-01-23 12:25:24.064481
+  Interval: 5minute
+[2026-01-23 12:25:24.135181] ✓ Retrieved 3 candles
+[2026-01-23 12:25:24.389558] Fetching historical data...
+  Instrument: 15017986
+  From: 2026-01-23 12:10:24.389502
+  To: 2026-01-23 12:25:24.389502
+  Interval: 5minute
+[2026-01-23 12:25:24.431618] ✓ Retrieved 3 candles
+[2026-01-23 12:25:24.687011] Fetching historical data...
+  Instrument: 15017218
+  From: 2026-01-23 12:10:24.686993
+  To: 2026-01-23 12:25:24.686993
+  Interval: 5minute
+[2026-01-23 12:25:24.715931] ✓ Retrieved 3 candles
+[2026-01-23 12:25:24.966915] Fetching historical data...
+  Instrument: 15017474
+  From: 2026-01-23 12:10:24.966894
+  To: 2026-01-23 12:25:24.966894
+  Interval: 5minute
+[2026-01-23 12:25:25.000452] ✓ Retrieved 3 candles
+[2026-01-23 12:25:25.254896] Fetching historical data...
+  Instrument: 15014658
+  From: 2026-01-23 12:10:25.254875
+  To: 2026-01-23 12:25:25.254875
+  Interval: 5minute
+[2026-01-23 12:25:25.291323] ✓ Retrieved 3 candles
+[2026-01-23 12:25:25.546684] Fetching historical data...
+  Instrument: 15014914
+  From: 2026-01-23 12:10:25.546652
+  To: 2026-01-23 12:25:25.546652
+  Interval: 5minute
+[2026-01-23 12:25:25.570994] ✓ Retrieved 3 candles
+[2026-01-23 12:25:25.823440] ✓ Retrieved 22 option chain records
+[2026-01-23 12:25:25.823559]   Candles: 22 | LTP fallback: 0
+[2026-01-23 12:25:00.005322+05:30] Checking entry: PUT 25200.0, Expiry=2026-01-27
+[2026-01-23 12:25:00.005322+05:30] PUT 25200.0: OI=16,040,180, Change=1,023,555 (+6.82%) - BUILDING
+[2026-01-23 12:25:00.005322+05:30] PUT 25200.0: Price=₹82.70, VWAP=₹96.07 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-23
+Broker: zerodha
+Daily Direction: PUT @ 25200.0
+Open Positions: 0
+Total P&L: ₹126.75
+ROI: +0.15%
+--------------------------------------------------------------------------------
+Waiting 274s for next candle at 12:30:00
+
+[2026-01-23 12:26:41.666211+05:30] Shutting down gracefully...
+
+[2026-01-23 12:29:16.443907+05:30] Shutting down gracefully...
+[2026-01-23 12:29:48.893262+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:29:48.896457+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+
+================================================================================
+[2026-01-23 12:30:00.003881+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 1
+  Win Rate: 100.0%
+  Total P&L: ₹126.75
+  ROI: +0.15%
+[2026-01-23 12:30:00.009668] Logging out...
+[2026-01-23 12:30:21.353787] ✗ Error during logout: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+
+[2026-01-23 12:30:21.356403+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_121447.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_121447.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

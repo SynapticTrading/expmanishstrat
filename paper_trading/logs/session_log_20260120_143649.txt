@@ -1,0 +1,163 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_143649.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-20 14:36:49.496323+05:30] Checking for previous session...
+[2026-01-20 14:36:49.496474+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-20T14:11:00.819103+05:30
+Downtime: ~25 minutes
+Active Positions: 0
+Daily P&L: ₹786.50
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-20T14:11:00.819103+05:30
+Recovery Time: 2026-01-20 14:36:49.496711+05:30
+Downtime: 25 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+[2026-01-20 14:36:49.496974+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-20T12:04:13.947759
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 14:36:49.497777+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 14:36:49.497802+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 14:36:49.497840+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 14:36:49.497857+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-20 14:36:49.498332+05:30] ✓ Adapter created: angelone
+[2026-01-20 14:36:49.498380+05:30] Connecting to angelone...
+[I 260120 14:36:49 smartConnect:124] in pool
+[2026-01-20 14:36:49.776735] Generated TOTP: 761966
+[2026-01-20 14:36:49.776774] Connecting to AngelOne...
+[2026-01-20 14:36:49.918254] ✓ Connection successful!
+[2026-01-20 14:36:49.918358] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-20 14:36:49.918390] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg5MDAwMDksImV4cCI6MTc2ODk4NjQwOX0.fzawMDjRT1WSzKZhSdTc_cui8E8LlO_FATqZ8fEIvJClboZhOCjG2WR69FbYe1aaqEOnhh1Gq6yyxwDUCay0_g
+Connected to AngelOne
+[2026-01-20 14:36:49.918452+05:30] ✓ Connected to angelone
+
+[2026-01-20 14:36:49.918492+05:30] Resuming from previous session...
+[2026-01-20 14:36:49.918532+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-20 14:36:49.918591+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 14:36:49.918615+05:30] Initializing paper broker...
+[2026-01-20 14:36:49.918972] Paper Broker initialized with capital: ₹92,694.50
+[2026-01-20 14:36:49.919006] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_143649.csv
+[2026-01-20 14:36:49.919034] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 14:36:49.919061] Restoring 1 closed trade(s)...
+  ✓ Restored trade: PE 25400 | P&L: ₹+832.00
+[2026-01-20 14:36:49.919121] ✓ Restored 1 closed trade(s)
+[2026-01-20 14:36:49.919141+05:30] Initializing OI analyzer...
+[2026-01-20 14:36:49.919670+05:30] Initializing strategy...
+[2026-01-20 14:36:49.919722] Using lot size from contract manager: 65 units/lot
+[2026-01-20 14:36:49.919746] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 14:36:49.923065+05:30] 📊 GLOBAL TRADE CHECK: Found 2 trade(s) today across all brokers
+[2026-01-20 14:36:49.923292+05:30] 📊 GLOBAL TRADE LIMIT: 2 trade(s) already taken today (any broker)
+[2026-01-20 14:36:49.923361+05:30] Setting daily_trade_taken = True
+[2026-01-20 14:36:49.923443+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-20
+  Restored expiry from strategy_state: 2026-01-20
+[2026-01-20 14:36:49.925360+05:30] 📊 GLOBAL TRADE CHECK: Found 2 trade(s) today across all brokers
+  Restored daily_trade_taken: True (has closed trades, trades_today=1, global_trades_today=2)
+  Restored direction: PUT
+  Restored strike: 25350
+  Restored expiry: 2026-01-20
+[2026-01-20 14:36:49.925758+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 14:36:49.925811+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-20 14:36:49.925975+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 14:36:49.926022+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 14:36:49.926117+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 14:36:49.926162+05:30] ✓ Exit monitor loop started
+[2026-01-20 14:36:49.926374+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 14:36:49.926402+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 14:36:49.926402+05:30] Nifty Spot: 25372.00
+[2026-01-20 14:36:49.926402+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-20 14:36:49.926402+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-20 14:36:49.926402+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-20
+[2026-01-20 14:36:49.926402+05:30] 🎯 Initialized VWAP for PUT 25350: 65 bars from 9:15 AM
+[2026-01-20 14:36:49.926402+05:30] Checking entry: PUT 25350, Expiry=2026-01-20
+[2026-01-20 14:36:49.926402+05:30] PUT 25350: OI=37,390,860, Change=0 (+0.00%) - BUILDING
+[2026-01-20 14:36:49.926402+05:30] PUT 25350: Price=₹9.05, VWAP=₹9.05 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: angelone
+Daily Direction: PUT @ 25350
+Open Positions: 0
+Total P&L: ₹832.00
+ROI: +0.90%
+--------------------------------------------------------------------------------
+Waiting 188s for next candle at 14:40:00
+
+================================================================================
+[2026-01-20 14:40:00.005212+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 14:40:00.005212+05:30] Nifty Spot: 25360.95
+[2026-01-20 14:40:00.005212+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-20 14:40:00.005212+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-20 14:40:00.005212+05:30] Checking entry: PUT 25350, Expiry=2026-01-20
+[2026-01-20 14:40:00.005212+05:30] PUT 25350: OI=39,574,990, Change=2,184,130 (+5.84%) - BUILDING
+[2026-01-20 14:40:00.005212+05:30] PUT 25350: Price=₹10.45, VWAP=₹9.76 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-20
+Broker: angelone
+Daily Direction: PUT @ 25350
+Open Positions: 0
+Total P&L: ₹832.00
+ROI: +0.90%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:45:00
+[2026-01-20 14:41:49.931837+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-20 14:41:49.934561+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 0 days)

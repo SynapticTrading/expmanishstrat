@@ -1,0 +1,211 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260119_142517.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-19 14:25:17.500076+05:30] Checking for previous session...
+[2026-01-19 14:25:17.500481+05:30] No previous state found - starting fresh
+
+[2026-01-19 14:25:17.500657+05:30] Connecting to Zerodha...
+[2026-01-19 14:25:17.500703] Connecting to Zerodha...
+[2026-01-19 14:25:17.724872] Generated TOTP: 803377
+[2026-01-19 14:25:17.806857] ✓ Request token extracted from redirect
+[2026-01-19 14:25:17.806958] Request token obtained: 0iixRC7ItfGHWoIzjpun...
+[2026-01-19 14:25:17.895311] ✓ Connection successful!
+[2026-01-19 14:25:17.895410] Access Token: 0WaPDkz6r2Ke5C3IDX0G...
+[2026-01-19 14:25:17.895463] Zerodha data feed initialized
+[2026-01-19 14:25:17.895498+05:30] ✓ Connected to Zerodha
+
+[2026-01-19 14:25:17.895552+05:30] Initializing new session...
+[2026-01-19 14:25:17.896243+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-16
+  Starting Capital: ₹91,862.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 0
+  Previous Win Rate: 0.0%
+[2026-01-19 14:25:17.896773+05:30] Session initialized: SESSION_20260119_1425
+[2026-01-19 14:25:17.896814+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260119.json
+[2026-01-19 14:25:17.896857+05:30] Loading instruments...
+[2026-01-19 14:25:17.896891] Loading instruments...
+[2026-01-19 14:25:17.896916] Fetching instruments for NFO...
+[2026-01-19 14:25:19.075751] ✓ Retrieved 42803 instruments
+[2026-01-19 14:25:19.081017] Fetching instruments for NSE...
+[2026-01-19 14:25:19.201861] ✓ Retrieved 9161 instruments
+[2026-01-19 14:25:19.204046] ✓ Nifty 50 token: 256265
+[2026-01-19 14:25:19.204117] ✓ Instruments loaded
+[2026-01-19 14:25:19.204153+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-19T14:20:39.302204)
+Options lot size: 65 units per lot
+Loaded 1518 instrument tokens for token-based lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-19 14:25:19.205847+05:30] ✓ Contract manager initialized
+[2026-01-19 14:25:19.205906+05:30] Active Weekly Expiry: 2026-01-20 (1 days)
+⚠️ Options rollover recommended for current_week: 1 days until expiry (threshold: 2)
+[2026-01-19 14:25:19.205979+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-19 14:25:19.206009+05:30] Initializing broker adapter...
+Created zerodha adapter
+[2026-01-19 14:25:19.207521+05:30] ✓ Broker adapter initialized with token-based lookups
+[2026-01-19 14:25:19.207561+05:30] Initializing paper broker...
+[2026-01-19 14:25:19.207926] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-19 14:25:19.207968] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260119_142519.csv
+[2026-01-19 14:25:19.207995] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-19 14:25:19.208026+05:30] Initializing OI analyzer...
+[2026-01-19 14:25:19.208363+05:30] Initializing strategy...
+[2026-01-19 14:25:19.208424] Using lot size from contract manager: 65 units/lot
+[2026-01-19 14:25:19.208457] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-19 14:25:19.208912+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-19 14:25:19.209167+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-19 14:25:19.209610+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-19 14:25:19.209694+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-19 14:25:19.209893+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-19 14:25:19.209962+05:30] ✓ Exit monitor loop started
+[2026-01-19 14:25:19.210319+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-19 14:25:19.210360+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-19 14:25:19.210360+05:30] Nifty Spot: 25609.65
+[2026-01-19 14:25:19.243483] Fetching quotes for 22 options...
+[2026-01-19 14:25:19.270565] ✓ Retrieved 22 option quotes
+
+================================================================================
+[2026-01-19 14:25:19.210360+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-19 14:25:19.210360+05:30] Determining direction using CURRENT OI data...
+[2026-01-19 14:25:19.210360+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-19 14:25:19.210360+05:30] NEW TRADING DAY: 2026-01-19
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25609.65)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25350.0            166,075            -259.65
+25400.0            907,790            -209.65
+25450.0          1,068,210            -159.65
+25500.0          5,803,850            -109.65
+25550.0          8,051,355             -59.65
+25600.0         19,178,835              -9.65
+25650.0         13,528,385              40.35
+25700.0         18,805,410              90.35
+25750.0         11,273,665             140.35
+25800.0         19,608,745             190.35 👈 MAX
+25850.0         10,169,510             240.35
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25350.0          6,362,135             259.65
+25400.0         12,895,805             209.65
+25450.0         11,228,815             159.65
+25500.0         27,040,390             109.65 👈 MAX
+25550.0         17,720,170              59.65
+25600.0         20,961,980               9.65
+25650.0          6,177,275             -40.35
+25700.0          6,624,085             -90.35
+25750.0          2,055,235            -140.35
+25800.0          3,879,720            -190.35
+25850.0          1,172,730            -240.35
+================================================================================
+[2026-01-19 14:25:19.210360+05:30] Max Call OI: 19,608,745 @ 25800.0, Max Put OI: 27,040,390 @ 25500.0
+[2026-01-19 14:25:19.210360+05:30] Direction determined: PUT (Call dist: 190.35, Put dist: 109.65)
+[2026-01-19 14:25:19.210360+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25600.0, Expiry=2026-01-20, Spot=25609.65
+[2026-01-19 14:25:19.210360+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-19
+[2026-01-19 14:25:19.210360+05:30] 🎯 Initialized VWAP for PUT 25600.0: 63 bars from 9:15 AM
+[2026-01-19 14:25:19.210360+05:30] Checking entry: PUT 25600.0, Expiry=2026-01-20
+[2026-01-19 14:25:19.210360+05:30] PUT 25600.0: OI=20,961,980, Change=0 (+0.00%) - BUILDING
+[2026-01-19 14:25:19.210360+05:30] PUT 25600.0: Price=₹62.45, VWAP=₹62.45 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-19
+Broker: Zerodha
+Daily Direction: PUT @ 25600.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:25:19] Waiting 281s for next candle at 14:30:00
+
+================================================================================
+[2026-01-19 14:30:00.004919+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-19 14:30:00.004919+05:30] Nifty Spot: 25592.30
+[2026-01-19 14:30:00.073393] Fetching quotes for 22 options...
+[2026-01-19 14:30:00.137840] ✓ Retrieved 22 option quotes
+[2026-01-19 14:30:00.004919+05:30] 📍 STRIKE UPDATED: 25600.0 → 25550.0 (Spot: 25592.30)
+[2026-01-19 14:30:00.004919+05:30] 🎯 Initialized VWAP for PUT 25550.0: 64 bars from 9:15 AM
+[2026-01-19 14:30:00.004919+05:30] Checking entry: PUT 25550.0, Expiry=2026-01-20
+[2026-01-19 14:30:00.004919+05:30] PUT 25550.0: OI=18,283,460, Change=0 (+0.00%) - BUILDING
+[2026-01-19 14:30:00.004919+05:30] PUT 25550.0: Price=₹46.40, VWAP=₹46.40 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-19
+Broker: Zerodha
+Daily Direction: PUT @ 25550.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:30:00] Waiting 300s for next candle at 14:35:00
+[2026-01-19 14:30:19.214796+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-19 14:30:19.218901+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 1 days)
+
+================================================================================
+[2026-01-19 14:35:00.000074+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-19 14:35:00.000074+05:30] Nifty Spot: 25603.15
+[2026-01-19 14:35:00.044399] Fetching quotes for 22 options...
+[2026-01-19 14:35:00.101741] ✓ Retrieved 22 option quotes
+[2026-01-19 14:35:00.000074+05:30] 📍 STRIKE UPDATED: 25550.0 → 25600.0 (Spot: 25603.15)
+[2026-01-19 14:35:00.000074+05:30] 🎯 Initialized VWAP for PUT 25600.0: 65 bars from 9:15 AM
+[2026-01-19 14:35:00.000074+05:30] Checking entry: PUT 25600.0, Expiry=2026-01-20
+[2026-01-19 14:35:00.000074+05:30] PUT 25600.0: OI=21,952,385, Change=0 (+0.00%) - BUILDING
+[2026-01-19 14:35:00.000074+05:30] PUT 25600.0: Price=₹65.15, VWAP=₹63.83 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-19
+Broker: Zerodha
+Daily Direction: PUT @ 25600.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[14:35:00] Waiting 300s for next candle at 14:40:00
+[2026-01-19 14:35:19.223854+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-19 14:35:19.224112+05:30] ✓ Contract check complete - No updates (Active: 2026-01-20, 1 days)

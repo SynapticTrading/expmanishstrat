@@ -1,0 +1,222 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_111513.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-23 11:15:13.705981+05:30] Checking for previous session...
+[2026-01-23 11:15:13.706248+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260123.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-23T11:13:11.958345+05:30
+Downtime: ~2 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-23T11:13:11.958345+05:30
+Recovery Time: 2026-01-23 11:15:13.706652+05:30
+Downtime: 2 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+[2026-01-23 11:15:13.707130+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-23T10:38:03.917443
+  Options lot size: 65 units per lot
+  Loaded 1610 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-23 11:15:13.708732+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-23 11:15:13.708780+05:30] Active Weekly Expiry: 2026-01-27 (4 days)
+[2026-01-23 11:15:13.708819+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-23 11:15:13.710349+05:30] ✓ Adapter created: angelone
+[2026-01-23 11:15:13.710400+05:30] Connecting to angelone...
+[I 260123 11:15:13 smartConnect:124] in pool
+[2026-01-23 11:15:13.987801] Generated TOTP: 895993
+[2026-01-23 11:15:13.987874] Connecting to AngelOne...
+[2026-01-23 11:15:14.159266] ✓ Connection successful!
+[2026-01-23 11:15:14.159400] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-23 11:15:14.159438] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3NjkxNDcxMTQsImV4cCI6MTc2OTIzMzUxNH0.1JnEiBKyRAuK2EqFafKBPhk8AhISCacCz73dW2F9I5vv_LVexxz9S-NgrXng5aFqw2Qmk68LZdyR-GPthlZyYw
+Connected to AngelOne
+[2026-01-23 11:15:14.159498+05:30] ✓ Connected to angelone
+
+[2026-01-23 11:15:14.159551+05:30] Resuming from previous session...
+[2026-01-23 11:15:14.159595+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-23 11:15:14.159666+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-23 11:15:14.159694+05:30] Initializing paper broker...
+[2026-01-23 11:15:14.160160] Paper Broker initialized with capital: ₹88,086.00
+[2026-01-23 11:15:14.160204] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260123_111514.csv
+[2026-01-23 11:15:14.160228] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-23 11:15:14.160265] Restoring 1 position(s)...
+  ✓ Restored: PUT 25250 @ ₹88.10
+     Size: 65, Peak: ₹88.10, Trailing: False
+[2026-01-23 11:15:14.160344] ✓ Restored 1 position(s)
+[2026-01-23 11:15:14.160365] Available cash: ₹88,086.00
+[2026-01-23 11:15:14.160387+05:30] Initializing OI analyzer...
+[2026-01-23 11:15:14.161128+05:30] Initializing strategy...
+[2026-01-23 11:15:14.161192] Using lot size from contract manager: 65 units/lot
+[2026-01-23 11:15:14.161222] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-23 11:15:14.166883+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-23
+  Restored expiry from strategy_state: 2026-01-27
+  Restored daily_trade_taken: True (has open positions)
+  Restored direction: PUT
+  Restored strike: 25250
+  Restored expiry: 2026-01-27
+[2026-01-23 11:15:14.169978+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-23 11:15:14.170194+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-23 11:15:14.170699+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 11:15:14.170747+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 11:15:14.171019+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-23 11:15:14.171088+05:30] ✓ Exit monitor loop started
+[2026-01-23 11:15:14.172518+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-23 11:15:14.172607+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:15:14.172607+05:30] Nifty Spot: 25285.55
+[2026-01-23 11:15:14.172607+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:15:14.172607+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 286s for next candle at 11:20:00
+[2026-01-23 11:15:14.171154+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹79.15 | Entry: ₹88.10 | P&L: -10.16%
+    Initial Stop: ₹66.07 (distance: 19.79%)
+    VWAP Stop: ₹75.19 | Current VWAP: ₹79.15
+    OI Change: -3.51% (Threshold: 10%)
+[2026-01-23 11:16:14.298720+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹80.55 | Entry: ₹88.10 | P&L: -8.57%
+    Initial Stop: ₹66.07 (distance: 21.91%)
+    VWAP Stop: ₹75.86 | Current VWAP: ₹79.85
+    OI Change: -3.51% (Threshold: 10%)
+[2026-01-23 11:17:14.456344+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹79.35 | Entry: ₹88.10 | P&L: -9.93%
+    Initial Stop: ₹66.07 (distance: 20.09%)
+    VWAP Stop: ₹75.70 | Current VWAP: ₹79.68
+    OI Change: -0.61% (Threshold: 10%)
+[2026-01-23 11:18:14.583426+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹78.65 | Entry: ₹88.10 | P&L: -10.73%
+    Initial Stop: ₹66.07 (distance: 19.03%)
+    VWAP Stop: ₹75.45 | Current VWAP: ₹79.42
+    OI Change: -0.61% (Threshold: 10%)
+[2026-01-23 11:19:14.755867+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹83.75 | Entry: ₹88.10 | P&L: -4.94%
+    Initial Stop: ₹66.07 (distance: 26.75%)
+    VWAP Stop: ₹76.28 | Current VWAP: ₹80.30
+    OI Change: -0.61% (Threshold: 10%)
+
+================================================================================
+[2026-01-23 11:20:00.008519+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:20:00.008519+05:30] Nifty Spot: 25265.25
+[2026-01-23 11:20:00.008519+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:20:00.008519+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 11:25:00
+[2026-01-23 11:20:14.179483+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 11:20:14.179712+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 11:20:17.968844+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹88.10 | Entry: ₹88.10 | P&L: +0.00%
+    Initial Stop: ₹66.07 (distance: 33.33%)
+[2026-01-23 11:21:18.119047+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹91.35 | Entry: ₹88.10 | P&L: +3.69%
+    Initial Stop: ₹66.07 (distance: 38.25%)
+[2026-01-23 11:22:18.263745+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹86.15 | Entry: ₹88.10 | P&L: -2.21%
+    Initial Stop: ₹66.07 (distance: 30.38%)
+    VWAP Stop: ₹79.27 | Current VWAP: ₹83.44
+    OI Change: -1.01% (Threshold: 10%)
+[2026-01-23 11:23:18.430951+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹83.30 | Entry: ₹88.10 | P&L: -5.45%
+    Initial Stop: ₹66.07 (distance: 26.07%)
+    VWAP Stop: ₹79.26 | Current VWAP: ₹83.43
+    OI Change: -1.64% (Threshold: 10%)
+[2026-01-23 11:24:18.566039+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹81.30 | Entry: ₹88.10 | P&L: -7.72%
+    Initial Stop: ₹66.07 (distance: 23.04%)
+    VWAP Stop: ₹79.05 | Current VWAP: ₹83.21
+    OI Change: -1.64% (Threshold: 10%)
+
+================================================================================
+[2026-01-23 11:25:00.002289+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:25:00.002289+05:30] Nifty Spot: 25264.75
+[2026-01-23 11:25:00.002289+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:25:00.002289+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 11:30:00
+[2026-01-23 11:25:14.183567+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 11:25:14.186615+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 11:25:18.705242+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹82.35 | Entry: ₹88.10 | P&L: -6.53%
+    Initial Stop: ₹66.07 (distance: 24.63%)
+    VWAP Stop: ₹78.97 | Current VWAP: ₹83.13
+    OI Change: -1.64% (Threshold: 10%)
+[2026-01-23 11:26:18.840201+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹84.80 | Entry: ₹88.10 | P&L: -3.75%
+    Initial Stop: ₹66.07 (distance: 28.34%)
+    VWAP Stop: ₹79.11 | Current VWAP: ₹83.27
+    OI Change: -0.53% (Threshold: 10%)
+[2026-01-23 11:27:18.991142+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹81.25 | Entry: ₹88.10 | P&L: -7.78%
+    Initial Stop: ₹66.07 (distance: 22.97%)
+    VWAP Stop: ₹78.95 | Current VWAP: ₹83.11
+    OI Change: -0.53% (Threshold: 10%)
+[2026-01-23 11:28:19.139225+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹79.20 | Entry: ₹88.10 | P&L: -10.10%
+    Initial Stop: ₹66.07 (distance: 19.86%)
+    VWAP Stop: ₹78.68 | Current VWAP: ₹82.82
+    OI Change: -0.53% (Threshold: 10%)
+[2026-01-23 11:29:19.290076+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹79.25 | Entry: ₹88.10 | P&L: -10.05%
+    Initial Stop: ₹66.07 (distance: 19.94%)
+    VWAP Stop: ₹78.45 | Current VWAP: ₹82.58
+    OI Change: -0.01% (Threshold: 10%)
+
+================================================================================
+[2026-01-23 11:30:00.001919+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:30:00.001919+05:30] Nifty Spot: 25275.30
+[2026-01-23 11:30:00.001919+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:30:00.001919+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 11:35:00
+[2026-01-23 11:30:14.187048+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 11:30:14.187368+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 11:30:19.438723+05:30] 📊 LTP CHECK: 25250 PUT
+    Current LTP: ₹79.25 | Entry: ₹88.10 | P&L: -10.05%
+    Initial Stop: ₹66.07 (distance: 19.94%)
+    VWAP Stop: ₹78.24 | Current VWAP: ₹82.36
+    OI Change: -0.01% (Threshold: 10%)

@@ -1,0 +1,2 @@
+entry_time,exit_time,broker,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-19 15:15:28,2026-01-19 15:29:00,zerodha,25550.0,PUT,2026-01-20,49.35,65.05,65,1020.5,31.813576494427554,48.18841114412084,65.7890573590869,14258985,-20.69663443786497,10053745,EOD Exit

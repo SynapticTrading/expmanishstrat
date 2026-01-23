@@ -1,0 +1,85 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_120331.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-20 12:03:31.594516+05:30] Checking for previous session...
+[2026-01-20 12:03:31.594763+05:30] No previous state found - starting fresh
+[2026-01-20 12:03:31.594845+05:30] Initializing contract manager (reading from universal cache)...
+No cache file found
+⚠️  Could not load cache from /Users/Algo_Trading/manishsir_options/contracts_cache.json
+Please run: python refresh_contracts.py
+[2026-01-20 12:03:31.595007+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 12:03:31.595040+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-20 12:03:31.595909+05:30] ✓ Adapter created: angelone
+[2026-01-20 12:03:31.595948+05:30] Connecting to angelone...
+[I 260120 12:03:31 smartConnect:124] in pool
+[2026-01-20 12:03:31.856685] Generated TOTP: 567317
+[2026-01-20 12:03:31.856736] Connecting to AngelOne...
+[2026-01-20 12:03:31.992547] ✓ Connection successful!
+[2026-01-20 12:03:31.992657] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-20 12:03:31.992695] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg4OTA4MTEsImV4cCI6MTc2ODk3NzIxMX0.QGOUPXn_Pm1qZKUPB1AreFpW2WfYEOBtZBeq1jHK-w07wXgsKPTQyU4RuFwJmA-ACtdzs8T9RbV09LjVAf5UOA
+Connected to AngelOne
+[2026-01-20 12:03:31.992761+05:30] ✓ Connected to angelone
+
+[2026-01-20 12:03:31.992804+05:30] Initializing new session...
+[2026-01-20 12:03:31.993217+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-12
+  Starting Capital: ₹91,862.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 1
+  Previous Win Rate: 0.0%
+[2026-01-20 12:03:31.993752+05:30] Session initialized: SESSION_20260120_1203
+[2026-01-20 12:03:31.993792+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+[2026-01-20 12:03:31.993833+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-20 12:03:31.993909+05:30] ✓ Adapter ready (symbol-based fallback)
+[2026-01-20 12:03:31.993938+05:30] Initializing paper broker...
+[2026-01-20 12:03:31.994186] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-20 12:03:31.994221] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_120331.csv
+[2026-01-20 12:03:31.994245] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 12:03:31.994274+05:30] Initializing OI analyzer...
+[2026-01-20 12:03:31.994809+05:30] Initializing strategy...
+[2026-01-20 12:03:31.994889] Using lot size from contract manager: 65 units/lot
+[2026-01-20 12:03:31.994925] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 12:03:31.995319+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 12:03:31.995390+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-20 12:03:31.995604+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:03:31.995652+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 12:03:31.995777+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 12:03:31.995853+05:30] ✓ Exit monitor loop started
+[2026-01-20 12:03:31.996172+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 12:03:31.996209+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 12:03:31.996209+05:30] Nifty Spot: 25456.85
+[2026-01-20 12:03:31.996209+05:30] ⚠️ Contract manager: No current week expiry, falling back to adapter
+[2026-01-20 12:03:31.996209+05:30] ✗ No options data, skipping...
+Waiting 88s for next candle at 12:05:00

@@ -1,0 +1,140 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260114_151741.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+Creating broker instance...
+✓ Broker: Zerodha
+
+[2026-01-14 15:17:41.110768+05:30] Checking for previous session...
+[2026-01-14 15:17:41.111183+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260114.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-14T15:17:14.335970+05:30
+Downtime: ~0 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-14T15:17:14.335970+05:30
+Recovery Time: 2026-01-14 15:17:41.111605+05:30
+Downtime: 0 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+
+[2026-01-14 15:17:41.112031+05:30] Connecting to Zerodha...
+[2026-01-14 15:17:41.112063] Connecting to Zerodha...
+[2026-01-14 15:17:41.299441] Generated TOTP: 292289
+[2026-01-14 15:17:41.407332] ✓ Request token extracted from redirect
+[2026-01-14 15:17:41.407458] Request token obtained: mRpO9mWazrZQYgVM77py...
+[2026-01-14 15:17:41.468973] ✓ Connection successful!
+[2026-01-14 15:17:41.469175] Access Token: fOYQqlK2RlJMbJI31ajl...
+[2026-01-14 15:17:41.469247] Zerodha data feed initialized
+[2026-01-14 15:17:41.469285+05:30] ✓ Connected to Zerodha
+
+[2026-01-14 15:17:41.469346+05:30] Resuming from previous session...
+[2026-01-14 15:17:41.469405+05:30] Loading instruments...
+[2026-01-14 15:17:41.469442] Loading instruments...
+[2026-01-14 15:17:41.469475] Fetching instruments for NFO...
+[2026-01-14 15:17:42.940296] ✓ Retrieved 41699 instruments
+[2026-01-14 15:17:42.946645] Fetching instruments for NSE...
+[2026-01-14 15:17:43.124747] ✓ Retrieved 9120 instruments
+[2026-01-14 15:17:43.127482] ✓ Nifty 50 token: 256265
+[2026-01-14 15:17:43.127572] ✓ Instruments loaded
+[2026-01-14 15:17:43.127614+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache (cached at: 2026-01-14T15:11:33.895130)
+Options lot size: 65 units per lot
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+[2026-01-14 15:17:43.128367+05:30] ✓ Contract manager initialized
+[2026-01-14 15:17:43.128415+05:30] Active Weekly Expiry: 2026-01-20 (6 days)
+[2026-01-14 15:17:43.128455+05:30] Initializing paper broker...
+[2026-01-14 15:17:43.128928] Paper Broker initialized with capital: ₹91,862.50
+[2026-01-14 15:17:43.128996] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260114_151743.csv
+[2026-01-14 15:17:43.129031] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-14 15:17:43.129064+05:30] Initializing OI analyzer...
+[2026-01-14 15:17:43.129481+05:30] Initializing strategy...
+[2026-01-14 15:17:43.129547] Using lot size from contract manager: 65 units/lot
+[2026-01-14 15:17:43.129580] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-14 15:17:43.129812+05:30] Restoring strategy state...
+  Restored current_date: 2026-01-14
+  Restored direction: PUT
+  Restored strike: 25650.0
+  Restored expiry: None
+[2026-01-14 15:17:43.130294+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-14 15:17:43.130355+05:30] Starting DUAL-LOOP paper trading...
+  Broker: Zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-14 15:17:43.131154+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-14 15:17:43.131239+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-14 15:17:43.131412+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-14 15:17:43.131453+05:30] ✓ Exit monitor loop started
+[2026-01-14 15:17:43.131818+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-14 15:17:43.131856+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 15:17:43.131856+05:30] Nifty Spot: 25650.05
+[2026-01-14 15:17:43.174885] Fetching quotes for 22 options...
+[2026-01-14 15:17:43.230991] ✓ Retrieved 22 option quotes
+[2026-01-14 15:17:43.131856+05:30] ⚠️  Could not find option data for PUT 25650.0 expiry=None
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-14
+Broker: Zerodha
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[15:17:43] Waiting 137s for next candle at 15:20:00
+
+================================================================================
+[2026-01-14 15:20:00.004868+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-14 15:20:00.004868+05:30] Nifty Spot: 25660.15
+[2026-01-14 15:20:00.057378] Fetching quotes for 22 options...
+[2026-01-14 15:20:00.102161] ✓ Retrieved 22 option quotes
+[2026-01-14 15:20:00.004868+05:30] ⚠️  Could not find option data for PUT 25650.0 expiry=None
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-14
+Broker: Zerodha
+Daily Direction: PUT @ 25650.0
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+[15:20:00] Waiting 300s for next candle at 15:25:00

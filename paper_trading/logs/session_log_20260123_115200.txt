@@ -1,0 +1,310 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260123_115200.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-23 11:52:00.423250+05:30] Checking for previous session...
+[2026-01-23 11:52:00.423695+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-23T11:50:26.400776+05:30
+Downtime: ~1 minutes
+Active Positions: 1
+Daily P&L: ₹0.00
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-23T11:50:26.400776+05:30
+Recovery Time: 2026-01-23 11:52:00.424111+05:30
+Downtime: 1 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+[2026-01-23 11:52:00.424572+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-23T10:38:03.917443
+  Options lot size: 65 units per lot
+  Loaded 1610 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-23 11:52:00.426155+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-23 11:52:00.426201+05:30] Active Weekly Expiry: 2026-01-27 (4 days)
+[2026-01-23 11:52:00.426241+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-23 11:52:00.431744+05:30] ✓ Adapter created: zerodha
+[2026-01-23 11:52:00.431801+05:30] Connecting to zerodha...
+[2026-01-23 11:52:00.432241] Connecting to Zerodha...
+[2026-01-23 11:52:00.644608] Generated TOTP: 300856
+[2026-01-23 11:52:00.743720] ✓ Request token extracted from redirect
+[2026-01-23 11:52:00.743815] Request token obtained: TEyxbnXNXwsKHPP7smYY...
+[2026-01-23 11:52:00.796681] ✓ Connection successful!
+[2026-01-23 11:52:00.796789] Access Token: 9qjz0kzBZuihdUTDuaC7...
+[2026-01-23 11:52:00.796852] Zerodha data feed initialized
+[INFO] Connected to Zerodha
+Connected to Zerodha
+[INFO] ✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+✓ TOKEN-BASED MODE: All API calls use contracts_cache.json
+[INFO] ✓ ContractManager ready with cached tokens
+✓ ContractManager ready with cached tokens
+[2026-01-23 11:52:00.797287+05:30] ✓ Connected to zerodha
+
+[2026-01-23 11:52:00.797330+05:30] Resuming from previous session...
+[2026-01-23 11:52:00.797374+05:30] Loading instruments...
+[2026-01-23 11:52:00.800276] Loading instruments...
+[2026-01-23 11:52:00.800336] Fetching instruments for NFO...
+[2026-01-23 11:52:02.121450] ✓ Retrieved 46006 instruments
+[2026-01-23 11:52:02.127277] Fetching instruments for NSE...
+[2026-01-23 11:52:02.299935] ✓ Retrieved 9165 instruments
+[2026-01-23 11:52:02.302497] ✓ Nifty 50 token: 256265
+[2026-01-23 11:52:02.302606] ✓ Instruments loaded
+[2026-01-23 11:52:02.302709+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-23 11:52:02.302787+05:30] Initializing paper broker...
+[2026-01-23 11:52:02.303199] Paper Broker initialized with capital: ₹87,260.50
+[2026-01-23 11:52:02.303259] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260123_115202.csv
+[2026-01-23 11:52:02.303316] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-23 11:52:02.303392] Restoring 1 position(s)...
+  ✓ Restored: PUT 25200.0 @ ₹86.50
+     Size: 65, Peak: ₹86.50, Trailing: False
+[2026-01-23 11:52:02.303589] ✓ Restored 1 position(s)
+[2026-01-23 11:52:02.303646] Available cash: ₹87,260.50
+[2026-01-23 11:52:02.303704+05:30] Initializing OI analyzer...
+[2026-01-23 11:52:02.304050+05:30] Initializing strategy...
+[2026-01-23 11:52:02.304151] Using lot size from contract manager: 65 units/lot
+[2026-01-23 11:52:02.304202] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-23 11:52:02.309460+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-23
+  Restored expiry from strategy_state: 2026-01-27
+  Restored daily_trade_taken: True (has open positions)
+  Restored direction: PUT
+  Restored strike: 25200.0
+  Restored expiry: 2026-01-27
+[2026-01-23 11:52:02.316061+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-23 11:52:02.316207+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-23 11:52:02.316734+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 11:52:02.316784+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-23 11:52:02.317022+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-23 11:52:02.317066+05:30] ✓ Exit monitor loop started
+[2026-01-23 11:52:02.318158+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-23 11:52:02.318225+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:52:02.317171+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:52:02.317171+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:52:02.317171+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:52:02.318225+05:30] Nifty Spot: 25204.40
+[2026-01-23 11:52:02.318225+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:52:02.318225+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 178s for next candle at 11:55:00
+[2026-01-23 11:53:02.378293+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:53:02.378293+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:53:02.378293+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:54:02.464311+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:54:02.464311+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:54:02.464311+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+
+================================================================================
+[2026-01-23 11:55:00.004836+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 11:55:00.004836+05:30] Nifty Spot: 25207.45
+[2026-01-23 11:55:00.004836+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 11:55:00.004836+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 12:00:00
+[2026-01-23 11:55:02.523789+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:55:02.523789+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:55:02.523789+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:56:02.611110+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:56:02.611110+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:56:02.611110+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:57:02.321981+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 11:57:02.322772+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 11:57:02.710415+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:57:02.710415+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:57:02.710415+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:58:02.788133+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:58:02.788133+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:58:02.788133+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 11:59:02.911461+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 11:59:02.911461+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 11:59:02.911461+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+
+================================================================================
+[2026-01-23 12:00:00.006528+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:00:00.006528+05:30] Nifty Spot: 25215.20
+[2026-01-23 12:00:00.006528+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:00:00.006528+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 12:05:00
+[2026-01-23 12:00:02.977869+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:00:02.977869+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:00:02.977869+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:01:03.086522+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:01:03.086522+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:01:03.086522+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:02:02.329500+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:02:02.329916+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 12:02:03.148187+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:02:03.148187+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:02:03.148187+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:03:03.219188+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:03:03.219188+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:03:03.219188+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:04:03.283750+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:04:03.283750+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:04:03.283750+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+
+================================================================================
+[2026-01-23 12:05:00.001566+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-23 12:05:00.001566+05:30] Nifty Spot: 25219.15
+[2026-01-23 12:05:00.001566+05:30] 📊 POSITION ACTIVE: Exit monitoring handled by 1-min LTP loop
+[2026-01-23 12:05:00.001566+05:30] Skipping option chain fetch (not needed for exits)
+Waiting 300s for next candle at 12:10:00
+[2026-01-23 12:05:03.372708+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:05:03.372708+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:05:03.372708+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:06:03.432732+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:06:03.432732+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:06:03.432732+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:07:02.333001+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-23 12:07:02.333487+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 4 days)
+[2026-01-23 12:07:03.508137+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:07:03.508137+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:07:03.508137+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...
+[2026-01-23 12:08:03.574635+05:30] 🔍 Fetching LTP: strike=25200, type=PE, expiry=2026-01-27
+[DEBUG] get_quote: Resolving instrument - NIFTY 25200 PE 2026-01-27
+[DEBUG] get_quote: Contract found - {'token': '58690', 'zerodha_instrument_token': '15024642', 'expiry': '2026-01-27', 'strike': 25200, 'option_type': 'PE'}
+[DEBUG] get_quote: Using token 15024642
+[DEBUG] get_quote: API response keys: None
+[ERROR] get_quote: Key NFO:15024642 not in response. Available keys: []
+get_quote: Key NFO:15024642 not in response. Available keys: []
+[2026-01-23 12:08:03.574635+05:30] ⚠️ Could not get LTP for 25200 PE (quote returned None)
+[2026-01-23 12:08:03.574635+05:30] ⚠️ Exit Monitor: Could not get LTP data, skipping...

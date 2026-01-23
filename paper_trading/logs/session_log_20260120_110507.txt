@@ -1,0 +1,107 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_110507.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-20 11:05:07.502192+05:30] Checking for previous session...
+[2026-01-20 11:05:07.502564+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260120.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-20T10:39:22.046898+05:30
+Downtime: ~25 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-20T10:39:22.046898+05:30
+Recovery Time: 2026-01-20 11:05:07.503093+05:30
+Downtime: 25 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+[2026-01-20 11:05:07.503532+05:30] Initializing contract manager (reading from universal cache)...
+No cache file found
+⚠️  Could not load cache from /Users/Algo_Trading/manishsir_options/contracts_cache.json
+Please run: python refresh_contracts.py
+[2026-01-20 11:05:07.503676+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 11:05:07.503707+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-20 11:05:07.504546+05:30] ✓ Adapter created: zerodha
+[2026-01-20 11:05:07.504582+05:30] Connecting to zerodha...
+[2026-01-20 11:05:07.505130] Connecting to Zerodha...
+[2026-01-20 11:05:07.676195] Generated TOTP: 150867
+[2026-01-20 11:05:07.804055] ✓ Request token extracted from redirect
+[2026-01-20 11:05:07.804180] Request token obtained: 2ojW7EM0r2qUkgCsdh0k...
+[2026-01-20 11:05:07.859083] ✓ Connection successful!
+[2026-01-20 11:05:07.859195] Access Token: IODcSwzrVWKOhjEO9QlX...
+[2026-01-20 11:05:07.859286] Zerodha data feed initialized
+Connected to Zerodha
+Using pre-stored instrument tokens from cache (no runtime conversion needed)
+[2026-01-20 11:05:07.859445+05:30] ✓ Connected to zerodha
+
+[2026-01-20 11:05:07.859492+05:30] Resuming from previous session...
+[2026-01-20 11:05:07.859556+05:30] Loading instruments...
+[2026-01-20 11:05:07.859586] Loading instruments...
+[2026-01-20 11:05:07.859613] Fetching instruments for NFO...
+[2026-01-20 11:05:09.093613] ✓ Retrieved 43257 instruments
+[2026-01-20 11:05:09.099470] Fetching instruments for NSE...
+[2026-01-20 11:05:09.204119] ✓ Retrieved 9140 instruments
+[2026-01-20 11:05:09.206685] ✓ Nifty 50 token: 256265
+[2026-01-20 11:05:09.206767] ✓ Instruments loaded
+[2026-01-20 11:05:09.206806+05:30] ✓ Adapter ready (symbol-based fallback)
+[2026-01-20 11:05:09.206850+05:30] Initializing paper broker...
+[2026-01-20 11:05:09.207351] Paper Broker initialized with capital: ₹92,883.00
+[2026-01-20 11:05:09.207396] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_110509.csv
+[2026-01-20 11:05:09.207424] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 11:05:09.207455+05:30] Initializing OI analyzer...
+[2026-01-20 11:05:09.207788+05:30] Initializing strategy...
+[2026-01-20 11:05:09.207846] Using lot size from contract manager: 65 units/lot
+[2026-01-20 11:05:09.207876] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 11:05:09.208023+05:30] No positions/trades - starting fresh to re-determine direction
+[2026-01-20 11:05:09.208330+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 11:05:09.208389+05:30] Starting DUAL-LOOP paper trading...
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-20 11:05:09.208755+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 11:05:09.208830+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 11:05:09.208986+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 11:05:09.209035+05:30] ✓ Exit monitor loop started
+[2026-01-20 11:05:09.209456+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-20 11:05:09.209505+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-20 11:05:09.209505+05:30] Nifty Spot: 25456.30
+[2026-01-20 11:05:09.209505+05:30] ⚠️ Contract manager: No current week expiry, falling back to adapter
+[2026-01-20 11:05:09.209505+05:30] ✗ No options data, skipping...
+Waiting 291s for next candle at 11:10:00

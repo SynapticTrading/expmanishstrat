@@ -1,0 +1,2 @@
+entry_time,exit_time,broker,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason
+2026-01-23 13:20:21,2026-01-23 13:20:21,test,25200,PUT,2026-01-27,86.5,88.0,65,97.5,1.7341040462427681,85.0,90.0,10000000,0.0,10500000,Test Exit

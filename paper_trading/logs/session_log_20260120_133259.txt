@@ -1,0 +1,124 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260120_133259.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-20 13:32:59.228291+05:30] Checking for previous session...
+[2026-01-20 13:32:59.228538+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260120.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-20T13:35:00.000000+05:30
+Downtime: ~-2 minutes
+Active Positions: 1
+Daily P&L: ₹-45.50
+================================================================================
+⚠️  CRITICAL: 1 open position(s) detected!
+Cannot start fresh session with active positions.
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-20T13:35:00.000000+05:30
+Recovery Time: 2026-01-20 13:32:59.228939+05:30
+Downtime: -2 minutes
+Active Positions: 1
+✓ Session resumed successfully
+================================================================================
+[2026-01-20 13:32:59.229406+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-20T12:04:13.947759
+  Options lot size: 65 units per lot
+  Loaded 1530 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-20 13:32:59.231002+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-20 13:32:59.231046+05:30] Active Weekly Expiry: 2026-01-20 (0 days)
+⚠️ Options rollover recommended for current_week: 0 days until expiry (threshold: 2)
+[2026-01-20 13:32:59.231108+05:30] ⚠️  ROLLOVER WARNING: Consider rolling to 2026-01-27
+[2026-01-20 13:32:59.231134+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-20 13:32:59.232637+05:30] ✓ Adapter created: angelone
+[2026-01-20 13:32:59.232686+05:30] Connecting to angelone...
+[I 260120 13:32:59 smartConnect:124] in pool
+[2026-01-20 13:32:59.504855] Generated TOTP: 468884
+[2026-01-20 13:32:59.504909] Connecting to AngelOne...
+[2026-01-20 13:32:59.651460] ✓ Connection successful!
+[2026-01-20 13:32:59.651585] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-20 13:32:59.651621] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg4OTYxNzksImV4cCI6MTc2ODk4MjU3OX0.U86qcsZlfXIpd-5_sG3iXnDwJujj5Yvh36ggQTyyfJMhQ7MQZwXQubpFaXCsLBt67_AzTNPPLDXlCJtnjYmNug
+Connected to AngelOne
+[2026-01-20 13:32:59.651680+05:30] ✓ Connected to angelone
+
+[2026-01-20 13:32:59.651724+05:30] Resuming from previous session...
+[2026-01-20 13:32:59.651768+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-20 13:32:59.651841+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-20 13:32:59.651871+05:30] Initializing paper broker...
+[2026-01-20 13:32:59.652445] Paper Broker initialized with capital: ₹90,400.00
+[2026-01-20 13:32:59.652511] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260120_133259.csv
+[2026-01-20 13:32:59.652551] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-20 13:32:59.652585] Restoring 1 position(s)...
+  ✓ Restored: PE 25400 @ ₹22.50
+     Size: 65, Peak: ₹22.50, Trailing: False
+[2026-01-20 13:32:59.652672] ✓ Restored 1 position(s)
+[2026-01-20 13:32:59.652697] Available cash: ₹90,400.00
+[2026-01-20 13:32:59.652721+05:30] Initializing OI analyzer...
+[2026-01-20 13:32:59.653327+05:30] Initializing strategy...
+[2026-01-20 13:32:59.653396] Using lot size from contract manager: 65 units/lot
+[2026-01-20 13:32:59.653427] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-20 13:32:59.653688+05:30] Restoring strategy state (has positions/trades)...
+  Restored current_date: 2026-01-20
+  Restored expiry from strategy_state: 2026-01-20
+  Restored daily_trade_taken: True (has open positions)
+  Restored direction: PUT
+  Restored strike: 25400
+  Restored expiry: 2026-01-20
+[2026-01-20 13:32:59.654287+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-20 13:32:59.654353+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-20 13:32:59.654584+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 13:32:59.654643+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-20 13:32:59.654746+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-20 13:32:59.654950+05:30] ✓ Exit monitor loop started
+[2026-01-20 13:32:59.655690+05:30] ✓ Strategy loop started
+[2026-01-20 13:32:59.655767+05:30] ⏳ Waiting for next 5-min candle boundary before starting...
+Waiting 120s for next candle at 13:35:00
+[2026-01-20 13:32:59.654787+05:30] 🔍 Exit Monitor: Fetching real-time LTP for 1 position(s)...
+Fetching real-time LTP for 22 options (NO WAIT)...
+✓ Retrieved 22 LTP quotes (REAL-TIME)
+[2026-01-20 13:33:01.428668+05:30] ✗ Error in exit monitor loop: 'price_tracking'
+Traceback (most recent call last):
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/runner.py", line 645, in _exit_monitor_loop
+    self.strategy._check_exits(current_time, options_data)
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/strategy.py", line 459, in _check_exits
+    self.state_manager.update_position_price(
+  File "/Users/Algo_Trading/manishsir_options/paper_trading/core/state_manager.py", line 316, in update_position_price
+    pos_data["price_tracking"]["current_price"] = current_price
+KeyError: 'price_tracking'

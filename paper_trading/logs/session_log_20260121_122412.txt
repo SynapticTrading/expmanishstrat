@@ -1,0 +1,1335 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting paper trading...
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260121_122412.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-21 12:24:12.667296+05:30] Checking for previous session...
+[2026-01-21 12:24:12.667813+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260121.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-21T11:55:26.419173+05:30
+Downtime: ~28 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-21T11:55:26.419173+05:30
+Recovery Time: 2026-01-21 12:24:12.668221+05:30
+Downtime: 28 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+[2026-01-21 12:24:12.668719+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-21T09:26:25.898966
+  Options lot size: 65 units per lot
+  Loaded 1580 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-21 12:24:12.670411+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-21 12:24:12.670457+05:30] Active Weekly Expiry: 2026-01-27 (6 days)
+[2026-01-21 12:24:12.670497+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-21 12:24:12.672234+05:30] ✓ Adapter created: angelone
+[2026-01-21 12:24:12.672282+05:30] Connecting to angelone...
+[I 260121 12:24:12 smartConnect:124] in pool
+[2026-01-21 12:24:12.960694] Generated TOTP: 845379
+[2026-01-21 12:24:12.960761] Connecting to AngelOne...
+[2026-01-21 12:24:13.143185] ✓ Connection successful!
+[2026-01-21 12:24:13.143318] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-21 12:24:13.143356] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njg5Nzg0NTMsImV4cCI6MTc2OTA2NDg1M30.I_7UmJbBfFe5xtGcvPj_NWNOjOkRrlEtTqFJXvMjw-2we_594lHomzQMneX8T12JJz1xxs-1amP3eWibnFwc8w
+Connected to AngelOne
+[2026-01-21 12:24:13.143420+05:30] ✓ Connected to angelone
+
+[2026-01-21 12:24:13.143466+05:30] Resuming from previous session...
+[2026-01-21 12:24:13.143515+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-21 12:24:13.143587+05:30] ✓ Adapter ready with token-based lookups
+[2026-01-21 12:24:13.143614+05:30] Initializing paper broker...
+[2026-01-21 12:24:13.146727] Paper Broker initialized with capital: ₹92,694.50
+[2026-01-21 12:24:13.146793] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260121_122413.csv
+[2026-01-21 12:24:13.146828] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+[2026-01-21 12:24:13.146861+05:30] Initializing OI analyzer...
+[2026-01-21 12:24:13.147903+05:30] Initializing strategy...
+[2026-01-21 12:24:13.147978] Using lot size from contract manager: 65 units/lot
+[2026-01-21 12:24:13.148011] Strategy initialized
+  Entry: 09:30:00 - 15:28:00
+  Exit: 15:29:00 - 15:30:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-21 12:24:13.152842+05:30] No positions/trades - starting fresh to re-determine direction
+[2026-01-21 12:24:13.153699+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-21 12:24:13.153784+05:30] Starting DUAL-LOOP paper trading...
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+  MODE: RECOVERY (resumed from crash)
+================================================================================
+[2026-01-21 12:24:13.154035+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-21 12:24:13.154104+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-21 12:24:13.154267+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-21 12:24:13.154340+05:30] ✓ Exit monitor loop started
+[2026-01-21 12:24:13.154736+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-21 12:24:13.154780+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:24:13.154780+05:30] Nifty Spot: 25184.10
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+
+================================================================================
+[2026-01-21 12:24:13.154780+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-21 12:24:13.154780+05:30] Determining direction using CURRENT OI data...
+[2026-01-21 12:24:13.154780+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-21 12:24:13.154780+05:30] NEW TRADING DAY: 2026-01-21
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25184.10)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+24950.0            326,105            -234.10
+25000.0          4,066,660            -184.10
+25050.0          1,548,755            -134.10
+25100.0          4,214,145             -84.10
+25150.0          3,019,770             -34.10
+25200.0          8,073,065              15.90
+25250.0          4,100,460              65.90
+25300.0          9,161,685             115.90 👈 MAX
+25350.0          3,485,950             165.90
+25400.0          7,534,345             215.90
+25450.0          3,239,340             265.90
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+24950.0          3,544,970             234.10
+25000.0         12,503,985             184.10 👈 MAX
+25050.0          3,380,780             134.10
+25100.0          6,776,315              84.10
+25150.0          3,097,705              34.10
+25200.0          5,349,110             -15.90
+25250.0          1,782,950             -65.90
+25300.0          3,251,560            -115.90
+25350.0            958,685            -165.90
+25400.0          2,674,230            -215.90
+25450.0            524,160            -265.90
+================================================================================
+[2026-01-21 12:24:13.154780+05:30] Max Call OI: 9,161,685 @ 25300, Max Put OI: 12,503,985 @ 25000
+[2026-01-21 12:24:13.154780+05:30] Direction determined: CALL (Call dist: 115.90, Put dist: 184.10)
+[2026-01-21 12:24:13.154780+05:30] ✓ Daily Analysis Complete: Direction=CALL, Strike=25200, Expiry=2026-01-27, Spot=25184.10
+[2026-01-21 12:24:13.154780+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-21
+[2026-01-21 12:24:13.154780+05:30] 🎯 Initialized VWAP for CALL 25200: 38 bars from 9:15 AM
+[2026-01-21 12:24:13.154780+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 12:24:13.154780+05:30] CALL 25200: OI=8,073,065, Change=0 (+0.00%) - BUILDING
+[2026-01-21 12:24:13.154780+05:30] CALL 25200: Price=₹174.70, VWAP=₹174.70 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 45s for next candle at 12:25:00
+
+================================================================================
+[2026-01-21 12:25:00.005118+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:25:00.005118+05:30] Nifty Spot: 25185.85
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:25:00.005118+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 12:25:00.005118+05:30] CALL 25200: OI=8,073,065, Change=0 (+0.00%) - BUILDING
+[2026-01-21 12:25:00.005118+05:30] CALL 25200: Price=₹172.90, VWAP=₹173.80 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:30:00
+[2026-01-21 12:29:13.159025+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:29:13.162029+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 12:30:00.004279+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:30:00.004279+05:30] Nifty Spot: 25133.20
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:30:00.004279+05:30] 📍 STRIKE UPDATED: 25200 → 25150 (Spot: 25133.20)
+[2026-01-21 12:30:00.004279+05:30] 🎯 Initialized VWAP for CALL 25150: 40 bars from 9:15 AM
+[2026-01-21 12:30:00.004279+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 12:30:00.004279+05:30] CALL 25150: OI=2,797,860, Change=0 (+0.00%) - BUILDING
+[2026-01-21 12:30:00.004279+05:30] CALL 25150: Price=₹175.15, VWAP=₹175.15 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:35:00
+[2026-01-21 12:34:13.163699+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:34:13.164300+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 12:35:00.004623+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:35:00.004623+05:30] Nifty Spot: 25185.45
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:35:00.004623+05:30] 📍 STRIKE UPDATED: 25150 → 25200 (Spot: 25185.45)
+[2026-01-21 12:35:00.004623+05:30] 🎯 Initialized VWAP for CALL 25200: 41 bars from 9:15 AM
+[2026-01-21 12:35:00.004623+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 12:35:00.004623+05:30] CALL 25200: OI=7,503,210, Change=0 (+0.00%) - BUILDING
+[2026-01-21 12:35:00.004623+05:30] CALL 25200: Price=₹176.30, VWAP=₹174.68 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:40:00
+[2026-01-21 12:39:13.169770+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:39:13.170179+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 12:40:00.005450+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:40:00.005450+05:30] Nifty Spot: 25226.65
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:40:00.005450+05:30] 📍 STRIKE UPDATED: 25200 → 25250 (Spot: 25226.65)
+[2026-01-21 12:40:00.005450+05:30] 🎯 Initialized VWAP for CALL 25250: 42 bars from 9:15 AM
+[2026-01-21 12:40:00.005450+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 12:40:00.005450+05:30] CALL 25250: OI=3,982,030, Change=0 (+0.00%) - BUILDING
+[2026-01-21 12:40:00.005450+05:30] CALL 25250: Price=₹171.60, VWAP=₹171.60 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:45:00
+[2026-01-21 12:44:13.172813+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:44:13.175862+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 12:45:00.005336+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:45:00.005336+05:30] Nifty Spot: 25226.70
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:45:00.005336+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 12:45:00.005336+05:30] CALL 25250: OI=3,951,025, Change=-31,005 (-0.78%) - UNWINDING ✓
+[2026-01-21 12:45:00.005336+05:30] CALL 25250: Price=₹174.40, VWAP=₹173.03 - ABOVE ✓
+[2026-01-21 12:45:00.005336+05:30] 🎯 ENTRY SIGNAL: CALL 25250 - Price: 174.40, VWAP: 173.03, OI Change: -31,005 (-0.78%)
+[2026-01-21 12:45:00.005336+05:30] 📈 PLACING BUY ORDER: size=1, expected_price=174.40
+[2026-01-21 12:45:01.809217] ✓ BUY ORDER EXECUTED
+  Strike: 25250 CALL
+  Expiry: 2026-01-27
+  Entry Price: ₹174.40
+  Size: 65
+  Cost: ₹11,336.00
+  VWAP: ₹173.03
+  OI: 3,951,025 (Change: -77.86%)
+  Remaining Cash: ₹81,358.50
+[2026-01-21 12:45:00.005336+05:30] 🔵 BUY OPTION EXECUTED: CALL 25250 @ ₹174.40 (Expiry: 2026-01-27, 1 lot = 65 qty)
+[2026-01-21 12:45:00.005336+05:30]    📊 ENTRY DATA: VWAP=173.03, OI=3,951,025, OI Change=-31,005 (-0.78%)
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:50:00
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:45:13.228819+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹185.70 | Entry: ₹174.40 | P&L: +6.48%
+    Initial Stop: ₹130.80 (distance: 41.97%)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:46:15.122214+05:30] 🎯 Trailing stop ACTIVATED for 25250 CALL
+[2026-01-21 12:46:15.122214+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹192.90 | Entry: ₹174.40 | P&L: +10.61%
+    Initial Stop: ₹130.80 (distance: 47.48%)
+    🎯 Trailing: Active | Peak: ₹192.90 | Stop: ₹173.61
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:47:16.968424+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹195.25 | Entry: ₹174.40 | P&L: +11.96%
+    Initial Stop: ₹130.80 (distance: 49.27%)
+    🎯 Trailing: Active | Peak: ₹195.25 | Stop: ₹175.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:48:18.764556+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹190.30 | Entry: ₹174.40 | P&L: +9.12%
+    Initial Stop: ₹130.80 (distance: 45.49%)
+    🎯 Trailing: Active | Peak: ₹195.25 | Stop: ₹175.72
+[2026-01-21 12:49:13.181241+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:49:13.181619+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:49:20.646443+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹196.20 | Entry: ₹174.40 | P&L: +12.50%
+    Initial Stop: ₹130.80 (distance: 50.00%)
+    🎯 Trailing: Active | Peak: ₹196.20 | Stop: ₹176.58
+
+================================================================================
+[2026-01-21 12:50:00.005350+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:50:00.005350+05:30] Nifty Spot: 25279.30
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:50:00.005350+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹206.30 | Entry: ₹174.40 | P&L: +18.29%
+    Initial Stop: ₹130.80 (distance: 57.72%)
+    🎯 Trailing: Active | Peak: ₹206.30 | Stop: ₹185.67
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 12:55:00
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:50:22.456493+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹201.85 | Entry: ₹174.40 | P&L: +15.74%
+    Initial Stop: ₹130.80 (distance: 54.32%)
+    🎯 Trailing: Active | Peak: ₹206.30 | Stop: ₹185.67
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:51:24.291086+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹198.95 | Entry: ₹174.40 | P&L: +14.08%
+    Initial Stop: ₹130.80 (distance: 52.10%)
+    🎯 Trailing: Active | Peak: ₹206.30 | Stop: ₹185.67
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:52:26.161640+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹208.30 | Entry: ₹174.40 | P&L: +19.44%
+    Initial Stop: ₹130.80 (distance: 59.25%)
+    🎯 Trailing: Active | Peak: ₹208.30 | Stop: ₹187.47
+Error getting spot price: Couldn't parse the JSON response received from the server: b'not found'
+[2026-01-21 12:53:27.979856+05:30] ⚠️ Exit Monitor: Could not get spot price, skipping...
+[2026-01-21 12:54:13.185025+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:54:13.188029+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:54:28.039138+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹215.25 | Entry: ₹174.40 | P&L: +23.42%
+    Initial Stop: ₹130.80 (distance: 64.56%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+================================================================================
+[2026-01-21 12:55:00.005331+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 12:55:00.005331+05:30] Nifty Spot: 25282.90
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:55:00.005331+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹211.95 | Entry: ₹174.40 | P&L: +21.53%
+    Initial Stop: ₹130.80 (distance: 62.04%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:00:00
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:55:29.835564+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹209.00 | Entry: ₹174.40 | P&L: +19.84%
+    Initial Stop: ₹130.80 (distance: 59.79%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:56:31.630064+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹206.80 | Entry: ₹174.40 | P&L: +18.58%
+    Initial Stop: ₹130.80 (distance: 58.10%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:57:33.457447+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹196.80 | Entry: ₹174.40 | P&L: +12.84%
+    Initial Stop: ₹130.80 (distance: 50.46%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:58:35.304054+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹198.95 | Entry: ₹174.40 | P&L: +14.08%
+    Initial Stop: ₹130.80 (distance: 52.10%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+[2026-01-21 12:59:13.189453+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 12:59:13.192365+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 12:59:37.114257+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹205.70 | Entry: ₹174.40 | P&L: +17.95%
+    Initial Stop: ₹130.80 (distance: 57.26%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+================================================================================
+[2026-01-21 13:00:00.004189+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:00:00.004189+05:30] Nifty Spot: 25279.40
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:00:00.004189+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹207.90 | Entry: ₹174.40 | P&L: +19.21%
+    Initial Stop: ₹130.80 (distance: 58.94%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:05:00
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:00:38.944810+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹207.50 | Entry: ₹174.40 | P&L: +18.98%
+    Initial Stop: ₹130.80 (distance: 58.64%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:01:40.725068+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹211.65 | Entry: ₹174.40 | P&L: +21.36%
+    Initial Stop: ₹130.80 (distance: 61.81%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:02:42.507968+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹208.20 | Entry: ₹174.40 | P&L: +19.38%
+    Initial Stop: ₹130.80 (distance: 59.17%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:03:44.312035+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹210.60 | Entry: ₹174.40 | P&L: +20.76%
+    Initial Stop: ₹130.80 (distance: 61.01%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+[2026-01-21 13:04:13.195230+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:04:13.195599+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:04:46.109899+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹210.80 | Entry: ₹174.40 | P&L: +20.87%
+    Initial Stop: ₹130.80 (distance: 61.16%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+================================================================================
+[2026-01-21 13:05:00.001474+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:05:00.001474+05:30] Nifty Spot: 25287.15
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:05:00.001474+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹206.00 | Entry: ₹174.40 | P&L: +18.12%
+    Initial Stop: ₹130.80 (distance: 57.49%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 1
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:10:00
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:05:47.980565+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹208.20 | Entry: ₹174.40 | P&L: +19.38%
+    Initial Stop: ₹130.80 (distance: 59.17%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:06:49.827020+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹203.00 | Entry: ₹174.40 | P&L: +16.40%
+    Initial Stop: ₹130.80 (distance: 55.20%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:07:51.633534+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹196.75 | Entry: ₹174.40 | P&L: +12.82%
+    Initial Stop: ₹130.80 (distance: 50.42%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:08:53.458316+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹202.25 | Entry: ₹174.40 | P&L: +15.97%
+    Initial Stop: ₹130.80 (distance: 54.63%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+[2026-01-21 13:09:13.200945+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:09:13.203707+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:09:55.255046+05:30] 📊 LTP CHECK: 25250 CALL
+    Current LTP: ₹191.60 | Entry: ₹174.40 | P&L: +9.86%
+    Initial Stop: ₹130.80 (distance: 46.48%)
+    🎯 Trailing: Active | Peak: ₹215.25 | Stop: ₹193.72
+[2026-01-21 13:09:55.255046+05:30] EXIT SIGNAL: Trailing Stop (10%)
+[2026-01-21 13:09:57.055908] ✓ SELL ORDER EXECUTED
+  Strike: 25250 CALL
+  Exit Price: ₹191.60
+  P&L: ₹+1,118.00 (+9.86%)
+  Exit Reason: Trailing Stop (10%)
+  Cash: ₹93,812.50
+
+================================================================================
+[2026-01-21 13:10:00.005346+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:10:00.005346+05:30] Nifty Spot: 25260.00
+[2026-01-21 13:10:00.005346+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:10:00.005346+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:10:00.005346+05:30] 📍 STRIKE UPDATED: 25250 → 25300 (Spot: 25260.00)
+[2026-01-21 13:10:00.005346+05:30] 🎯 Initialized VWAP for CALL 25300: 48 bars from 9:15 AM
+[2026-01-21 13:10:00.005346+05:30] Checking entry: CALL 25300, Expiry=2026-01-27
+[2026-01-21 13:10:00.005346+05:30] CALL 25300: OI=8,147,490, Change=0 (+0.00%) - BUILDING
+[2026-01-21 13:10:00.005346+05:30] CALL 25300: Price=₹160.80, VWAP=₹160.80 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25300
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 297s for next candle at 13:15:00
+[2026-01-21 13:14:13.209067+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:14:13.209548+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:15:00.005363+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:15:00.005363+05:30] Nifty Spot: 25237.45
+[2026-01-21 13:15:00.005363+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:15:00.005363+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:15:00.005363+05:30] 📍 STRIKE UPDATED: 25300 → 25250 (Spot: 25237.45)
+[2026-01-21 13:15:00.005363+05:30] 🎯 Initialized VWAP for CALL 25250: 49 bars from 9:15 AM
+[2026-01-21 13:15:00.005363+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 13:15:00.005363+05:30] CALL 25250: OI=2,854,735, Change=0 (+0.00%) - BUILDING
+[2026-01-21 13:15:00.005363+05:30] CALL 25250: Price=₹182.50, VWAP=₹200.69 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:20:00
+[2026-01-21 13:19:13.214109+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:19:13.216784+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:20:00.004543+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:20:00.004543+05:30] Nifty Spot: 25214.40
+[2026-01-21 13:20:00.004543+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:20:00.004543+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:20:00.004543+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 13:20:00.004543+05:30] CALL 25250: OI=2,874,170, Change=19,435 (+0.68%) - BUILDING
+[2026-01-21 13:20:00.004543+05:30] CALL 25250: Price=₹171.90, VWAP=₹199.70 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:25:00
+[2026-01-21 13:24:13.220650+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:24:13.223603+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:25:00.005302+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:25:00.005302+05:30] Nifty Spot: 25212.50
+[2026-01-21 13:25:00.005302+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:25:00.005302+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:25:00.005302+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 13:25:00.005302+05:30] CALL 25250: OI=2,936,700, Change=81,965 (+2.87%) - BUILDING
+[2026-01-21 13:25:00.005302+05:30] CALL 25250: Price=₹165.35, VWAP=₹198.54 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:30:00
+[2026-01-21 13:29:13.228968+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:29:13.232226+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:30:00.001062+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:30:00.001062+05:30] Nifty Spot: 25210.40
+[2026-01-21 13:30:00.001062+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:30:00.001062+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:30:00.001062+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 13:30:00.001062+05:30] CALL 25250: OI=3,085,485, Change=230,750 (+8.08%) - BUILDING
+[2026-01-21 13:30:00.001062+05:30] CALL 25250: Price=₹161.60, VWAP=₹197.33 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:35:00
+[2026-01-21 13:34:13.236678+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:34:13.237303+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:35:00.004828+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:35:00.004828+05:30] Nifty Spot: 25183.60
+[2026-01-21 13:35:00.004828+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:35:00.004828+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:35:00.004828+05:30] 📍 STRIKE UPDATED: 25250 → 25200 (Spot: 25183.60)
+[2026-01-21 13:35:00.004828+05:30] 🎯 Initialized VWAP for CALL 25200: 53 bars from 9:15 AM
+[2026-01-21 13:35:00.004828+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 13:35:00.004828+05:30] CALL 25200: OI=5,405,855, Change=0 (+0.00%) - BUILDING
+[2026-01-21 13:35:00.004828+05:30] CALL 25200: Price=₹171.60, VWAP=₹173.72 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:40:00
+[2026-01-21 13:39:13.239654+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:39:13.242392+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:40:00.005242+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:40:00.005242+05:30] Nifty Spot: 25212.15
+[2026-01-21 13:40:00.005242+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:40:00.005242+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:40:00.005242+05:30] 📍 STRIKE UPDATED: 25200 → 25250 (Spot: 25212.15)
+[2026-01-21 13:40:00.005242+05:30] 🎯 Initialized VWAP for CALL 25250: 54 bars from 9:15 AM
+[2026-01-21 13:40:00.005242+05:30] Checking entry: CALL 25250, Expiry=2026-01-27
+[2026-01-21 13:40:00.005242+05:30] CALL 25250: OI=3,124,095, Change=0 (+0.00%) - BUILDING
+[2026-01-21 13:40:00.005242+05:30] CALL 25250: Price=₹165.00, VWAP=₹196.25 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25250
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:45:00
+[2026-01-21 13:44:13.243084+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:44:13.246027+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:45:00.005242+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:45:00.005242+05:30] Nifty Spot: 25195.70
+[2026-01-21 13:45:00.005242+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:45:00.005242+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:45:00.005242+05:30] 📍 STRIKE UPDATED: 25250 → 25200 (Spot: 25195.70)
+[2026-01-21 13:45:00.005242+05:30] 🎯 Initialized VWAP for CALL 25200: 55 bars from 9:15 AM
+[2026-01-21 13:45:00.005242+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 13:45:00.005242+05:30] CALL 25200: OI=6,061,120, Change=0 (+0.00%) - BUILDING
+[2026-01-21 13:45:00.005242+05:30] CALL 25200: Price=₹182.10, VWAP=₹175.77 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:50:00
+[2026-01-21 13:49:13.251319+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:49:13.251889+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:50:00.005274+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:50:00.005274+05:30] Nifty Spot: 25195.70
+[2026-01-21 13:50:00.005274+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:50:00.005274+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:50:00.005274+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 13:50:00.005274+05:30] CALL 25200: OI=6,076,720, Change=15,600 (+0.26%) - BUILDING
+[2026-01-21 13:50:00.005274+05:30] CALL 25200: Price=₹180.45, VWAP=₹176.70 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 13:55:00
+[2026-01-21 13:54:13.254423+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:54:13.257331+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 13:55:00.000986+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 13:55:00.000986+05:30] Nifty Spot: 25168.85
+[2026-01-21 13:55:00.000986+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 13:55:00.000986+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 13:55:00.000986+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 13:55:00.000986+05:30] CALL 25200: OI=6,095,635, Change=34,515 (+0.57%) - BUILDING
+[2026-01-21 13:55:00.000986+05:30] CALL 25200: Price=₹164.70, VWAP=₹174.69 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:00:00
+[2026-01-21 13:59:13.262767+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 13:59:13.266685+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:00:00.002841+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:00:00.002841+05:30] Nifty Spot: 25153.25
+[2026-01-21 14:00:00.002841+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:00:00.002841+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:00:00.002841+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:00:00.002841+05:30] CALL 25200: OI=6,296,355, Change=235,235 (+3.88%) - BUILDING
+[2026-01-21 14:00:00.002841+05:30] CALL 25200: Price=₹155.05, VWAP=₹171.85 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:05:00
+[2026-01-21 14:04:13.272006+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:04:13.272472+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:05:00.005259+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:05:00.005259+05:30] Nifty Spot: 25148.25
+[2026-01-21 14:05:00.005259+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:05:00.005259+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:05:00.005259+05:30] 📍 STRIKE UPDATED: 25200 → 25150 (Spot: 25148.25)
+[2026-01-21 14:05:00.005259+05:30] 🎯 Initialized VWAP for CALL 25150: 59 bars from 9:15 AM
+[2026-01-21 14:05:00.005259+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 14:05:00.005259+05:30] CALL 25150: OI=2,049,125, Change=0 (+0.00%) - BUILDING
+[2026-01-21 14:05:00.005259+05:30] CALL 25150: Price=₹180.90, VWAP=₹178.41 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:10:00
+[2026-01-21 14:09:13.277826+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:09:13.281376+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:10:00.001818+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:10:00.001818+05:30] Nifty Spot: 25144.10
+[2026-01-21 14:10:00.001818+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:10:00.001818+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:10:00.001818+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 14:10:00.001818+05:30] CALL 25150: OI=2,252,185, Change=203,060 (+9.91%) - BUILDING
+[2026-01-21 14:10:00.001818+05:30] CALL 25150: Price=₹175.00, VWAP=₹177.16 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:15:00
+[2026-01-21 14:14:13.284633+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:14:13.290057+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:15:00.007909+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:15:00.007909+05:30] Nifty Spot: 25136.70
+[2026-01-21 14:15:00.007909+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:15:00.007909+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:15:00.007909+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 14:15:00.007909+05:30] CALL 25150: OI=2,364,570, Change=315,445 (+15.39%) - BUILDING
+[2026-01-21 14:15:00.007909+05:30] CALL 25150: Price=₹169.75, VWAP=₹175.16 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:20:00
+[2026-01-21 14:19:13.294448+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:19:13.301188+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:20:00.005488+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:20:00.005488+05:30] Nifty Spot: 25177.80
+[2026-01-21 14:20:00.005488+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:20:00.005488+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:20:00.005488+05:30] 📍 STRIKE UPDATED: 25150 → 25200 (Spot: 25177.80)
+[2026-01-21 14:20:00.005488+05:30] 🎯 Initialized VWAP for CALL 25200: 62 bars from 9:15 AM
+[2026-01-21 14:20:00.005488+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:20:00.005488+05:30] CALL 25200: OI=6,456,320, Change=0 (+0.00%) - BUILDING
+[2026-01-21 14:20:00.005488+05:30] CALL 25200: Price=₹162.45, VWAP=₹170.60 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:25:00
+[2026-01-21 14:24:13.303062+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:24:13.306795+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:25:00.001648+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:25:00.001648+05:30] Nifty Spot: 25152.20
+[2026-01-21 14:25:00.001648+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:25:00.001648+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:25:00.001648+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:25:00.001648+05:30] CALL 25200: OI=6,619,210, Change=162,890 (+2.52%) - BUILDING
+[2026-01-21 14:25:00.001648+05:30] CALL 25200: Price=₹146.95, VWAP=₹167.79 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:30:00
+[2026-01-21 14:29:13.308056+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:29:13.311815+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:30:00.003890+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:30:00.003890+05:30] Nifty Spot: 25120.85
+[2026-01-21 14:30:00.003890+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:30:00.003890+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:30:00.003890+05:30] 📍 STRIKE UPDATED: 25200 → 25150 (Spot: 25120.85)
+[2026-01-21 14:30:00.003890+05:30] 🎯 Initialized VWAP for CALL 25150: 64 bars from 9:15 AM
+[2026-01-21 14:30:00.003890+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 14:30:00.003890+05:30] CALL 25150: OI=2,537,795, Change=0 (+0.00%) - BUILDING
+[2026-01-21 14:30:00.003890+05:30] CALL 25150: Price=₹155.75, VWAP=₹170.82 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:35:00
+[2026-01-21 14:34:13.316910+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:34:13.317444+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:35:00.004832+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:35:00.004832+05:30] Nifty Spot: 25162.85
+[2026-01-21 14:35:00.004832+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:35:00.004832+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:35:00.004832+05:30] 📍 STRIKE UPDATED: 25150 → 25200 (Spot: 25162.85)
+[2026-01-21 14:35:00.004832+05:30] 🎯 Initialized VWAP for CALL 25200: 65 bars from 9:15 AM
+[2026-01-21 14:35:00.004832+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:35:00.004832+05:30] CALL 25200: OI=6,454,500, Change=0 (+0.00%) - BUILDING
+[2026-01-21 14:35:00.004832+05:30] CALL 25200: Price=₹156.35, VWAP=₹166.55 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:40:00
+[2026-01-21 14:39:13.319992+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:39:13.323014+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:40:00.002567+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:40:00.002567+05:30] Nifty Spot: 25155.00
+[2026-01-21 14:40:00.002567+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:40:00.002567+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:40:00.002567+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:40:00.002567+05:30] CALL 25200: OI=6,625,060, Change=170,560 (+2.64%) - BUILDING
+[2026-01-21 14:40:00.002567+05:30] CALL 25200: Price=₹152.90, VWAP=₹165.20 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:45:00
+[2026-01-21 14:44:13.324738+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:44:13.327623+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:45:00.005440+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:45:00.005440+05:30] Nifty Spot: 25150.10
+[2026-01-21 14:45:00.005440+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:45:00.005440+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:45:00.005440+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:45:00.005440+05:30] CALL 25200: OI=6,636,500, Change=182,000 (+2.82%) - BUILDING
+[2026-01-21 14:45:00.005440+05:30] CALL 25200: Price=₹144.60, VWAP=₹163.32 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:50:00
+[2026-01-21 14:49:13.333262+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:49:13.337533+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:50:00.005507+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:50:00.005507+05:30] Nifty Spot: 25155.85
+[2026-01-21 14:50:00.005507+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:50:00.005507+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:50:00.005507+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:50:00.005507+05:30] CALL 25200: OI=6,690,450, Change=235,950 (+3.66%) - BUILDING
+[2026-01-21 14:50:00.005507+05:30] CALL 25200: Price=₹150.15, VWAP=₹162.21 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 14:55:00
+[2026-01-21 14:54:13.342066+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:54:13.342652+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 14:55:00.005477+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 14:55:00.005477+05:30] Nifty Spot: 25153.95
+[2026-01-21 14:55:00.005477+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 14:55:00.005477+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 14:55:00.005477+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 14:55:00.005477+05:30] CALL 25200: OI=6,730,880, Change=276,380 (+4.28%) - BUILDING
+[2026-01-21 14:55:00.005477+05:30] CALL 25200: Price=₹146.20, VWAP=₹160.96 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:00:00
+[2026-01-21 14:59:13.345977+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 14:59:13.346478+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:00:00.002359+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:00:00.002359+05:30] Nifty Spot: 25143.15
+[2026-01-21 15:00:00.002359+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:00:00.002359+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:00:00.002359+05:30] 📍 STRIKE UPDATED: 25200 → 25150 (Spot: 25143.15)
+[2026-01-21 15:00:00.002359+05:30] 🎯 Initialized VWAP for CALL 25150: 70 bars from 9:15 AM
+[2026-01-21 15:00:00.002359+05:30] Checking entry: CALL 25150, Expiry=2026-01-27
+[2026-01-21 15:00:00.002359+05:30] CALL 25150: OI=2,640,430, Change=0 (+0.00%) - BUILDING
+[2026-01-21 15:00:00.002359+05:30] CALL 25150: Price=₹170.00, VWAP=₹170.66 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25150
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:05:00
+[2026-01-21 15:04:13.348805+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:04:13.352591+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:05:00.005511+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:05:00.005511+05:30] Nifty Spot: 25177.50
+[2026-01-21 15:05:00.005511+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:05:00.005511+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:05:00.005511+05:30] 📍 STRIKE UPDATED: 25150 → 25200 (Spot: 25177.50)
+[2026-01-21 15:05:00.005511+05:30] 🎯 Initialized VWAP for CALL 25200: 71 bars from 9:15 AM
+[2026-01-21 15:05:00.005511+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 15:05:00.005511+05:30] CALL 25200: OI=6,767,930, Change=0 (+0.00%) - BUILDING
+[2026-01-21 15:05:00.005511+05:30] CALL 25200: Price=₹164.15, VWAP=₹161.20 - ABOVE ✓
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:10:00
+[2026-01-21 15:09:13.355795+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:09:13.358587+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:10:00.005219+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:10:00.005219+05:30] Nifty Spot: 25165.70
+[2026-01-21 15:10:00.005219+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:10:00.005219+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:10:00.005219+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 15:10:00.005219+05:30] CALL 25200: OI=6,869,915, Change=101,985 (+1.51%) - BUILDING
+[2026-01-21 15:10:00.005219+05:30] CALL 25200: Price=₹150.20, VWAP=₹160.43 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:15:00
+[2026-01-21 15:14:13.363248+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:14:13.364949+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:15:00.001058+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:15:00.001058+05:30] Nifty Spot: 25155.00
+[2026-01-21 15:15:00.001058+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:15:00.001058+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:15:00.001058+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 15:15:00.001058+05:30] CALL 25200: OI=6,705,920, Change=-62,010 (-0.92%) - UNWINDING ✓
+[2026-01-21 15:15:00.001058+05:30] CALL 25200: Price=₹138.65, VWAP=₹158.98 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:20:00
+[2026-01-21 15:19:13.367639+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:19:13.368129+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:20:00.005401+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:20:00.005401+05:30] Nifty Spot: 25159.90
+[2026-01-21 15:20:00.005401+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:20:00.005401+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:20:00.005401+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 15:20:00.005401+05:30] CALL 25200: OI=6,518,785, Change=-249,145 (-3.68%) - UNWINDING ✓
+[2026-01-21 15:20:00.005401+05:30] CALL 25200: Price=₹140.10, VWAP=₹157.80 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:25:00
+[2026-01-21 15:24:13.372696+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:24:13.373269+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+
+================================================================================
+[2026-01-21 15:25:00.004465+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-21 15:25:00.004465+05:30] Nifty Spot: 25152.80
+[2026-01-21 15:25:00.004465+05:30] 📊 MONITORING MODE: Daily trade limit reached (1/1 trades taken)
+[2026-01-21 15:25:00.004465+05:30] System will continue monitoring but will NOT enter new trades
+Fetching quotes for 22 options (TOKEN-BASED)...
+✓ Retrieved 22 option quotes (TOKEN-BASED)
+[2026-01-21 15:25:00.004465+05:30] Checking entry: CALL 25200, Expiry=2026-01-27
+[2026-01-21 15:25:00.004465+05:30] CALL 25200: OI=6,328,660, Change=-439,270 (-6.49%) - UNWINDING ✓
+[2026-01-21 15:25:00.004465+05:30] CALL 25200: Price=₹133.35, VWAP=₹156.35 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-21
+Broker: angelone
+Daily Direction: CALL @ 25200
+Open Positions: 0
+Total P&L: ₹1,118.00
+ROI: +1.21%
+--------------------------------------------------------------------------------
+Waiting 298s for next candle at 15:30:00
+[2026-01-21 15:29:13.378754+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-21 15:29:13.381804+05:30] ✓ Contract check complete - No updates (Active: 2026-01-27, 6 days)
+[2026-01-21 15:30:00.004601+05:30] Market closed, stopping...
+
+================================================================================
+[2026-01-21 15:30:00.004940+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 1
+  Win Rate: 100.0%
+  Total P&L: ₹1,118.00
+  ROI: +1.21%
+[2026-01-21 15:30:05.011278] Logging out...
+[2026-01-21 15:30:05.075794] ✓ Logged out successfully
+
+[2026-01-21 15:30:05.075963+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260121_122412.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260121_122412.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260121.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================
