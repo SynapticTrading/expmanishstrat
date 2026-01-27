@@ -22,45 +22,57 @@ wheels/
 
 # Virtual Environment
 venv/
-env/
 ENV/
+env/
+.venv
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.DS_Store
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Credentials - NEVER COMMIT!
+**/credentials*.txt
+**/credentials*.yaml
+!**/credentials*.template.txt
+!**/credentials*.yaml.template
+paper_trading/tests/integration/test_credentials.yaml
 
-# Logs (keep folder structure, ignore contents)
-logs/*.log
-!logs/.gitkeep
+# API Keys and Secrets
+**/*secret*.txt
+**/*token*.txt
+**/*key*.txt
+.env
+.env.local
 
-# Data files (keep DataDump folder out of git)
-DataDump/
+# Logs
+*.log
+logs/
+paper_trading/logs/
+tests/integration/logs/
 
-# Reports - include all reports
-# Keeping all reports for historical tracking
+# State files
+paper_trading/state/*.json
+!paper_trading/state/.gitkeep
 
-# Temporary files
-*.tmp
-*.bak
+# Cache
+contracts_cache.json
 *.cache
 
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
+# Reports
+reports/
 
-# Testing
+# OS
+.DS_Store
+Thumbs.db
+
+# Pytest
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Documentation builds
-docs/_build/
-
+# Data files
+DataDump/
+*.csv

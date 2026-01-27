@@ -82,9 +82,11 @@ class AngelOneAdapter(BrokerAdapter):
     # ══════════════════════════════════════════════════════════════════════════
 
     def connect(self) -> bool:
-        """Connect to AngelOne API."""
+        """Connect to AngelOne API and load instruments."""
         try:
             from paper_trading.legacy.angelone_connection import AngelOneConnection
+            import pandas as pd
+            import requests
 
             self._connection = AngelOneConnection(
                 api_key=self.credentials.get('api_key'),
@@ -97,6 +99,22 @@ class AngelOneAdapter(BrokerAdapter):
             if session_data:
                 self._smart_api = self._connection.smart_api
                 self._connected = True
+                
+                # Load AngelOne master instruments for token->symbol lookup
+                try:
+                    logger.info("Loading AngelOne master instruments for token lookup...")
+                    url = "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json"
+                    response = requests.get(url, timeout=10)
+                    instruments = response.json()
+                    df = pd.DataFrame(instruments)
+                    
+                    # Filter for NFO (F&O) instruments only
+                    self.nfo_instruments = df[df['exch_seg'] == 'NFO'].copy()
+                    logger.info(f"Loaded {len(self.nfo_instruments)} NFO instruments")
+                except Exception as e:
+                    logger.warning(f"Could not load master instruments: {e}")
+                    self.nfo_instruments = None
+                
                 logger.info("Connected to AngelOne")
                 return True
 
@@ -120,6 +138,35 @@ class AngelOneAdapter(BrokerAdapter):
     @property
     def broker_name(self) -> str:
         return "angelone"
+
+    def _get_symbol_from_token(self, token: str) -> Optional[str]:
+        """
+        Get trading symbol from AngelOne master instruments using token.
+        This eliminates the need for manual symbol construction.
+        
+        Args:
+            token: Exchange token (e.g., '58661')
+        
+        Returns:
+            Trading symbol string (e.g., 'NIFTY27JAN2625000CE') or None
+        """
+        try:
+            # Use AngelOne's searchScrip API to get symbol by token
+            # Or query from loaded instruments if available
+            if hasattr(self, 'nfo_instruments') and self.nfo_instruments is not None:
+                # Search in cached instruments
+                result = self.nfo_instruments[self.nfo_instruments['token'] == token]
+                if not result.empty:
+                    return result.iloc[0]['symbol']
+            
+            # If not cached, try API search (if available)
+            # For now, return None and let caller handle
+            logger.warning(f"Could not find symbol for token {token} in cached instruments")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting symbol from token {token}: {e}")
+            return None
 
     # ══════════════════════════════════════════════════════════════════════════
     # MARKET DATA
@@ -447,9 +494,20 @@ class AngelOneAdapter(BrokerAdapter):
             )
 
         try:
-            # Resolve instrument
-            contract = self._resolve_instrument(
-                order.underlying, order.option_type, order.strike, order.expiry
+            # Get contract from cache using contract_manager
+            if not self.contract_manager:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message="ContractManager not available"
+                )
+
+            # Convert expiry to string format
+            expiry_str = order.expiry.strftime('%Y-%m-%d') if hasattr(order.expiry, 'strftime') else str(order.expiry)
+            
+            contract = self.contract_manager.get_option_contract(
+                expiry_str, order.strike, order.option_type
             )
 
             if not contract:
@@ -457,14 +515,39 @@ class AngelOneAdapter(BrokerAdapter):
                     success=False,
                     order_id="",
                     status=OrderStatus.REJECTED,
-                    message=f"Could not resolve instrument"
+                    message=f"Contract not found: {order.underlying} {order.option_type} {order.strike} {expiry_str}"
                 )
 
+            # Get token (AngelOne uses 'token', not 'zerodha_instrument_token')
+            token = contract.get('token')
+            if not token:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message=f"No token found for contract"
+                )
+
+            # Get trading symbol from token (using AngelOne's master instruments)
+            # This is more reliable than manual construction
+            trading_symbol = self._get_symbol_from_token(token)
+            
+            if not trading_symbol:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message=f"Could not resolve trading symbol for token {token}"
+                )
+            
+            logger.info(f"Placing order: {trading_symbol} (token: {token}) [TOKEN LOOKUP]")
+
             # Build AngelOne order params
+            # AngelOne requires BOTH tradingsymbol AND symboltoken (cannot use token alone)
             order_params = {
                 'variety': 'NORMAL',
-                'tradingsymbol': contract['symbol'],
-                'symboltoken': contract['token'],
+                'tradingsymbol': trading_symbol,  # Actual symbol (e.g., "NIFTY27JAN2625000CE")
+                'symboltoken': str(token),         # Token from cache
                 'transactiontype': order.transaction_type.value,
                 'exchange': 'NFO',
                 'ordertype': self.ORDER_TYPE_MAP.get(order.order_type, "MARKET"),
@@ -485,11 +568,31 @@ class AngelOneAdapter(BrokerAdapter):
 
             # Place order
             response = self._smart_api.placeOrder(order_params)
+            
+            logger.debug(f"Order response type: {type(response)}, value: {response}")
 
-            if response and response.get('status'):
+            # Handle different response types
+            if isinstance(response, dict):
+                if response.get('status'):
+                    return OrderResponse(
+                        success=True,
+                        order_id=str(response.get('data', {}).get('orderid', '')),
+                        status=OrderStatus.PENDING,
+                        timestamp=datetime.now()
+                    )
+                else:
+                    return OrderResponse(
+                        success=False,
+                        order_id="",
+                        status=OrderStatus.REJECTED,
+                        message=response.get('message', 'Order placement failed')
+                    )
+            elif isinstance(response, str):
+                # Sometimes AngelOne returns order ID directly as string
+                logger.info(f"Order placed successfully, ID: {response}")
                 return OrderResponse(
                     success=True,
-                    order_id=str(response.get('data', {}).get('orderid', '')),
+                    order_id=response,
                     status=OrderStatus.PENDING,
                     timestamp=datetime.now()
                 )
@@ -498,7 +601,7 @@ class AngelOneAdapter(BrokerAdapter):
                     success=False,
                     order_id="",
                     status=OrderStatus.REJECTED,
-                    message=response.get('message', 'Order placement failed')
+                    message=f"Unexpected response type: {type(response)}"
                 )
 
         except Exception as e:

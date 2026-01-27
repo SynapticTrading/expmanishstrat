@@ -289,9 +289,20 @@ class ZerodhaAdapter(BrokerAdapter):
             )
 
         try:
-            # Resolve instrument
-            contract = self._resolve_instrument(
-                order.underlying, order.option_type, order.strike, order.expiry
+            # Get contract from cache using contract_manager
+            if not self.contract_manager:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message="ContractManager not available"
+                )
+
+            # Convert expiry to string format
+            expiry_str = order.expiry.strftime('%Y-%m-%d') if hasattr(order.expiry, 'strftime') else str(order.expiry)
+            
+            contract = self.contract_manager.get_option_contract(
+                expiry_str, order.strike, order.option_type
             )
 
             if not contract:
@@ -299,13 +310,26 @@ class ZerodhaAdapter(BrokerAdapter):
                     success=False,
                     order_id="",
                     status=OrderStatus.REJECTED,
-                    message=f"Could not resolve instrument: {order.underlying} {order.option_type} {order.strike}"
+                    message=f"Contract not found: {order.underlying} {order.option_type} {order.strike} {expiry_str}"
                 )
 
-            # Build Zerodha order params
+            # Get instrument token for TOKEN-BASED order placement
+            instrument_token = contract.get('zerodha_instrument_token')
+            if not instrument_token:
+                return OrderResponse(
+                    success=False,
+                    order_id="",
+                    status=OrderStatus.REJECTED,
+                    message=f"No instrument token found for contract"
+                )
+
+            logger.info(f"Placing order using instrument token: {instrument_token} (TOKEN-BASED)")
+
+            # Build Zerodha order params using INSTRUMENT TOKEN
+            # Zerodha API accepts instrument tokens directly (just like quotes!)
             broker_params = {
+                'tradingsymbol': instrument_token,  # Use token directly (integer, not string)
                 'exchange': 'NFO',
-                'tradingsymbol': contract['symbol'],
                 'transaction_type': order.transaction_type.value,
                 'order_type': self.ORDER_TYPE_MAP.get(order.order_type, "MARKET"),
                 'product': self.PRODUCT_MAP.get(order.product_type, "MIS"),
