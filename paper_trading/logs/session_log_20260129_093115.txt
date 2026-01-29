@@ -1,0 +1,88 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting trading system...
+Mode: 🔴 LIVE live
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_093115.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-29 09:31:15.035095+05:30] Checking for previous session...
+[2026-01-29 09:31:15.035298+05:30] No previous state found - starting fresh
+[2026-01-29 09:31:15.035324+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-28T10:22:22.317004
+  Options lot size: 65 units per lot
+  Loaded 1586 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-29 09:31:15.036343+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-29 09:31:15.036371+05:30] Active Weekly Expiry: 2026-02-03 (5 days)
+[2026-01-29 09:31:15.036397+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-29 09:31:15.037638+05:30] ✓ Adapter created: angelone
+[2026-01-29 09:31:15.037665+05:30] Connecting to angelone...
+[I 260129 09:31:15 smartConnect:124] in pool
+[2026-01-29 09:31:15.716927] Generated TOTP: 480531
+[2026-01-29 09:31:15.716958] Connecting to AngelOne...
+[2026-01-29 09:31:15.920015] ✓ Connection successful!
+[2026-01-29 09:31:15.920103] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-29 09:31:15.920128] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njk2NTkyNzUsImV4cCI6MTc2OTc0NTY3NX0.1OcJbCnbsUl95JZ6W-5a327JVzdM_B2Qebi-gJR1zkwIwpRCH0sTFnaBw9V__mnqlj7JMn5gdZhoiYdOCyUD5g
+Loading AngelOne master instruments for token lookup...
+Loaded 36423 NFO instruments
+Connected to AngelOne
+[2026-01-29 09:31:37.460701+05:30] ✓ Connected to angelone
+
+[2026-01-29 09:31:37.460817+05:30] Trading mode overridden to: live
+
+[2026-01-29 09:31:37.460845+05:30] Initializing new session...
+[2026-01-29 09:31:37.461427+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-28
+  Starting Capital: ₹95,255.50
+  Previous P&L: ₹+0.00
+  Previous Trades: 0
+  Previous Win Rate: 0.0%
+[2026-01-29 09:31:37.461777+05:30] Session initialized: SESSION_20260129_0931
+[2026-01-29 09:31:37.461803+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260129.json
+[2026-01-29 09:31:37.461831+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-29 09:31:37.461878+05:30] ✓ Adapter ready with token-based lookups
+
+================================================================================
+⚠️  LIVE TRADING MODE ACTIVATED ⚠️
+================================================================================
+
+This will place REAL orders with REAL money!
+Broker: angelone
+Product Type: INTRADAY
+Order Type: MARKET
+Max Order Value: ₹20,000.00
+Max Daily Loss: ₹7,000.00
+
+Account Balance: ₹29,615.22
+
+================================================================================
+
+Type 'CONFIRM LIVE TRADING' to proceed:
+
+⛔ Live trading cancelled by user
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_093115.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_093115.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

@@ -1,0 +1,96 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting trading system...
+Mode: 🔴 LIVE live
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_094044.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-29 09:40:44.406363+05:30] Checking for previous session...
+[2026-01-29 09:40:44.406514+05:30] ✓ State loaded from /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260129.json
+
+================================================================================
+CRASH RECOVERY DETECTED
+================================================================================
+Last Activity: 2026-01-29T09:40:28.640018+05:30
+Downtime: ~0 minutes
+Active Positions: 0
+Daily P&L: ₹0.00
+================================================================================
+✓ AUTOMATIC RECOVERY: Previous session detected
+Automatically resuming from crash...
+
+================================================================================
+RESUMING SESSION FROM CRASH
+================================================================================
+Crash Time: 2026-01-29T09:40:28.640018+05:30
+Recovery Time: 2026-01-29 09:40:44.406742+05:30
+Downtime: 0 minutes
+Active Positions: 0
+✓ Session resumed successfully
+================================================================================
+[2026-01-29 09:40:44.406983+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-28T10:22:22.317004
+  Options lot size: 65 units per lot
+  Loaded 1586 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-29 09:40:44.408007+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-29 09:40:44.408036+05:30] Active Weekly Expiry: 2026-02-03 (5 days)
+[2026-01-29 09:40:44.408060+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-29 09:40:44.408933+05:30] ✓ Adapter created: angelone
+[2026-01-29 09:40:44.408963+05:30] Connecting to angelone...
+[I 260129 09:40:44 smartConnect:124] in pool
+[2026-01-29 09:40:44.694336] Generated TOTP: 221499
+[2026-01-29 09:40:44.694383] Connecting to AngelOne...
+[2026-01-29 09:40:44.875611] ✓ Connection successful!
+[2026-01-29 09:40:44.875715] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-29 09:40:44.875754] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njk2NTk4NDQsImV4cCI6MTc2OTc0NjI0NH0.zYodIuH9_m6Y0Z7hZN4cEuL5FblsEwHW6ZA15ePhOCUZoresx6bqUFaUlcG7DeBUAyVHIfzaAhip3SBTiJu7xQ
+Loading AngelOne master instruments for token lookup...
+Loaded 36423 NFO instruments
+Connected to AngelOne
+[2026-01-29 09:41:00.130607+05:30] ✓ Connected to angelone
+
+[2026-01-29 09:41:00.130784+05:30] Trading mode overridden to: live
+
+[2026-01-29 09:41:00.130810+05:30] Resuming from previous session...
+[2026-01-29 09:41:00.130847+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-29 09:41:00.130907+05:30] ✓ Adapter ready with token-based lookups
+
+================================================================================
+⚠️  LIVE TRADING MODE ACTIVATED ⚠️
+================================================================================
+
+This will place REAL orders with REAL money!
+Broker: angelone
+Product Type: INTRADAY
+Order Type: MARKET
+Max Order Value: No limit (relying on strategy stop losses)
+Max Daily Loss: No limit (relying on strategy stop losses)
+
+Account Balance: ₹29,615.22
+
+================================================================================
+
+Type 'CONFIRM LIVE TRADING' to proceed:
+
+[2026-01-29 09:41:17.260337+05:30] Shutting down gracefully...
+
+[2026-01-29 09:45:21.499175+05:30] Shutting down gracefully...
+
+[2026-01-29 09:45:25.450713+05:30] Shutting down gracefully...
+
+[2026-01-29 09:47:13.705062+05:30] Shutting down gracefully...

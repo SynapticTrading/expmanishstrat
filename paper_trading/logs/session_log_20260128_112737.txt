@@ -1,0 +1,593 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting trading system...
+Mode: 🔴 LIVE live
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260128_112737.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-28 11:27:37.653951+05:30] Checking for previous session...
+[2026-01-28 11:27:37.654094+05:30] No previous state found - starting fresh
+[2026-01-28 11:27:37.654136+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: zerodha, cached at: 2026-01-28T10:22:22.317004
+  Options lot size: 65 units per lot
+  Loaded 1586 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-28 11:27:37.656097+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-28 11:27:37.656143+05:30] Active Weekly Expiry: 2026-02-03 (6 days)
+[2026-01-28 11:27:37.656184+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-28 11:27:37.658200+05:30] ✓ Adapter created: angelone
+[2026-01-28 11:27:37.658248+05:30] Connecting to angelone...
+[I 260128 11:27:38 smartConnect:124] in pool
+[2026-01-28 11:27:38.330144] Generated TOTP: 860303
+[2026-01-28 11:27:38.330196] Connecting to AngelOne...
+[2026-01-28 11:27:38.456541] ✓ Connection successful!
+[2026-01-28 11:27:38.456641] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-28 11:27:38.456676] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njk1Nzk4NTgsImV4cCI6MTc2OTY2NjI1OH0.Y5-wjxiiaZJLIdmM-K01cFjhXQcqz7YvYyz-6p6OihMt_olVBiO19TfkdvqJoYzi8DengM_BLQNXwXEwNkbMtA
+Loading AngelOne master instruments for token lookup...
+Loaded 40051 NFO instruments
+Connected to AngelOne
+[2026-01-28 11:27:45.279723+05:30] ✓ Connected to angelone
+
+[2026-01-28 11:27:45.279984+05:30] Trading mode overridden to: live
+
+[2026-01-28 11:27:45.280033+05:30] Initializing new session...
+[2026-01-28 11:27:45.280918+05:30] 📊 PORTFOLIO CARRYOVER
+  Previous Date: 2026-01-23
+  Starting Capital: ₹95,255.50
+  Previous P&L: ₹+1,443.00
+  Previous Trades: 1
+  Previous Win Rate: 100.0%
+[2026-01-28 11:27:45.281526+05:30] Session initialized: SESSION_20260128_1127
+[2026-01-28 11:27:45.281570+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_20260128.json
+[2026-01-28 11:27:45.281614+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-28 11:27:45.281687+05:30] ✓ Adapter ready with token-based lookups
+
+================================================================================
+⚠️  LIVE TRADING MODE ACTIVATED ⚠️
+================================================================================
+
+This will place REAL orders with REAL money!
+Broker: angelone
+Product Type: INTRADAY
+Order Type: MARKET
+Max Order Value: ₹10,000.00
+Max Daily Loss: ₹3,000.00
+
+Account Balance: ₹29,615.22
+
+================================================================================
+
+Type 'CONFIRM LIVE TRADING' to proceed:
+
+🔴 INITIALIZING LIVE BROKER 🔴
+[2026-01-28 11:27:54.997754] Live Broker initialized
+[2026-01-28 11:27:54.997856] Product Type: INTRADAY
+[2026-01-28 11:27:54.997910] Order Type: MARKET
+[2026-01-28 11:27:54.997944] Max Order Value: ₹10,000.00
+[2026-01-28 11:27:54.997983] Max Daily Loss: ₹3,000.00
+[2026-01-28 11:27:54.998084] Live trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/live_trades_20260128_112754.csv
+✓ Live broker initialized - REAL MONEY MODE
+[2026-01-28 11:27:54.998318+05:30] Initializing OI analyzer...
+[2026-01-28 11:27:54.999311+05:30] Initializing strategy...
+[2026-01-28 11:27:54.999453] Using lot size from contract manager: 65 units/lot
+[2026-01-28 11:27:54.999535] Strategy initialized
+  Entry: 09:30:00 - 14:30:00
+  Exit: 14:50:00 - 15:00:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-28 11:27:55.010213+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-28 11:27:55.010357+05:30] Starting DUAL-LOOP trading...
+  MODE: 🔴 LIVE TRADING 🔴
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-28 11:27:55.011057+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-28 11:27:55.011128+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-28 11:27:55.011308+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-28 11:27:55.011370+05:30] ✓ Exit monitor loop started
+[2026-01-28 11:27:55.011757+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-28 11:27:55.011804+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-28 11:27:55.011804+05:30] Nifty Spot: 25339.95
+Fetching quotes for 22 options (TOKEN-BASED)...
+Fetching 5-min candles for 22 options...
+[2026-01-28 11:27:56.802623] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49787
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:56 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49787', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:56.859583] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25100 CE, using LTP fallback
+[2026-01-28 11:27:57.360140] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49788
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:57 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49788', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:57.428832] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25100 PE, using LTP fallback
+[2026-01-28 11:27:57.934043] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49789
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:57 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49789', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:57.997924] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25150 CE, using LTP fallback
+[2026-01-28 11:27:58.503134] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49790
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:58 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49790', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:58.561007] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25150 PE, using LTP fallback
+[2026-01-28 11:27:59.066201] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49791
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:59 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49791', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:59.129152] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25200 CE, using LTP fallback
+[2026-01-28 11:27:59.634330] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49792
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[E 260128 11:27:59 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData. Error: Something Went Wrong, Please Try After Sometime. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/historical/v1/getCandleData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '4a:6b:51:90:30:4f', 'Accept': 'application/json', 'X-PrivateKey': 'GuULp2XA', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'symboltoken': '49792', 'interval': 'FIVE_MINUTE', 'fromdate': '2026-01-28 11:20', 'todate': '2026-01-28 11:25'}, Response: {'message': 'Something Went Wrong, Please Try After Sometime', 'errorcode': 'AB1004', 'status': False, 'data': None}
+[2026-01-28 11:27:59.694321] ✗ Failed to get candle data: Something Went Wrong, Please Try After Sometime
+No candle for 25200 PE, using LTP fallback
+[2026-01-28 11:28:00.196570] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49793
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:00.256517] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:00.759418] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49794
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:00.822161] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:01.327444] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49795
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:01.415330] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:01.920606] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49796
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:01.990529] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:02.495783] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49799
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:02.558784] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:03.061433] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49800
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:03.143492] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:03.648767] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49801
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:03.733134] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:04.238475] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49802
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:04.326585] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:04.831936] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49806
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:04.906186] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:05.411515] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49807
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:05.520063] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:06.025366] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49808
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:06.099763] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:06.605074] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49816
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:06.667220] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:07.172509] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49818
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:07.243549] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:07.748868] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49819
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:07.827532] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:08.331396] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49820
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:08.398569] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:28:08.900340] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49821
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:20
+  To: 2026-01-28 11:25
+[2026-01-28 11:28:08.966715] ✓ Candle data retrieved successfully
+  Data points: 2
+✓ Retrieved 22 option chain records (TOKEN-BASED)
+  Candles: 16 | LTP fallback: 6
+
+================================================================================
+[2026-01-28 11:27:55.011804+05:30] ⚠️  STARTED LATE (after 9:15 AM)
+[2026-01-28 11:27:55.011804+05:30] Determining direction using CURRENT OI data...
+[2026-01-28 11:27:55.011804+05:30] (OI buildup direction is still valid mid-day)
+================================================================================
+
+================================================================================
+[2026-01-28 11:27:55.011804+05:30] NEW TRADING DAY: 2026-01-28
+================================================================================
+
+================================================================================
+OI DISTRIBUTION DEBUG (Spot: 25339.95)
+================================================================================
+
+CALL OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25100.0          1,226,550            -239.95
+25150.0            525,915            -189.95
+25200.0          2,860,780            -139.95
+25250.0          1,930,695             -89.95
+25300.0          6,507,865             -39.95
+25350.0          3,902,795              10.05
+25400.0          5,094,765              60.05
+25450.0          1,896,960             110.05
+25500.0          6,551,480             160.05 👈 MAX
+25550.0          1,634,685             210.05
+25600.0          3,331,315             260.05
+
+PUT OI by Strike:
+Strike                  OI   Distance from Spot
+--------------------------------------------------
+25100.0          3,136,120             239.95
+25150.0          1,575,925             189.95
+25200.0          4,761,510             139.95
+25250.0          3,162,965              89.95
+25300.0          6,712,615              39.95 👈 MAX
+25350.0          2,584,920             -10.05
+25400.0          2,415,465             -60.05
+25450.0            394,940            -110.05
+25500.0          1,815,450            -160.05
+25550.0            153,400            -210.05
+25600.0            550,160            -260.05
+================================================================================
+[2026-01-28 11:27:55.011804+05:30] Max Call OI: 6,551,480 @ 25500, Max Put OI: 6,712,615 @ 25300
+[2026-01-28 11:27:55.011804+05:30] Direction determined: PUT (Call dist: 160.05, Put dist: 39.95)
+[2026-01-28 11:27:55.011804+05:30] ✓ Daily Analysis Complete: Direction=PUT, Strike=25300, Expiry=2026-02-03, Spot=25339.95
+[2026-01-28 11:27:55.011804+05:30] 🔄 Reset VWAP running totals for new day: 2026-01-28
+[2026-01-28 11:27:55.011804+05:30] 🎯 Initialized VWAP for PUT 25300: 27 bars from 9:15 AM
+[2026-01-28 11:27:55.011804+05:30] Checking entry: PUT 25300, Expiry=2026-02-03
+[2026-01-28 11:27:55.011804+05:30] PUT 25300: OI=6,712,615, Change=0 (+0.00%) - BUILDING
+[2026-01-28 11:27:55.011804+05:30] PUT 25300: Price=₹185.65, VWAP=₹185.65 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-28
+Broker: angelone
+Daily Direction: PUT @ 25300
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 111s for next candle at 11:30:00
+
+================================================================================
+[2026-01-28 11:30:00.004123+05:30] STRATEGY LOOP - Processing 5-min candle...
+================================================================================
+[2026-01-28 11:30:00.004123+05:30] Nifty Spot: 25337.40
+Fetching quotes for 22 options (TOKEN-BASED)...
+Fetching 5-min candles for 22 options...
+[2026-01-28 11:30:01.842166] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49787
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:01.940652] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:02.445983] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49788
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:02.536873] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:03.041218] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49789
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:03.118925] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:03.624175] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49790
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:03.684904] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:04.190169] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49791
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:04.258648] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:04.763909] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49792
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:04.827996] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:05.333219] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49793
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:05.392144] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:05.897382] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49794
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:05.953956] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:06.457323] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49795
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:06.526891] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:07.030935] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49796
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:07.092455] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:07.595771] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49799
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:07.684865] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:08.186497] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49800
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:08.262134] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:08.767384] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49801
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:08.854779] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:09.360031] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49802
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:09.439210] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:09.944578] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49806
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:10.030275] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:10.535615] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49807
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:10.666732] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:11.169801] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49808
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:11.248799] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:11.753192] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49816
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:11.824789] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:12.330053] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49818
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:12.432157] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:12.937424] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49819
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:13.023293] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:13.528496] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49820
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:13.590146] ✓ Candle data retrieved successfully
+  Data points: 2
+[2026-01-28 11:30:14.095431] Fetching candle data...
+  Exchange: NFO
+  Symbol Token: 49821
+  Interval: FIVE_MINUTE
+  From: 2026-01-28 11:25
+  To: 2026-01-28 11:30
+[2026-01-28 11:30:14.394274] ✓ Candle data retrieved successfully
+  Data points: 2
+✓ Retrieved 22 option chain records (TOKEN-BASED)
+  Candles: 22 | LTP fallback: 0
+[2026-01-28 11:30:00.004123+05:30] Checking entry: PUT 25300, Expiry=2026-02-03
+[2026-01-28 11:30:00.004123+05:30] PUT 25300: OI=6,945,705, Change=233,090 (+3.47%) - BUILDING
+[2026-01-28 11:30:00.004123+05:30] PUT 25300: Price=₹182.90, VWAP=₹185.30 - BELOW ✗
+
+--------------------------------------------------------------------------------
+STATUS UPDATE
+--------------------------------------------------------------------------------
+Date: 2026-01-28
+Broker: angelone
+Daily Direction: PUT @ 25300
+Open Positions: 0
+Total P&L: ₹0.00
+ROI: +0.00%
+--------------------------------------------------------------------------------
+Waiting 285s for next candle at 11:35:00
+[2026-01-28 11:32:55.013692+05:30] 🔄 Contract monitor: Checking for cache updates...
+[2026-01-28 11:32:55.016805+05:30] ✓ Contract check complete - No updates (Active: 2026-02-03, 6 days)
+
+[2026-01-28 11:34:08.859607+05:30] Shutting down gracefully...
+
+================================================================================
+[2026-01-28 11:35:00.004447+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 0
+  Win Rate: 0.0%
+  Total P&L: ₹0.00
+  ROI: +0.00%
+[2026-01-28 11:35:00.005157] Logging out...
+[2026-01-28 11:35:00.138527] ✓ Logged out successfully
+
+[2026-01-28 11:35:00.138669+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260128_112737.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260128_112737.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_20260123.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

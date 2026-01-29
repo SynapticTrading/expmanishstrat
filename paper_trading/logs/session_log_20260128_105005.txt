@@ -1,0 +1,16 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+usage: runner.py [-h] [--broker {zerodha,angelone}] [--config CONFIG]
+                 [--credentials CREDENTIALS] [--mode {paper,live}]
+
+Universal Paper Trading System
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --broker {zerodha,angelone}
+                        Broker to use (auto-detected if not specified)
+  --config CONFIG       Config file path
+  --credentials CREDENTIALS
+                        Credentials file path (auto-selected if not specified)
+  --mode {paper,live}   Trading mode (overrides config)

@@ -1,0 +1,136 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting trading system...
+Mode: 🔴 LIVE live
+Broker: angelone
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155728.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+✓ Broker: angelone
+
+[2026-01-29 15:57:28.178929+05:30] Checking for previous session...
+[2026-01-29 15:57:28.179019+05:30] Looking for LIVE mode state file...
+[2026-01-29 15:57:28.179110+05:30] No previous LIVE state found - starting fresh
+[2026-01-29 15:57:28.179143+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: angelone, cached at: 2026-01-29T15:55:04.896746
+  Options lot size: 65 units per lot
+  Loaded 1594 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-29 15:57:28.180787+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-29 15:57:28.180835+05:30] Active Weekly Expiry: 2026-02-03 (5 days)
+[2026-01-29 15:57:28.180873+05:30] Creating broker adapter...
+Created angelone adapter
+[2026-01-29 15:57:28.182626+05:30] ✓ Adapter created: angelone
+[2026-01-29 15:57:28.182761+05:30] Connecting to angelone...
+[I 260129 15:57:28 smartConnect:124] in pool
+[2026-01-29 15:57:28.479823] Generated TOTP: 397366
+[2026-01-29 15:57:28.479874] Connecting to AngelOne...
+[2026-01-29 15:57:28.646741] ✓ Connection successful!
+[2026-01-29 15:57:28.646852] Auth Token: Bearer eyJhbGciOiJIU...
+[2026-01-29 15:57:28.646889] Feed Token: eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Ik4xODI2NDAiLCJpYXQiOjE3Njk2ODI0NDgsImV4cCI6MTc2OTc2ODg0OH0.3N8rRQxL3zrozSFATs-ypLAkNDRonY254cWOcJvpw77wFQwjxAUTP3uPICedgM63gA3-W_wfFTgEIaoAc82XIg
+Loading AngelOne master instruments for token lookup...
+Loaded 36423 NFO instruments
+Extracted 1594 NIFTY options
+Connected to AngelOne
+[2026-01-29 15:57:34.115226+05:30] ✓ Connected to angelone
+
+[2026-01-29 15:57:34.115424+05:30] Trading mode overridden to: live
+
+[2026-01-29 15:57:34.115466+05:30] Initializing new session...
+[2026-01-29 15:57:34.115881+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-29 15:57:34.116488+05:30] Session initialized: SESSION_20260129_1557
+[2026-01-29 15:57:34.116541+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_angelone_live_20260129.json
+[2026-01-29 15:57:34.116586+05:30] Loading instruments...
+load_instruments() called - SKIPPED (using token-based approach)
+All lookups use ContractManager → contracts_cache.json
+[2026-01-29 15:57:34.116662+05:30] ✓ Adapter ready with token-based lookups
+
+================================================================================
+⚠️  LIVE TRADING MODE ACTIVATED ⚠️
+================================================================================
+
+This will place REAL orders with REAL money!
+Broker: angelone
+Product Type: INTRADAY
+Order Type: MARKET
+Max Order Value: No limit (relying on strategy stop losses)
+Max Daily Loss: No limit (relying on strategy stop losses)
+
+Account Balance: ₹29,541.14
+
+================================================================================
+
+Type 'CONFIRM LIVE TRADING' to proceed:
+
+🔴 INITIALIZING LIVE BROKER 🔴
+[2026-01-29 15:58:56.064371] Live Broker initialized
+[2026-01-29 15:58:56.064443] Product Type: INTRADAY
+[2026-01-29 15:58:56.064479] Order Type: MARKET
+[2026-01-29 15:58:56.064505] Max Order Value: No limit (relying on strategy stop losses)
+[2026-01-29 15:58:56.064543] Max Daily Loss: No limit (relying on strategy stop losses)
+[2026-01-29 15:58:56.064616] Live trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/live_trades_20260129_155856.csv
+✓ Live broker initialized - REAL MONEY MODE
+[2026-01-29 15:58:56.064774+05:30] Initializing OI analyzer...
+[2026-01-29 15:58:56.065411+05:30] Initializing strategy...
+[2026-01-29 15:58:56.065485] Using lot size from contract manager: 65 units/lot
+[2026-01-29 15:58:56.065517] Strategy initialized
+  Entry: 09:30:00 - 14:30:00
+  Exit: 14:50:00 - 15:00:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-29 15:58:56.072981+05:30] 📊 GLOBAL TRADE CHECK: Found 1 live trade(s) today in live_trades_cumulative.csv
+[2026-01-29 15:58:56.076633+05:30] 📊 GLOBAL TRADE LIMIT: 1 trade(s) already taken today (any broker)
+[2026-01-29 15:58:56.076868+05:30] Setting daily_trade_taken = True
+[2026-01-29 15:58:56.077335+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-29 15:58:56.077406+05:30] Starting DUAL-LOOP trading...
+  MODE: 🔴 LIVE TRADING 🔴
+  Broker: angelone
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-29 15:58:56.077652+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-29 15:58:56.077689+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-29 15:58:56.077801+05:30] Market closed, waiting...
+
+[2026-01-29 16:00:10.453621+05:30] Shutting down gracefully...
+[2026-01-29 16:00:10.456843+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-29 16:00:10.456964+05:30] ✓ Exit monitor loop started
+[2026-01-29 16:00:10.461962+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-29 16:00:10.462168+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 0
+  Win Rate: 0.0%
+  Total P&L: ₹0.00
+  ROI: +0.00%
+[2026-01-29 16:00:10.462755] Logging out...
+[2026-01-29 16:00:10.529028] ✓ Logged out successfully
+
+[2026-01-29 16:00:10.529141+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155728.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155728.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_paper_20260129.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

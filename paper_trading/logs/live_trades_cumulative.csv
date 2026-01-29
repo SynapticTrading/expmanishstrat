@@ -1,0 +1,2 @@
+entry_time,exit_time,strike,option_type,expiry,entry_price,exit_price,size,pnl,pnl_pct,vwap_at_entry,vwap_at_exit,oi_at_entry,oi_change_at_entry,oi_at_exit,exit_reason,entry_order_id,exit_order_id
+2026-01-29 11:00:14,2026-01-29 11:35:05,25250,CALL,2026-02-03,207.0,214.15,65,464.75,3.4541062801932476,202.87056068644787,218.676734481326,4423250,-3.821692059812873,3240380,Trailing Stop (10%),260129000523978,260129000647686

@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-01-28T15:05:00.002395+05:30",
+  "date": "2026-01-28",
+  "session_id": "SESSION_20260128_1147",
+  "mode": "live",
+  "active_positions": {},
+  "closed_positions": [],
+  "strategy_state": {
+    "current_spot": 25320.8,
+    "trading_strike": 25200,
+    "trading_expiry": "2026-02-03",
+    "direction": "PUT",
+    "max_call_oi_strike": 25500,
+    "max_put_oi_strike": 25300,
+    "last_oi_check": "2026-01-28T15:00:16.648956+05:30",
+    "vwap_tracking": {
+      "25300PUT": {
+        "sum_typical_price_volume": 1910254.85,
+        "sum_volume": 9990.0,
+        "current_vwap": 191.2167017017017,
+        "last_update": "2026-01-28T15:00:16.648990+05:30"
+      },
+      "25250PUT": {
+        "sum_typical_price_volume": 1538762.7,
+        "sum_volume": 8170.0,
+        "current_vwap": 188.34304773561811,
+        "last_update": "2026-01-28T15:00:16.648999+05:30"
+      },
+      "25200PUT": {
+        "sum_typical_price_volume": 3121705.6999999997,
+        "sum_volume": 16023.0,
+        "current_vwap": 194.8265430943019,
+        "last_update": "2026-01-28T15:00:16.649005+05:30"
+      },
+      "25150PUT": {
+        "sum_typical_price_volume": 52353.3,
+        "sum_volume": 282.0,
+        "current_vwap": 185.65,
+        "last_update": "2026-01-28T15:00:16.649011+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 0,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 0.0,
+    "win_count": 0,
+    "loss_count": 0,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 95255.5,
+    "current_cash": 95255.5,
+    "positions_value": 0.0,
+    "total_value": 0.0,
+    "total_return_pct": 0.0
+  },
+  "api_stats": {
+    "calls_5min_loop": 39,
+    "calls_1min_ltp": 0,
+    "total_calls_today": 39,
+    "last_api_call": "2026-01-28T15:00:16.651930+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-28T15:05:00.002386+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false,
+    "recovered": true,
+    "recovery_time": "2026-01-28T11:55:40.150943+05:30"
+  }
+}

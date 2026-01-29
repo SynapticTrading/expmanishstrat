@@ -1,0 +1,122 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+Starting trading system...
+Mode: 📄 PAPER paper
+Broker: zerodha
+Log file: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155622.txt
+Press Ctrl+C to stop
+================================================================================
+
+================================================================================
+UNIVERSAL TRADING SYSTEM (Adapter-Based)
+================================================================================
+Loading configuration...
+Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+✓ Broker: zerodha
+
+[2026-01-29 15:56:22.415954+05:30] Checking for previous session...
+[2026-01-29 15:56:22.416080+05:30] Looking for PAPER mode state file...
+[2026-01-29 15:56:22.416386+05:30] No previous PAPER state found - starting fresh
+[2026-01-29 15:56:22.416486+05:30] Initializing contract manager (reading from universal cache)...
+Loaded 18 options expiries from cache
+  Source broker: angelone, cached at: 2026-01-29T15:55:04.896746
+  Options lot size: 65 units per lot
+  Loaded 1594 UNIVERSAL exchange tokens for lookups
+✓ Loaded contracts from universal cache: /Users/Algo_Trading/manishsir_options/contracts_cache.json
+  Using UNIVERSAL exchange tokens (same for all brokers)
+[2026-01-29 15:56:22.418044+05:30] ✓ Contract manager initialized (using universal exchange tokens)
+[2026-01-29 15:56:22.418094+05:30] Active Weekly Expiry: 2026-02-03 (5 days)
+[2026-01-29 15:56:22.418132+05:30] Creating broker adapter...
+Created zerodha adapter
+[2026-01-29 15:56:22.419583+05:30] ✓ Adapter created: zerodha
+[2026-01-29 15:56:22.419624+05:30] Connecting to zerodha...
+[2026-01-29 15:56:22.420182] Connecting to Zerodha...
+[2026-01-29 15:56:22.655093] Generated TOTP: 244211
+[2026-01-29 15:56:22.745570] ✓ Request token extracted from redirect
+[2026-01-29 15:56:22.745691] Request token obtained: XeTpPVOAY97IzOk8xroI...
+[2026-01-29 15:56:22.831642] ✓ Connection successful!
+[2026-01-29 15:56:22.831763] Access Token: OXtHVkm76QcD5ytvsc17...
+[2026-01-29 15:56:22.831818] Zerodha data feed initialized
+Connected to Zerodha
+✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly
+✓ NO tradingsymbol lookups - tokens from contracts_cache.json
+✓ ContractManager ready with cached tokens
+[2026-01-29 15:56:22.831956+05:30] ✓ Connected to zerodha
+
+[2026-01-29 15:56:22.831998+05:30] Trading mode overridden to: paper
+
+[2026-01-29 15:56:22.832030+05:30] Initializing new session...
+[2026-01-29 15:56:22.832364+05:30] 🆕 First session - Starting with ₹100,000.00
+[2026-01-29 15:56:22.832838+05:30] Session initialized: SESSION_20260129_1556
+[2026-01-29 15:56:22.832881+05:30] State file: /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_paper_20260129.json
+[2026-01-29 15:56:22.832952+05:30] Loading instruments...
+[2026-01-29 15:56:22.833050] Loading instruments...
+[2026-01-29 15:56:22.833115] Fetching instruments for NFO...
+[2026-01-29 15:56:23.865883] ✓ Retrieved 36655 instruments
+[2026-01-29 15:56:23.871491] Fetching instruments for NSE...
+[2026-01-29 15:56:23.985058] ✓ Retrieved 9169 instruments
+[2026-01-29 15:56:23.988591] ✓ Nifty 50 token: 256265
+[2026-01-29 15:56:23.988726] ✓ Instruments loaded
+[2026-01-29 15:56:23.988871+05:30] ✓ Adapter ready with token-based lookups
+
+📄 INITIALIZING PAPER BROKER 📄
+[2026-01-29 15:56:23.989387] Paper Broker initialized with capital: ₹100,000.00
+[2026-01-29 15:56:23.989430] Daily trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_20260129_155623.csv
+[2026-01-29 15:56:23.989458] Cumulative trade log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative.csv
+✓ Paper broker initialized - SIMULATION MODE
+[2026-01-29 15:56:23.989511+05:30] Initializing OI analyzer...
+[2026-01-29 15:56:23.989862+05:30] Initializing strategy...
+[2026-01-29 15:56:23.989933] Using lot size from contract manager: 65 units/lot
+[2026-01-29 15:56:23.989965] Strategy initialized
+  Entry: 09:30:00 - 14:30:00
+  Exit: 14:50:00 - 15:00:00
+  Stop Loss: 25.0%
+  Trailing Stop: 10.0%
+  VWAP Stop: 5.0%
+  OI Stop: 10.0%
+[2026-01-29 15:56:23.999278+05:30] 📊 GLOBAL TRADE CHECK: Found 1 live trade(s) today in live_trades_cumulative.csv
+[2026-01-29 15:56:23.999405+05:30] 📊 GLOBAL TRADE LIMIT: 1 trade(s) already taken today (any broker)
+[2026-01-29 15:56:23.999445+05:30] Setting daily_trade_taken = True
+[2026-01-29 15:56:23.999924+05:30] ✓ All components initialized
+
+================================================================================
+[2026-01-29 15:56:24.000048+05:30] Starting DUAL-LOOP trading...
+  MODE: 📄 PAPER TRADING 📄
+  Broker: zerodha
+  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)
+  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)
+  Loop 3: Contract Monitor Loop - Every 300s (Cache updates)
+================================================================================
+[2026-01-29 15:56:24.000635+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-29 15:56:24.000696+05:30] ✓ Contract monitor loop started (checks every 300s)
+[2026-01-29 15:56:24.000824+05:30] Market closed, waiting...
+
+[2026-01-29 15:59:55.384258+05:30] Shutting down gracefully...
+[2026-01-29 15:59:55.388758+05:30] ✓ Exit monitor loop started (1-min LTP)
+[2026-01-29 15:59:55.388918+05:30] ✓ Exit monitor loop started
+[2026-01-29 15:59:55.390646+05:30] ✓ Strategy loop started
+
+================================================================================
+[2026-01-29 15:59:55.390948+05:30] Shutting down...
+================================================================================
+Final Statistics:
+  Total Trades: 0
+  Win Rate: 0.0%
+  Total P&L: ₹0.00
+  ROI: +0.00%
+[2026-01-29 15:59:55.391865] Logging out...
+[2026-01-29 15:59:55.434766] ✓ Logged out successfully
+
+[2026-01-29 15:59:55.434880+05:30] ✓ Shutdown complete
+================================================================================
+Paper trading stopped
+Session log: /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155622.txt
+View files:
+  Session log:  cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/session_log_20260129_155622.txt
+  Trade log:    cat /Users/Algo_Trading/manishsir_options/paper_trading/logs/trades_cumulative_backup_20260109_112610.csv
+  State (JSON): cat /Users/Algo_Trading/manishsir_options/paper_trading/state/trading_state_zerodha_paper_20260129.json | jq .
+All paper trading files are in: paper_trading/
+  - paper_trading/logs/       (session logs & trade CSVs)
+  - paper_trading/state/      (state JSON files)
+================================================================================

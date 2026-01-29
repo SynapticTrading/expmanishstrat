@@ -1,0 +1,6 @@
+================================================================================
+   PAPER TRADING LAUNCHER
+================================================================================
+usage: runner.py [-h] [--broker {zerodha,angelone}] [--config CONFIG] [--credentials CREDENTIALS]
+                 [--mode {paper,live}]
+runner.py: error: unrecognized arguments: -- mode live
