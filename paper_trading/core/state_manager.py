@@ -30,6 +30,9 @@ class StateManager:
         # Broker name for separate state files
         self.broker_name = broker_name
 
+        # Trading mode (will be set by initialize_session)
+        self.mode = None
+
         # Current state
         self.state = None
         self.state_file = None
@@ -79,11 +82,14 @@ class StateManager:
         date_str = now.strftime('%Y%m%d')
         session_id = f"SESSION_{date_str}_{now.strftime('%H%M')}"
 
-        # Create state file (include broker name if specified)
+        # Store mode for later use
+        self.mode = mode
+
+        # Create state file (include broker name AND mode for separation)
         if self.broker_name:
-            self.state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{date_str}.json"
+            self.state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{mode}_{date_str}.json"
         else:
-            self.state_file = self.state_dir / f"trading_state_{date_str}.json"
+            self.state_file = self.state_dir / f"trading_state_{mode}_{date_str}.json"
 
         # Initialize state
         self.state = {
@@ -221,6 +227,85 @@ class StateManager:
 
         return order_id
 
+    def update_position_entry_live(self, position, broker_order_id):
+        """
+        Update state with new LIVE position entry (includes broker order ID)
+
+        Args:
+            position: LivePosition object
+            broker_order_id: Real broker order ID (e.g., "260129000523978")
+
+        Returns:
+            str: State manager order ID (e.g., "LIVE_20260129_001")
+        """
+        # Generate LIVE-prefixed ID
+        order_id = f"LIVE_{self.get_ist_now().strftime('%Y%m%d')}_{len(self.state['active_positions']) + 1:03d}"
+
+        # Handle expiry as either string or datetime
+        from datetime import datetime
+        if isinstance(position.expiry, str):
+            expiry_str = position.expiry
+            expiry_dt = datetime.strptime(position.expiry, '%Y-%m-%d')
+            expiry_symbol = expiry_dt.strftime('%y%b').upper()
+        else:
+            expiry_str = position.expiry.strftime('%Y-%m-%d')
+            expiry_symbol = position.expiry.strftime('%y%b').upper()
+
+        position_data = {
+            "order_id": order_id,  # State manager ID
+            "broker_order_id": broker_order_id,  # REAL broker order ID
+            "mode": "LIVE",  # Mark as live trade
+            "symbol": f"NIFTY{expiry_symbol}{int(position.strike)}{position.option_type}",
+            "strike": position.strike,
+            "option_type": position.option_type,
+            "expiry": expiry_str,
+
+            "entry": {
+                "price": position.entry_price,
+                "time": position.entry_time.astimezone(self.ist).isoformat(),
+                "quantity": position.size,
+                "reason": "OI unwinding + Price above VWAP"
+            },
+
+            "stop_losses": {
+                "initial_stop": position.entry_price * 0.75,
+                "initial_stop_pct": 25,
+                "vwap_stop": None,
+                "vwap_stop_pct": 5,
+                "vwap_stop_active": False,
+                "oi_stop_active": False,
+                "trailing_stop": None,
+                "trailing_stop_pct": 10,
+                "trailing_active": position.trailing_stop_active
+            },
+
+            "price_tracking": {
+                "peak_price": position.peak_price,
+                "peak_time": position.entry_time.astimezone(self.ist).isoformat(),
+                "current_price": position.entry_price,
+                "unrealized_pnl": 0.0,
+                "unrealized_pnl_pct": 0.0
+            },
+
+            "market_data": {
+                "entry_oi": position.oi_at_entry,
+                "current_oi": position.oi_at_entry,
+                "oi_change_pct": position.oi_change_at_entry * 100,
+                "entry_vwap": position.vwap_at_entry,
+                "current_vwap": position.vwap_at_entry
+            },
+
+            "status": "OPEN"
+        }
+
+        self.state["active_positions"][order_id] = position_data
+        self.state["daily_stats"]["current_positions"] = len(self.state["active_positions"])
+        self.state["timestamp"] = self.get_ist_timestamp()
+
+        self.save()
+
+        return order_id
+
     def update_position_exit(self, order_id, position):
         """
         Update state with position exit
@@ -268,6 +353,91 @@ class StateManager:
             "oi_at_entry": pos_data["market_data"]["entry_oi"],
             "oi_change_at_entry": pos_data["market_data"]["oi_change_pct"],
             "oi_at_exit": pos_data["market_data"].get("current_oi", 0),
+            "exit_reason": position.exit_reason
+        }
+        self.state["closed_positions"].append(closed_summary)
+
+        # Remove from active
+        del self.state["active_positions"][order_id]
+
+        # Update stats
+        self.state["daily_stats"]["trades_today"] += 1
+        self.state["daily_stats"]["current_positions"] = len(self.state["active_positions"])
+        self.state["daily_stats"]["total_pnl_today"] += position.pnl
+
+        if position.pnl > 0:
+            self.state["daily_stats"]["win_count"] += 1
+        else:
+            self.state["daily_stats"]["loss_count"] += 1
+
+        total_trades = self.state["daily_stats"]["trades_today"]
+        if total_trades > 0:
+            self.state["daily_stats"]["win_rate"] = (
+                self.state["daily_stats"]["win_count"] / total_trades * 100
+            )
+
+        self.state["timestamp"] = self.get_ist_timestamp()
+
+        self.save()
+
+    def update_position_exit_live(self, order_id, position, exit_broker_order_id, exit_vwap, exit_oi):
+        """
+        Update state with LIVE position exit (includes exit broker order ID and market data)
+
+        Args:
+            order_id: State manager order ID (e.g., "LIVE_20260129_001")
+            position: LivePosition object
+            exit_broker_order_id: Real broker order ID for exit (e.g., "260129000647686")
+            exit_vwap: VWAP at exit
+            exit_oi: OI at exit
+        """
+        if order_id not in self.state["active_positions"]:
+            return
+
+        pos_data = self.state["active_positions"][order_id]
+
+        # Add exit data
+        entry_time = datetime.fromisoformat(pos_data["entry"]["time"])
+        exit_time = position.exit_time.astimezone(self.ist)
+        duration_minutes = int((exit_time - entry_time).total_seconds() / 60)
+
+        pos_data["exit"] = {
+            "price": position.exit_price,
+            "time": exit_time.isoformat(),
+            "reason": position.exit_reason,
+            "duration_minutes": duration_minutes,
+            "broker_order_id": exit_broker_order_id  # Store exit broker order ID
+        }
+
+        # Update market data with exit values
+        pos_data["market_data"]["current_vwap"] = exit_vwap
+        pos_data["market_data"]["current_oi"] = exit_oi
+
+        pos_data["status"] = "CLOSED"
+        pos_data["pnl"] = position.pnl
+        pos_data["pnl_pct"] = position.pnl_pct
+
+        # Move to closed positions
+        closed_summary = {
+            "order_id": order_id,  # State manager ID
+            "broker_order_id": pos_data.get("broker_order_id", ""),  # Entry broker order ID
+            "exit_broker_order_id": exit_broker_order_id,  # Exit broker order ID
+            "mode": "LIVE",  # Mark as live trade
+            "strike": pos_data["strike"],
+            "option_type": pos_data["option_type"],
+            "expiry": pos_data["expiry"],
+            "entry_time": pos_data["entry"]["time"],
+            "exit_time": exit_time.isoformat(),
+            "entry_price": pos_data["entry"]["price"],
+            "exit_price": position.exit_price,
+            "size": pos_data["entry"]["quantity"],
+            "pnl": position.pnl,
+            "pnl_pct": position.pnl_pct,
+            "vwap_at_entry": pos_data["market_data"]["entry_vwap"],
+            "vwap_at_exit": exit_vwap,  # Use actual exit VWAP
+            "oi_at_entry": pos_data["market_data"]["entry_oi"],
+            "oi_change_at_entry": pos_data["market_data"]["oi_change_pct"],
+            "oi_at_exit": exit_oi,  # Use actual exit OI
             "exit_reason": position.exit_reason
         }
         self.state["closed_positions"].append(closed_summary)
@@ -501,9 +671,17 @@ class StateManager:
         if date_str is None:
             date_str = self.get_ist_now().strftime('%Y%m%d')
 
-        # Try broker-specific file first, then fall back to generic file
-        if self.broker_name:
+        # Use mode if available (set by initialize_session)
+        mode = getattr(self, 'mode', None)
+
+        # Build filename with broker name and mode
+        if self.broker_name and mode:
+            state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{mode}_{date_str}.json"
+        elif self.broker_name:
+            # Fallback: try without mode for backward compatibility
             state_file = self.state_dir / f"trading_state_{self.broker_name.lower()}_{date_str}.json"
+        elif mode:
+            state_file = self.state_dir / f"trading_state_{mode}_{date_str}.json"
         else:
             state_file = self.state_dir / f"trading_state_{date_str}.json"
 
@@ -530,9 +708,15 @@ class StateManager:
                   or None if no previous state found
         """
         # Get all state files sorted by date (newest first)
-        # If broker_name is set, only look at broker-specific files
-        if self.broker_name:
+        # Filter by broker_name AND mode to keep paper/live separate
+        mode = getattr(self, 'mode', None)
+
+        if self.broker_name and mode:
+            pattern = f"trading_state_{self.broker_name.lower()}_{mode}_*.json"
+        elif self.broker_name:
             pattern = f"trading_state_{self.broker_name.lower()}_*.json"
+        elif mode:
+            pattern = f"trading_state_{mode}_*.json"
         else:
             pattern = "trading_state_*.json"
 

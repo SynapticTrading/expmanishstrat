@@ -103,7 +103,7 @@ def setup_logging():
 class UniversalPaperTrader:
     """Universal paper trader supporting multiple brokers"""
 
-    def __init__(self, config_path, credentials_path, broker_type=None):
+    def __init__(self, config_path, credentials_path, broker_type=None, trading_mode=None):
         """
         Initialize paper trader
 
@@ -111,9 +111,10 @@ class UniversalPaperTrader:
             config_path: Path to config YAML
             credentials_path: Path to credentials file
             broker_type: 'zerodha' or 'angelone' (auto-detected if None)
+            trading_mode: 'paper' or 'live' (from command-line, overrides config)
         """
         print(f"\n{'='*80}")
-        print(f"UNIVERSAL PAPER TRADING SYSTEM (Adapter-Based)")
+        print(f"UNIVERSAL TRADING SYSTEM (Adapter-Based)")
         print(f"{'='*80}\n")
 
         # Load config
@@ -127,8 +128,9 @@ class UniversalPaperTrader:
         if not self.credentials:
             raise Exception("Failed to load credentials!")
 
-        # Store broker type for later adapter creation
+        # Store broker type and trading mode for later adapter creation
         self.broker_type = broker_type
+        self.trading_mode_override = trading_mode  # Command-line override
 
         # Determine broker name for state management (auto-detect if not specified)
         if broker_type:
@@ -186,35 +188,91 @@ class UniversalPaperTrader:
         """Get current IST time"""
         return datetime.now(self.ist)
 
+    def _confirm_live_trading(self):
+        """Require user confirmation before live trading"""
+        if not self.config['trading_mode']['live_settings'].get('require_confirmation', True):
+            print(f"\n⚠️  Live trading confirmation DISABLED in config ⚠️")
+            return True
+
+        print("\n" + "="*80)
+        print("⚠️  LIVE TRADING MODE ACTIVATED ⚠️")
+        print("="*80)
+        print("\nThis will place REAL orders with REAL money!")
+        print(f"Broker: {self.adapter.broker_name}")
+        print(f"Product Type: {self.config['trading_mode']['live_settings']['product_type']}")
+        print(f"Order Type: {self.config['trading_mode']['live_settings']['order_type']}")
+
+        # Display safety limits (if configured)
+        max_order_value = self.config['trading_mode']['live_settings'].get('max_order_value')
+        max_daily_loss = self.config['trading_mode']['live_settings'].get('max_daily_loss')
+
+        if max_order_value:
+            print(f"Max Order Value: ₹{max_order_value:,.2f}")
+        else:
+            print(f"Max Order Value: No limit (relying on strategy stop losses)")
+
+        if max_daily_loss:
+            print(f"Max Daily Loss: ₹{max_daily_loss:,.2f}")
+        else:
+            print(f"Max Daily Loss: No limit (relying on strategy stop losses)")
+
+        # Get account info
+        try:
+            funds = self.adapter.get_funds()
+            if funds:
+                print(f"\nAccount Balance: ₹{funds.available_cash:,.2f}")
+        except Exception as e:
+            print(f"\n⚠️  Could not fetch account balance: {e}")
+
+        print("\n" + "="*80)
+        response = input("\nType 'CONFIRM LIVE TRADING' to proceed: ")
+
+        return response == 'CONFIRM LIVE TRADING'
+
     def _check_global_trades_today(self):
         """
-        Check cumulative CSV for any trades today (from ANY broker).
-        This ensures 1 trade/day limit works globally, not per broker.
-        
+        Check cumulative CSV for any trades today (from ANY broker AND any mode).
+        This ensures 1 trade/day limit works globally, not per broker or mode.
+
         Returns:
-            int: Number of trades today across all brokers
+            int: Number of trades today across all brokers and modes
         """
         try:
-            cumulative_csv = Path(__file__).parent / "logs" / "trades_cumulative.csv"
-            if not cumulative_csv.exists():
-                return 0
-            
-            import pandas as pd
-            df = pd.read_csv(cumulative_csv)
-            if df.empty:
-                return 0
-            
-            # Get today's date
+            logs_dir = Path(__file__).parent / "logs"
             today = self._get_ist_now().date()
-            
-            # Parse entry_time and count trades from today
-            df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
-            trades_today = len(df[df['entry_date'] == today])
-            
-            if trades_today > 0:
-                print(f"[{self._get_ist_now()}] 📊 GLOBAL TRADE CHECK: Found {trades_today} trade(s) today across all brokers")
-            
-            return trades_today
+            total_trades_today = 0
+
+            import pandas as pd
+
+            # Check BOTH paper and live cumulative CSVs
+            csv_files = [
+                logs_dir / "trades_cumulative.csv",        # Paper trades
+                logs_dir / "live_trades_cumulative.csv"    # Live trades
+            ]
+
+            for cumulative_csv in csv_files:
+                if not cumulative_csv.exists():
+                    continue
+
+                try:
+                    df = pd.read_csv(cumulative_csv)
+                    if df.empty:
+                        continue
+
+                    # Parse entry_time and count trades from today
+                    df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
+                    trades = len(df[df['entry_date'] == today])
+                    total_trades_today += trades
+
+                    if trades > 0:
+                        mode = "live" if "live_trades" in str(cumulative_csv) else "paper"
+                        print(f"[{self._get_ist_now()}] 📊 GLOBAL TRADE CHECK: Found {trades} {mode} trade(s) today in {cumulative_csv.name}")
+
+                except Exception as e:
+                    print(f"[{self._get_ist_now()}] ⚠️  Error reading {cumulative_csv.name}: {e}")
+                    continue
+
+            return total_trades_today
         except Exception as e:
             print(f"[{self._get_ist_now()}] ⚠️  Error checking global trades: {e}")
             return 0
@@ -233,11 +291,20 @@ class UniversalPaperTrader:
         """
         print(f"\n[{self._get_ist_now()}] Checking for previous session...")
 
-        # Try to load today's state
+        # CRITICAL: Set mode BEFORE trying to load state
+        # Otherwise load() won't find the correct paper/live state file
+        trading_mode = self.config['trading_mode']['mode']
+        if self.trading_mode_override:
+            trading_mode = self.trading_mode_override
+
+        self.state_manager.mode = trading_mode
+        print(f"[{self._get_ist_now()}] Looking for {trading_mode.upper()} mode state file...")
+
+        # Try to load today's state (will use mode from state_manager.mode)
         loaded_state = self.state_manager.load()
 
         if not loaded_state:
-            print(f"[{self._get_ist_now()}] No previous state found - starting fresh")
+            print(f"[{self._get_ist_now()}] No previous {trading_mode.upper()} state found - starting fresh")
             return False
 
         # Check if can recover
@@ -320,6 +387,13 @@ class UniversalPaperTrader:
     def initialize(self):
         """Initialize components"""
 
+        # Determine trading mode (command-line overrides config)
+        trading_mode = self.config['trading_mode']['mode']
+        if self.trading_mode_override:
+            trading_mode = self.trading_mode_override
+            self.config['trading_mode']['mode'] = trading_mode
+            print(f"\n[{self._get_ist_now()}] Trading mode overridden to: {trading_mode}")
+
         # Initialize or resume state
         if not self.recovery_mode:
             print(f"\n[{self._get_ist_now()}] Initializing new session...")
@@ -342,7 +416,7 @@ class UniversalPaperTrader:
                 print(f"[{self._get_ist_now()}] 🆕 First session - Starting with ₹{initial_capital:,.2f}")
 
             # Now create today's state file
-            self.state_manager.initialize_session(mode="paper")
+            self.state_manager.initialize_session(mode=trading_mode)
         else:
             print(f"\n[{self._get_ist_now()}] Resuming from previous session...")
             initial_capital = self.recovery_info['portfolio'].get('current_cash', 100000)
@@ -364,17 +438,39 @@ class UniversalPaperTrader:
         else:
             print(f"[{self._get_ist_now()}] ✓ Adapter ready (symbol-based fallback)")
 
-        # Initialize paper broker
-        print(f"[{self._get_ist_now()}] Initializing paper broker...")
-        # Use absolute path for logs directory
+        # Initialize broker based on mode
         paper_trading_dir = Path(__file__).parent
         logs_dir = paper_trading_dir / "logs"
-        self.paper_broker = PaperBroker(
-            initial_capital,
-            state_manager=self.state_manager,
-            logs_dir=str(logs_dir),
-            broker_name=self.adapter.broker_name  # Pass broker name for tracking
-        )
+
+        if trading_mode == 'live':
+            # Require confirmation
+            if not self._confirm_live_trading():
+                print("\n⛔ Live trading cancelled by user")
+                sys.exit(0)
+
+            print(f"\n🔴 INITIALIZING LIVE BROKER 🔴")
+            from paper_trading.core.live_broker import LiveBroker
+
+            self.broker = LiveBroker(
+                adapter=self.adapter,
+                config=self.config,
+                state_manager=self.state_manager,
+                logs_dir=str(logs_dir)
+            )
+            print(f"✓ Live broker initialized - REAL MONEY MODE")
+
+        else:  # paper mode
+            print(f"\n📄 INITIALIZING PAPER BROKER 📄")
+            self.broker = PaperBroker(
+                initial_capital,
+                state_manager=self.state_manager,
+                logs_dir=str(logs_dir),
+                broker_name=self.adapter.broker_name  # Pass broker name for tracking
+            )
+            print(f"✓ Paper broker initialized - SIMULATION MODE")
+
+        # Keep paper_broker alias for compatibility
+        self.paper_broker = self.broker
 
         # Restore positions if recovering from crash
         if self.recovery_mode and self.recovery_info:
@@ -403,7 +499,7 @@ class UniversalPaperTrader:
         print(f"[{self._get_ist_now()}] Initializing strategy...")
         self.strategy = IntradayMomentumOIPaper(
             config=self.config,
-            broker=self.paper_broker,
+            broker=self.broker,  # Works with both PaperBroker and LiveBroker
             oi_analyzer=self.oi_analyzer,
             state_manager=self.state_manager,
             contract_manager=self.contract_manager,
@@ -508,15 +604,20 @@ class UniversalPaperTrader:
         """Main trading loop"""
         self.running = True
 
+        # Determine trading mode display
+        trading_mode = self.config['trading_mode']['mode']
+        mode_display = '🔴 LIVE TRADING 🔴' if trading_mode == 'live' else '📄 PAPER TRADING 📄'
+
         print(f"\n{'='*80}")
-        print(f"[{self._get_ist_now()}] Starting DUAL-LOOP paper trading...")
+        print(f"[{self._get_ist_now()}] Starting DUAL-LOOP trading...")
+        print(f"  MODE: {mode_display}")
         print(f"  Broker: {self.adapter.broker_name}")
         print(f"  Loop 1: Strategy Loop - Every 5 minutes (Entry decisions)")
         print(f"  Loop 2: Exit Monitor Loop - Every 1 minute (LTP-based exits)")
         if self.use_contract_manager and self.contract_manager:
             print(f"  Loop 3: Contract Monitor Loop - Every {self.contract_monitor_interval}s (Cache updates)")
         if self.recovery_mode:
-            print(f"  MODE: RECOVERY (resumed from crash)")
+            print(f"  RECOVERY: Resumed from crash")
         print(f"{'='*80}\n")
 
         # Start contract monitor thread BEFORE market open
@@ -947,6 +1048,7 @@ def main():
     parser.add_argument('--broker', choices=['zerodha', 'angelone'], help='Broker to use (auto-detected if not specified)')
     parser.add_argument('--config', help='Config file path')
     parser.add_argument('--credentials', help='Credentials file path (auto-selected if not specified)')
+    parser.add_argument('--mode', choices=['paper', 'live'], help='Trading mode (overrides config)')
 
     args = parser.parse_args()
 
@@ -976,7 +1078,12 @@ def main():
                 print(f"  - {angelone_creds}")
                 return
 
-    print("Starting paper trading...")
+    # Determine mode display
+    mode = args.mode if args.mode else 'Config default'
+    mode_emoji = '🔴 LIVE' if args.mode == 'live' else '📄 PAPER' if args.mode == 'paper' else '📋 Config'
+
+    print("Starting trading system...")
+    print(f"Mode: {mode_emoji} {mode}")
     print(f"Broker: {args.broker if args.broker else 'Auto-detect'}")
     print(f"Log file: {log_file}")
     print("")
@@ -987,7 +1094,7 @@ def main():
     trader = None
     try:
         # Create trader
-        trader = UniversalPaperTrader(args.config, args.credentials, args.broker)
+        trader = UniversalPaperTrader(args.config, args.credentials, args.broker, args.mode)
 
         # Try to recover from crash
         trader.try_recover_state()

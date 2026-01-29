@@ -107,13 +107,39 @@ class AngelOneAdapter(BrokerAdapter):
                     response = requests.get(url, timeout=10)
                     instruments = response.json()
                     df = pd.DataFrame(instruments)
-                    
+
                     # Filter for NFO (F&O) instruments only
                     self.nfo_instruments = df[df['exch_seg'] == 'NFO'].copy()
                     logger.info(f"Loaded {len(self.nfo_instruments)} NFO instruments")
+
+                    # Extract NIFTY options for refresh_contracts.py
+                    # Filter for NIFTY options (OPTIDX with name='NIFTY')
+                    nifty_opts = self.nfo_instruments[
+                        (self.nfo_instruments['name'] == 'NIFTY') &
+                        (self.nfo_instruments['instrumenttype'] == 'OPTIDX')
+                    ].copy()
+
+                    if not nifty_opts.empty:
+                        # Parse expiry dates
+                        nifty_opts['expiry'] = pd.to_datetime(nifty_opts['expiry'], format='%d%b%Y', errors='coerce').dt.date
+
+                        # Extract option type (CE/PE) from symbol
+                        # AngelOne format: "NIFTY30JAN2623500CE" -> last 2 chars are CE/PE
+                        nifty_opts['option_type'] = nifty_opts['symbol'].str[-2:]
+
+                        # Convert strike to numeric
+                        nifty_opts['strike'] = pd.to_numeric(nifty_opts['strike'], errors='coerce')
+
+                        self.nifty_options = nifty_opts
+                        logger.info(f"Extracted {len(self.nifty_options)} NIFTY options")
+                    else:
+                        logger.warning("No NIFTY options found in master instruments")
+                        self.nifty_options = None
+
                 except Exception as e:
                     logger.warning(f"Could not load master instruments: {e}")
                     self.nfo_instruments = None
+                    self.nifty_options = None
                 
                 logger.info("Connected to AngelOne")
                 return True

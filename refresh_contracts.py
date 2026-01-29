@@ -194,11 +194,10 @@ def _create_cache_from_zerodha(kite):
         if strike not in options_instruments[expiry_str]:
             options_instruments[expiry_str][strike] = {}
 
-        # Store tokens AND tradingsymbol (tradingsymbol needed for Zerodha quote API!)
+        # Store ONLY tokens (no symbols!) - Zerodha API accepts tokens directly
         options_instruments[expiry_str][strike][opt_type] = {
             'token': exchange_token,  # Universal exchange token (NSE/NFO assigned)
-            'zerodha_instrument_token': instrument_token,  # Zerodha's API token (pre-stored!)
-            'tradingsymbol': opt.get('tradingsymbol', '')  # Zerodha tradingsymbol for quote API
+            'zerodha_instrument_token': instrument_token  # Zerodha's API token (uses in tradingsymbol field)
         }
 
     # Count instruments cached
@@ -457,6 +456,8 @@ def _create_cache_from_angelone(broker):
             expiry_str = str(expiry_date)
 
         strike = int(opt.get('strike', 0))
+        # AngelOne stores strikes in paise, convert to rupees
+        strike = strike // 100 if strike >= 10000 else strike
         opt_type = opt.get('option_type')  # 'CE' or 'PE'
         # AngelOne's token IS the exchange token (universal)
         exchange_token = str(opt.get('token', ''))

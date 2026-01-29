@@ -98,32 +98,52 @@ class IntradayMomentumOIPaper:
 
     def _check_global_trades_today(self, current_time):
         """
-        Check cumulative CSV for any trades today (from ANY broker).
-        This ensures 1 trade/day limit works globally, not per broker.
-        
+        Check cumulative CSV for any trades today (from ANY broker AND any mode).
+        This ensures 1 trade/day limit works globally across:
+        - All brokers (Zerodha, AngelOne, etc.)
+        - All modes (paper and live)
+
         Returns:
-            int: Number of trades today across all brokers
+            int: Number of trades today across all brokers and modes
         """
         try:
             from pathlib import Path
             import pandas as pd
-            
-            cumulative_csv = Path(__file__).parent.parent / "logs" / "trades_cumulative.csv"
-            if not cumulative_csv.exists():
-                return 0
-            
-            df = pd.read_csv(cumulative_csv)
-            if df.empty:
-                return 0
-            
-            # Get today's date
+
+            logs_dir = Path(__file__).parent.parent / "logs"
             today = current_time.date()
-            
-            # Parse entry_time and count trades from today
-            df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
-            trades_today = len(df[df['entry_date'] == today])
-            
-            return trades_today
+            total_trades_today = 0
+
+            # Check BOTH paper and live cumulative CSVs
+            csv_files = [
+                logs_dir / "trades_cumulative.csv",        # Paper trades
+                logs_dir / "live_trades_cumulative.csv"    # Live trades
+            ]
+
+            for cumulative_csv in csv_files:
+                if not cumulative_csv.exists():
+                    continue
+
+                try:
+                    df = pd.read_csv(cumulative_csv)
+                    if df.empty:
+                        continue
+
+                    # Parse entry_time and count trades from today
+                    df['entry_date'] = pd.to_datetime(df['entry_time']).dt.date
+                    trades = len(df[df['entry_date'] == today])
+                    total_trades_today += trades
+
+                    if trades > 0:
+                        mode = "live" if "live_trades" in str(cumulative_csv) else "paper"
+                        print(f"[{current_time}] 📊 Found {trades} {mode} trade(s) today in {cumulative_csv.name}")
+
+                except Exception as e:
+                    print(f"[{current_time}] ⚠️  Error reading {cumulative_csv.name}: {e}")
+                    continue
+
+            return total_trades_today
+
         except Exception as e:
             print(f"[{current_time}] ⚠️  Error checking global trades: {e}")
             return 0
