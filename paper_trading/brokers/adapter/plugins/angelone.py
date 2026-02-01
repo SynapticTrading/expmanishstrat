@@ -292,12 +292,16 @@ class AngelOneAdapter(BrokerAdapter):
     def get_option_chain(self, underlying: str, expiry: str,
                          strikes: List[int]) -> pd.DataFrame:
         """
-        Get option chain data with 5-minute OHLC candles using TOKEN-BASED lookups.
+        Get option chain data using real-time quotes (OPTIMIZED - no candle fetches!)
 
-        Fetches actual candle data for OHLC and merges with quote data for OI.
-        Returns latest complete candle (not current LTP).
+        Fetches quote data (LTP, OI, Volume) in batched calls using TOKEN-BASED lookups.
+        Uses LTP for price and cumulative volume for VWAP calculations.
 
         NO SYMBOLS - uses only pre-cached tokens from contracts_cache.json
+
+        Returns:
+            DataFrame with columns: strike, option_type, expiry, open, high, low, close, OI, volume, instrument_token
+            Note: open/high/low/close all set to LTP (quote-based, not candle-based)
         """
         if not self._connected:
             return pd.DataFrame()
@@ -374,83 +378,43 @@ class AngelOneAdapter(BrokerAdapter):
                         time_module.sleep(2)
                     continue
 
-            logger.info(f"Fetching 5-min candles for {len(token_list)} options...")
-
-            # INDIVIDUAL fetch candles + merge with quotes
+            # OPTIMIZED: Use quote data directly (LTP + OI + Volume)
+            # No need for individual candle fetches!
             result_data = []
-            candle_success = 0
-            candle_fallback = 0
-
-            # Calculate last completed 5-minute boundary (shared for all tokens)
-            # Round DOWN current time to nearest 5-min boundary = end time of last complete candle
-            # Example: 12:37:23 -> 12:35:00 (fetch 12:30-12:35 candle)
-            #          12:35:00 -> 12:35:00 (fetch 12:30-12:35 candle that just completed)
-            now = datetime.now()
-            current_minute = now.minute
-
-            # Round down to nearest 5-minute boundary
-            boundary_minute = (current_minute // 5) * 5
-            last_complete_boundary = now.replace(minute=boundary_minute, second=0, microsecond=0)
-
-            # This boundary is the END time of the last complete candle
-            # Fetch that candle: [boundary - 5 min, boundary]
-            to_date = last_complete_boundary
-            from_date = last_complete_boundary - timedelta(minutes=5)
 
             for token in token_list:
                 try:
                     strike, option_type = strike_map[token]
-
-                    candle_response = self._connection.get_candle_data(
-                        exchange="NFO",
-                        symbol_token=token,
-                        interval="FIVE_MINUTE",
-                        from_date=from_date.strftime("%Y-%m-%d %H:%M"),
-                        to_date=to_date.strftime("%Y-%m-%d %H:%M")
-                    )
-
                     quote = quotes_map.get(token, {})
 
-                    if candle_response and candle_response.get('status'):
-                        candles = candle_response.get('data', [])
-                        if candles and len(candles) > 0:
-                            # Use the LAST candle (should be exactly 1 complete candle)
-                            candle = candles[-1]
+                    if not quote:
+                        logger.warning(f"No quote data for token {token}")
+                        continue
 
-                            # AngelOne format: [timestamp, O, H, L, C, V]
-                            result_data.append({
-                                'strike': strike,
-                                'option_type': option_type,
-                                'expiry': expiry_str,
-                                'open': float(candle[1]),
-                                'high': float(candle[2]),
-                                'low': float(candle[3]),
-                                'close': float(candle[4]),
-                                'OI': int(quote.get('opnInterest', 0)),
-                                'volume': int(candle[5]),
-                                'instrument_token': token
-                            })
-                            candle_success += 1
-                        else:
-                            # Fallback to LTP
-                            self._add_ltp_fallback(result_data, strike, option_type,
-                                                  expiry_str, token, quote)
-                            candle_fallback += 1
-                    else:
-                        # Fallback to LTP
-                        self._add_ltp_fallback(result_data, strike, option_type,
-                                              expiry_str, token, quote)
-                        candle_fallback += 1
+                    # Use LTP from quote (fast, no candle fetch needed!)
+                    ltp = float(quote.get('ltp', 0))
+                    volume = int(quote.get('tradeVolume', 0))  # Cumulative volume
+                    oi = int(quote.get('opnInterest', 0))
 
-                    time_module.sleep(0.5)  # Rate limiting between candle fetches
+                    result_data.append({
+                        'strike': strike,
+                        'option_type': option_type,
+                        'expiry': expiry_str,
+                        'open': ltp,   # Use LTP for all OHLC fields
+                        'high': ltp,
+                        'low': ltp,
+                        'close': ltp,  # This is what matters for entry/VWAP
+                        'OI': oi,
+                        'volume': volume,  # Cumulative volume (VWAP handles this now)
+                        'instrument_token': token
+                    })
 
                 except Exception as e:
-                    logger.error(f"Error fetching candle for token {token}: {e}")
+                    logger.error(f"Error processing quote for token {token}: {e}")
                     continue
 
             result_df = pd.DataFrame(result_data) if result_data else pd.DataFrame()
-            logger.info(f"✓ Retrieved {len(result_df)} option chain records (TOKEN-BASED)")
-            logger.info(f"  Candles: {candle_success} | LTP fallback: {candle_fallback}")
+            logger.info(f"✓ Retrieved {len(result_df)} option quotes (TOKEN-BASED)")
 
             return result_df
 
@@ -463,7 +427,10 @@ class AngelOneAdapter(BrokerAdapter):
     def _add_ltp_fallback(self, result_data: list, strike: int, option_type: str,
                           expiry_str: str, token: str, quote: dict):
         """
-        Helper to add LTP fallback when candle data unavailable.
+        DEPRECATED: No longer used after quote-based optimization.
+
+        Previously used as fallback when candle data was unavailable.
+        Now all data uses quotes directly (no candles fetched).
 
         Args:
             result_data: List to append fallback record to
@@ -871,15 +838,56 @@ class AngelOneAdapter(BrokerAdapter):
     # ══════════════════════════════════════════════════════════════════════════
 
     def is_market_open(self) -> bool:
-        """Check if market is open."""
+        """
+        Check if market is open.
+
+        Supports both regular weekdays and special trading days (e.g., Union Budget sessions).
+        Special trading days are configured in config.yaml under market.special_trading_days.
+        """
         now = datetime.now()
         current_time = now.time()
+        current_date = now.date()
 
         market_open = time(9, 15)
         market_close = time(15, 30)
 
+        # Check if it's a regular weekday (Monday-Friday)
         is_weekday = now.weekday() < 5
-        return is_weekday and market_open <= current_time <= market_close
+
+        # Check if it's a special trading day (e.g., Union Budget on Sunday)
+        is_special_day = False
+        try:
+            # Try to load special trading days from config
+            from pathlib import Path
+            import yaml
+
+            config_path = Path(__file__).parent.parent.parent.parent / "config" / "config.yaml"
+            if config_path.exists():
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    special_days = config.get('market', {}).get('special_trading_days', [])
+
+                    # Convert special days to date objects for comparison
+                    for special_day_str in special_days:
+                        try:
+                            if isinstance(special_day_str, str):
+                                special_day = datetime.strptime(special_day_str, '%Y-%m-%d').date()
+                            else:
+                                # Already a date object
+                                special_day = special_day_str
+
+                            if current_date == special_day:
+                                is_special_day = True
+                                logger.info(f"Special trading day detected: {current_date}")
+                                break
+                        except (ValueError, TypeError):
+                            continue
+        except Exception as e:
+            logger.debug(f"Could not check special trading days: {e}")
+
+        # Market is open if it's either a weekday OR a special trading day, and within trading hours
+        is_trading_day = is_weekday or is_special_day
+        return is_trading_day and market_open <= current_time <= market_close
 
     def load_instruments(self) -> bool:
         """

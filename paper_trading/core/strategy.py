@@ -671,14 +671,17 @@ class IntradayMomentumOIPaper:
 
     def _calculate_vwap(self, strike, option_type, expiry, price, volume):
         """
-        Calculate incremental VWAP for option
+        Calculate incremental VWAP for option using cumulative volume.
+
+        Handles both candle-based (interval volume) and quote-based (cumulative volume) data.
+        For cumulative volume, calculates incremental delta to avoid double-counting.
 
         Args:
             strike: Strike price
             option_type: CALL or PUT
             expiry: Expiry date
-            price: Current price
-            volume: Current volume
+            price: Current price (LTP or candle close)
+            volume: Current volume (cumulative from market open, or interval volume)
 
         Returns:
             float: VWAP value
@@ -687,14 +690,23 @@ class IntradayMomentumOIPaper:
 
         # Initialize if first time
         if key not in self.vwap_running_totals:
-            self.vwap_running_totals[key] = {'tpv': 0.0, 'volume': 0.0}
+            self.vwap_running_totals[key] = {
+                'tpv': 0.0,                      # Total Price × Volume
+                'volume': 0.0,                   # Total Volume
+                'prev_cumulative_volume': 0.0    # Track previous cumulative volume
+            }
 
-        # Calculate typical price
-        typical_price = price  # Using close as typical price (can be (H+L+C)/3 if OHLC available)
+        # Calculate incremental volume (delta since last update)
+        # This handles cumulative volume from quote data
+        prev_cumulative = self.vwap_running_totals[key]['prev_cumulative_volume']
+        incremental_volume = volume - prev_cumulative
 
-        # Update running totals
-        self.vwap_running_totals[key]['tpv'] += typical_price * volume
-        self.vwap_running_totals[key]['volume'] += volume
+        # Update running totals with INCREMENTAL volume only
+        self.vwap_running_totals[key]['tpv'] += price * incremental_volume
+        self.vwap_running_totals[key]['volume'] += incremental_volume
+
+        # Store current cumulative volume for next iteration
+        self.vwap_running_totals[key]['prev_cumulative_volume'] = volume
 
         # Calculate VWAP
         if self.vwap_running_totals[key]['volume'] > 0:

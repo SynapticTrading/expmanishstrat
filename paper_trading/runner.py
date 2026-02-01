@@ -848,7 +848,13 @@ class UniversalPaperTrader:
                 traceback.print_exc()
 
     def _get_options_data(self, current_time, spot_price):
-        """Get options chain data with 5-min candles (for entry decisions)"""
+        """
+        Get options data for entry decisions - optimized to fetch only what's needed.
+
+        OPTIMIZATION:
+        - First candle of day: Fetch full option chain (22 strikes) to determine direction
+        - After direction determined: Fetch LTP only for specific strike (1 API call, fast!)
+        """
         # Get next expiry - use contract manager if available
         if self.contract_manager:
             expiry = self.contract_manager.get_options_expiry('current_week')
@@ -861,20 +867,105 @@ class UniversalPaperTrader:
         if not expiry:
             return pd.DataFrame()
 
-        # Calculate strikes
-        strikes_above = self.config['entry']['strikes_above_spot']
-        strikes_below = self.config['entry']['strikes_below_spot']
+        # Check if direction is already determined
+        direction_determined = (
+            hasattr(self.strategy, 'daily_direction') and
+            self.strategy.daily_direction is not None and
+            hasattr(self.strategy, 'daily_strike') and
+            self.strategy.daily_strike is not None
+        )
 
-        strike_interval = 50
-        base_strike = round(spot_price / strike_interval) * strike_interval
+        if direction_determined:
+            # OPTIMIZED PATH: Fetch LTP only for specific strike
+            print(f"[{current_time}] 🚀 OPTIMIZED FETCH: Direction determined ({self.strategy.daily_direction} @ {self.strategy.daily_strike})")
+            print(f"[{current_time}] Fetching LTP for specific strike only (1 API call, fast!)")
 
-        strikes = []
-        for i in range(-strikes_below, strikes_above + 1):
-            strikes.append(base_strike + (i * strike_interval))
+            options_df = self._get_ltp_for_entry(
+                current_time=current_time,
+                strike=self.strategy.daily_strike,
+                option_type=self.strategy.daily_direction,
+                expiry=expiry
+            )
+            return options_df
+        else:
+            # FIRST CANDLE: Fetch full option chain to determine direction
+            print(f"[{current_time}] 📊 FULL FETCH: Direction not determined, fetching all strikes to find max OI")
 
-        # Fetch options chain via adapter (5-min candles for strategy)
-        options_df = self.adapter.get_options_chain(expiry, strikes)
-        return options_df if options_df is not None else pd.DataFrame()
+            # Calculate strikes
+            strikes_above = self.config['entry']['strikes_above_spot']
+            strikes_below = self.config['entry']['strikes_below_spot']
+
+            strike_interval = 50
+            base_strike = round(spot_price / strike_interval) * strike_interval
+
+            strikes = []
+            for i in range(-strikes_below, strikes_above + 1):
+                strikes.append(base_strike + (i * strike_interval))
+
+            # Fetch full options chain (22 strikes, one-time cost for direction determination)
+            options_df = self.adapter.get_options_chain(expiry, strikes)
+            return options_df if options_df is not None else pd.DataFrame()
+
+    def _get_ltp_for_entry(self, current_time, strike, option_type, expiry):
+        """
+        Get LTP-only data for specific strike (fast, for entry monitoring after direction determined).
+
+        Fetches only quote data (LTP + OI + Volume) for the specific strike being monitored,
+        NOT candle data for the entire option chain.
+
+        Args:
+            current_time: Current timestamp
+            strike: Strike price to monitor
+            option_type: 'CALL' or 'PUT' (strategy format)
+            expiry: Expiry date string (YYYY-MM-DD)
+
+        Returns:
+            DataFrame with columns: strike, option_type, expiry, close (LTP), OI, volume
+        """
+        import pandas as pd
+
+        # Convert option_type format: CALL→CE, PUT→PE (for adapter compatibility)
+        adapter_option_type = 'CE' if option_type == 'CALL' else 'PE'
+
+        # Ensure strike is integer
+        strike = int(strike)
+
+        # Convert expiry to string format if needed
+        if hasattr(expiry, 'strftime'):
+            expiry_str = expiry.strftime('%Y-%m-%d')
+        else:
+            expiry_str = str(expiry)
+
+        try:
+            # Get quote (LTP + OI + Volume) for this specific strike
+            quote = self.adapter.get_quote(
+                underlying='NIFTY',
+                option_type=adapter_option_type,
+                strike=strike,
+                expiry=expiry_str
+            )
+
+            if quote:
+                print(f"[{current_time}] ✓ Quote fetched: {strike} {adapter_option_type} → LTP=₹{quote.ltp:.2f}, OI={quote.oi:,.0f}, Vol={quote.volume:,.0f}")
+
+                # Return as DataFrame matching option chain format
+                return pd.DataFrame([{
+                    'strike': strike,
+                    'option_type': adapter_option_type,  # Use adapter format (PE/CE)
+                    'expiry': expiry_str,
+                    'close': quote.ltp,      # Use LTP as close (for price checks)
+                    'OI': quote.oi,          # Current open interest
+                    'volume': quote.volume   # Cumulative volume (market open to now)
+                }])
+            else:
+                print(f"[{current_time}] ⚠️ Could not get quote for {strike} {adapter_option_type} (returned None)")
+                return pd.DataFrame()
+
+        except Exception as e:
+            print(f"[{current_time}] ✗ Error fetching quote for {strike} {adapter_option_type}: {e}")
+            import traceback
+            traceback.print_exc()
+            return pd.DataFrame()
 
     def _get_ltp_for_positions(self, current_time, positions):
         """

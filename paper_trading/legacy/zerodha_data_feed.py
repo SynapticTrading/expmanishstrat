@@ -155,10 +155,10 @@ class ZerodhaDataFeed:
 
     def get_options_chain(self, expiry, strikes):
         """
-        Get options chain data with 5-minute OHLC candles
+        Get options chain data using real-time quotes (OPTIMIZED - no candle fetches!)
 
-        Fetches actual candle data for OHLC and merges with quote data for OI.
-        Returns latest complete candle (not current LTP).
+        Fetches quote data (LTP, OI, Volume) in a single batch call.
+        Uses LTP for price and cumulative volume for VWAP calculations.
 
         Args:
             expiry: Expiry date (YYYY-MM-DD format or datetime)
@@ -166,6 +166,7 @@ class ZerodhaDataFeed:
 
         Returns:
             DataFrame: Options data with columns [strike, option_type, expiry, open, high, low, close, OI, volume, instrument_token, tradingsymbol]
+                      Note: open/high/low/close all set to LTP (quote-based, not candle-based)
         """
         try:
             if self.nfo_instruments is None:
@@ -238,67 +239,45 @@ class ZerodhaDataFeed:
             if quotes is None:
                 return pd.DataFrame()
 
-            print(f"[{datetime.now()}] Fetching 5-min candles for {len(token_to_option_map)} options...")
-
-            # INDIVIDUAL fetch candles + merge with quotes
+            # OPTIMIZED: Use quote data directly (LTP + OI + Volume)
+            # No need for individual candle fetches!
             result_data = []
-            candle_success = 0
-            candle_fallback = 0
 
             for token, (strike, option_type, symbol, expiry) in token_to_option_map.items():
                 try:
-                    # Fetch 5-min candle using existing method (already token-based)
-                    candle = self.get_5min_candle(token)
-
-                    # Get quote for OI using TOKEN key (not symbol!)
+                    # Get quote for this token
                     token_key = str(token)
                     quote = quotes.get(token_key, {})
 
-                    if candle:
-                        # Use candle OHLC
-                        result_data.append({
-                            'strike': strike,
-                            'option_type': option_type,
-                            'expiry': expiry,
-                            'open': candle['open'],
-                            'high': candle['high'],
-                            'low': candle['low'],
-                            'close': candle['close'],  # Candle close, NOT LTP
-                            'OI': quote.get('oi', 0),  # Uppercase to match backtest
-                            'volume': candle['volume'],
-                            'instrument_token': token,
-                            'tradingsymbol': symbol
-                        })
-                        candle_success += 1
-                    else:
-                        # Fallback to LTP if no candle
-                        ltp = quote.get('last_price', 0)
-                        print(f"[{datetime.now()}] ⚠️  No candle for {symbol}, using LTP fallback")
-                        result_data.append({
-                            'strike': strike,
-                            'option_type': option_type,
-                            'expiry': expiry,
-                            'open': ltp,
-                            'high': ltp,
-                            'low': ltp,
-                            'close': ltp,
-                            'OI': quote.get('oi', 0),
-                            'volume': 0,
-                            'instrument_token': token,
-                            'tradingsymbol': symbol
-                        })
-                        candle_fallback += 1
+                    if not quote:
+                        print(f"[{datetime.now()}] ⚠️  No quote data for {symbol}")
+                        continue
 
-                    time_module.sleep(0.25)  # Rate limiting between candle fetches
+                    # Use LTP from quote (fast, no candle fetch needed!)
+                    ltp = quote.get('last_price', 0)
+                    volume = quote.get('volume', 0)  # Cumulative volume
+                    oi = quote.get('oi', 0)
+
+                    result_data.append({
+                        'strike': strike,
+                        'option_type': option_type,
+                        'expiry': expiry,
+                        'open': ltp,   # Use LTP for all OHLC fields
+                        'high': ltp,
+                        'low': ltp,
+                        'close': ltp,  # This is what matters for entry/VWAP
+                        'OI': oi,
+                        'volume': volume,  # Cumulative volume (VWAP handles this now)
+                        'instrument_token': token,
+                        'tradingsymbol': symbol
+                    })
 
                 except Exception as e:
-                    print(f"[{datetime.now()}] ✗ Error fetching data for {symbol}: {e}")
+                    print(f"[{datetime.now()}] ✗ Error processing quote for {symbol}: {e}")
                     continue
 
             result_df = pd.DataFrame(result_data)
-
-            print(f"[{datetime.now()}] ✓ Retrieved {len(result_df)} option chain records")
-            print(f"[{datetime.now()}]   Candles: {candle_success} | LTP fallback: {candle_fallback}")
+            print(f"[{datetime.now()}] ✓ Retrieved {len(result_df)} option quotes")
 
             return result_df
 
@@ -377,13 +356,17 @@ class ZerodhaDataFeed:
 
     def is_market_open(self):
         """
-        Check if market is open
+        Check if market is open.
+
+        Supports both regular weekdays and special trading days (e.g., Union Budget sessions).
+        Special trading days are configured in config.yaml under market.special_trading_days.
 
         Returns:
             bool: True if market is open
         """
         now = datetime.now()
         current_time = now.time()
+        current_date = now.date()
 
         # Market hours: 9:15 AM - 3:30 PM
         market_open = time(9, 15)
@@ -392,4 +375,38 @@ class ZerodhaDataFeed:
         # Check if weekday (Monday=0, Sunday=6)
         is_weekday = now.weekday() < 5
 
-        return is_weekday and market_open <= current_time <= market_close
+        # Check if it's a special trading day (e.g., Union Budget on Sunday)
+        is_special_day = False
+        try:
+            # Try to load special trading days from config
+            from pathlib import Path
+            import yaml
+
+            config_path = Path(__file__).parent.parent.parent / "config" / "config.yaml"
+            if config_path.exists():
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    special_days = config.get('market', {}).get('special_trading_days', [])
+
+                    # Convert special days to date objects for comparison
+                    for special_day_str in special_days:
+                        try:
+                            if isinstance(special_day_str, str):
+                                special_day = datetime.strptime(special_day_str, '%Y-%m-%d').date()
+                            else:
+                                # Already a date object
+                                special_day = special_day_str
+
+                            if current_date == special_day:
+                                is_special_day = True
+                                print(f"Special trading day detected: {current_date}")
+                                break
+                        except (ValueError, TypeError):
+                            continue
+        except Exception as e:
+            # Silently fail if config cannot be read
+            pass
+
+        # Market is open if it's either a weekday OR a special trading day, and within trading hours
+        is_trading_day = is_weekday or is_special_day
+        return is_trading_day and market_open <= current_time <= market_close

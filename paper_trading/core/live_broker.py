@@ -58,6 +58,12 @@ class LiveBroker:
         self.max_order_value = live_cfg.get('max_order_value', None)  # Optional
         self.max_daily_loss = live_cfg.get('max_daily_loss', None)    # Optional
 
+        # Order fill settings (rate limit protection)
+        self.order_timeout = live_cfg.get('order_timeout', 30)
+        self.status_check_interval = live_cfg.get('status_check_interval', 2)
+        self.max_status_retries = live_cfg.get('max_status_retries', 3)
+        self.retry_initial_delay = live_cfg.get('retry_initial_delay', 2)
+
         # Position tracking
         self.positions = []  # Open positions
         self.trade_history = []  # Closed trades
@@ -83,6 +89,12 @@ class LiveBroker:
             print(f"[{datetime.now()}] Max Daily Loss: ₹{self.max_daily_loss:,.2f}")
         else:
             print(f"[{datetime.now()}] Max Daily Loss: No limit (relying on strategy stop losses)")
+
+        print(f"[{datetime.now()}] Order Settings:")
+        print(f"  - Fill timeout: {self.order_timeout}s")
+        print(f"  - Status check interval: {self.status_check_interval}s (rate limit protection)")
+        print(f"  - Max retries: {self.max_status_retries} (exponential backoff)")
+        print(f"  - Initial retry delay: {self.retry_initial_delay}s")
 
         print(f"[{datetime.now()}] Live trade log: {self.daily_trade_log}")
 
@@ -175,13 +187,20 @@ class LiveBroker:
                 self.adapter.cancel_order(response.order_id)
                 return None
 
-            # 5. Get actual fill price
-            order_status = self.adapter.get_order(response.order_id)
-            if order_status:
+            # 5. Get actual fill price with retry logic
+            print(f"[{datetime.now()}] Fetching fill price from broker...")
+            order_status = self._get_order_with_retry(response.order_id)  # Uses config defaults
+
+            if order_status and order_status.average_price:
                 actual_price = order_status.average_price
+                slippage = actual_price - price
+                slippage_pct = (slippage / price) * 100 if price > 0 else 0
+
                 print(f"[{datetime.now()}] ✓ Order filled at ₹{actual_price:.2f}")
+                if abs(slippage) > 0.01:  # Show slippage if > 1 paisa
+                    print(f"[{datetime.now()}]   Slippage: ₹{slippage:+.2f} ({slippage_pct:+.2f}%)")
             else:
-                print(f"[{datetime.now()}] ⚠️  Could not get order status, using requested price")
+                print(f"[{datetime.now()}] ⚠️  Could not get fill price after retries, using requested price ₹{price:.2f}")
 
         # 6. Create position object
         position = LivePosition(
@@ -270,13 +289,20 @@ class LiveBroker:
                 position._sold = False
                 return False
 
-            # 5. Get actual exit price
-            order_status = self.adapter.get_order(response.order_id)
-            if order_status:
+            # 5. Get actual exit price with retry logic
+            print(f"[{datetime.now()}] Fetching exit fill price from broker...")
+            order_status = self._get_order_with_retry(response.order_id)  # Uses config defaults
+
+            if order_status and order_status.average_price:
                 actual_exit_price = order_status.average_price
+                slippage = actual_exit_price - price
+                slippage_pct = (slippage / price) * 100 if price > 0 else 0
+
                 print(f"[{datetime.now()}] ✓ Sell order filled at ₹{actual_exit_price:.2f}")
+                if abs(slippage) > 0.01:  # Show slippage if > 1 paisa
+                    print(f"[{datetime.now()}]   Slippage: ₹{slippage:+.2f} ({slippage_pct:+.2f}%)")
             else:
-                print(f"[{datetime.now()}] ⚠️  Could not get order status, using requested price")
+                print(f"[{datetime.now()}] ⚠️  Could not get exit fill price after retries, using requested price ₹{price:.2f}")
 
         # 6. Calculate P&L
         proceeds = actual_exit_price * position.size
@@ -320,29 +346,99 @@ class LiveBroker:
 
         return True
 
-    def _wait_for_fill(self, order_id, timeout=30):
+    def _get_order_with_retry(self, order_id, max_retries=None, initial_delay=None):
         """
-        Wait for order to be filled
+        Get order status with exponential backoff retry for rate limit errors.
+
+        Args:
+            order_id: Order ID to fetch
+            max_retries: Maximum number of retry attempts (uses config default if None)
+            initial_delay: Initial delay in seconds (uses config default if None)
+
+        Returns:
+            OrderResponse or None
+        """
+        # Use config values as defaults
+        if max_retries is None:
+            max_retries = self.max_status_retries
+        if initial_delay is None:
+            initial_delay = self.retry_initial_delay
+
+        delay = initial_delay
+
+        for attempt in range(max_retries):
+            try:
+                order_status = self.adapter.get_order(order_id)
+
+                if order_status:
+                    return order_status
+
+                # If None returned, might be rate limit - retry with backoff
+                if attempt < max_retries - 1:
+                    print(f"[{datetime.now()}] ⚠️  Order status fetch returned None, retrying in {delay}s... (attempt {attempt + 1}/{max_retries})")
+                    time.sleep(delay)
+                    delay *= 2  # Exponential backoff
+
+            except Exception as e:
+                error_msg = str(e).lower()
+
+                # Check if it's a rate limit error
+                if 'rate' in error_msg or 'access denied' in error_msg or 'too many' in error_msg:
+                    if attempt < max_retries - 1:
+                        print(f"[{datetime.now()}] ⚠️  Rate limit detected, backing off for {delay}s... (attempt {attempt + 1}/{max_retries})")
+                        time.sleep(delay)
+                        delay *= 2  # Exponential backoff
+                    else:
+                        print(f"[{datetime.now()}] ✗ Rate limit persists after {max_retries} attempts: {e}")
+                        return None
+                else:
+                    # Non-rate-limit error, log and return None
+                    print(f"[{datetime.now()}] ✗ Error fetching order status: {e}")
+                    return None
+
+        return None
+
+    def _wait_for_fill(self, order_id, timeout=None):
+        """
+        Wait for order to be filled with rate limit handling.
 
         Args:
             order_id: Order ID to monitor
-            timeout: Timeout in seconds
+            timeout: Timeout in seconds (uses config default if None)
 
         Returns:
             bool: True if filled, False if timeout
         """
+        # Use config values as defaults
+        if timeout is None:
+            timeout = self.order_timeout
+
         start_time = time.time()
+        check_interval = self.status_check_interval  # From config (default 2s)
+        last_check = 0
+
         while time.time() - start_time < timeout:
-            order_status = self.adapter.get_order(order_id)
+            # Rate limit protection: don't check too frequently
+            elapsed = time.time() - last_check
+            if elapsed < check_interval:
+                time.sleep(check_interval - elapsed)
+
+            last_check = time.time()
+
+            # Use retry logic for order status fetch
+            order_status = self._get_order_with_retry(order_id)  # Uses config defaults
+
             if order_status:
                 if order_status.status == OrderStatus.COMPLETE:
                     return True
                 elif order_status.status in [OrderStatus.REJECTED, OrderStatus.CANCELLED]:
                     print(f"[{datetime.now()}] ✗ Order {order_id} {order_status.status.value}")
                     return False
+            else:
+                # If we still can't get status after retries, continue waiting
+                print(f"[{datetime.now()}] ⚠️  Could not get order status, will retry...")
 
-            time.sleep(1)
-
+        print(f"[{datetime.now()}] ⚠️  Timeout waiting for order fill after {timeout}s")
         return False
 
     def _log_trade(self, position, vwap_at_exit, oi_at_exit):
