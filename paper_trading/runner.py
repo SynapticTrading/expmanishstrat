@@ -876,7 +876,32 @@ class UniversalPaperTrader:
         )
 
         if direction_determined:
-            # OPTIMIZED PATH: Fetch LTP only for specific strike
+            # OPTIMIZED PATH: Update strike based on current spot, then fetch LTP for that strike
+
+            # Calculate current ATM strike based on spot price
+            strike_interval = 50
+            base_strike = round(spot_price / strike_interval) * strike_interval
+
+            # Get available strikes around current spot
+            strikes_range = 5  # Check strikes within +/- 5 strikes
+            available_strikes = [base_strike + (i * strike_interval) for i in range(-strikes_range, strikes_range + 1)]
+
+            # Calculate what the strike should be for current direction
+            # Use strategy's oi_analyzer if available, otherwise create a new one
+            oi_analyzer = self.strategy.oi_analyzer if hasattr(self.strategy, 'oi_analyzer') else OIAnalyzer()
+            current_strike = oi_analyzer.get_nearest_strike(
+                spot_price, self.strategy.daily_direction, available_strikes
+            )
+
+            if current_strike is not None:
+                current_strike = int(current_strike)
+
+                # Update strategy's daily_strike if it changed
+                if current_strike != self.strategy.daily_strike:
+                    old_strike = self.strategy.daily_strike
+                    self.strategy.daily_strike = current_strike
+                    print(f"[{current_time}] 📍 STRIKE UPDATED: {old_strike} → {current_strike} (Spot: {spot_price:.2f})")
+
             print(f"[{current_time}] 🚀 OPTIMIZED FETCH: Direction determined ({self.strategy.daily_direction} @ {self.strategy.daily_strike})")
             print(f"[{current_time}] Fetching LTP for specific strike only (1 API call, fast!)")
 
