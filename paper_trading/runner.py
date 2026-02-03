@@ -876,13 +876,13 @@ class UniversalPaperTrader:
         )
 
         if direction_determined:
-            # OPTIMIZED PATH: Update strike based on current spot, then fetch LTP for that strike
+            # OPTIMIZED PATH: Calculate potential strike range, fetch data, let strategy decide final strike
 
             # Calculate current ATM strike based on spot price
             strike_interval = 50
             base_strike = round(spot_price / strike_interval) * strike_interval
 
-            # Get available strikes around current spot
+            # Get available strikes around current spot (for strike update logic in strategy)
             strikes_range = 5  # Check strikes within +/- 5 strikes
             available_strikes = [base_strike + (i * strike_interval) for i in range(-strikes_range, strikes_range + 1)]
 
@@ -895,22 +895,29 @@ class UniversalPaperTrader:
 
             if current_strike is not None:
                 current_strike = int(current_strike)
+            else:
+                # Fallback to current strike if calculation fails
+                print(f"[{current_time}] ⚠️  Strike calculation returned None (spot: {spot_price:.2f}, direction: {self.strategy.daily_direction})")
+                print(f"[{current_time}]    Using existing strike: {self.strategy.daily_strike}")
+                current_strike = self.strategy.daily_strike
 
-                # Update strategy's daily_strike if it changed
-                if current_strike != self.strategy.daily_strike:
-                    old_strike = self.strategy.daily_strike
-                    self.strategy.daily_strike = current_strike
-                    print(f"[{current_time}] 📍 STRIKE UPDATED: {old_strike} → {current_strike} (Spot: {spot_price:.2f})")
-
-            print(f"[{current_time}] 🚀 OPTIMIZED FETCH: Direction determined ({self.strategy.daily_direction} @ {self.strategy.daily_strike})")
+            print(f"[{current_time}] 🚀 OPTIMIZED FETCH: Direction determined ({self.strategy.daily_direction} @ {current_strike})")
             print(f"[{current_time}] Fetching LTP for specific strike only (1 API call, fast!)")
 
+            # Fetch data for the calculated strike (strategy will update its internal state)
             options_df = self._get_ltp_for_entry(
                 current_time=current_time,
-                strike=self.strategy.daily_strike,
+                strike=current_strike,
                 option_type=self.strategy.daily_direction,
                 expiry=expiry
             )
+
+            # Add available strikes as metadata for strategy's strike update logic
+            # This ensures strategy has the strike range to make decisions
+            if not options_df.empty:
+                # Store available strikes in DataFrame metadata for strategy to use
+                options_df.attrs['available_strikes'] = available_strikes
+
             return options_df
         else:
             # FIRST CANDLE: Fetch full option chain to determine direction

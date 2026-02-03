@@ -2845,3 +2845,133 @@ Step 3/3: Verifying contracts...
 2026-02-01 09:39:30,052 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
 2026-02-01 09:39:30,052 - __main__ - INFO - ======================================================================
 
+2026-02-02 09:56:48,985 - __main__ - INFO - ======================================================================
+2026-02-02 09:56:48,985 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-02 09:56:48
+2026-02-02 09:56:48,986 - __main__ - INFO - ======================================================================
+2026-02-02 09:56:48,986 - __main__ - INFO - Broker: ANGELONE
+2026-02-02 09:56:48,986 - __main__ - INFO - 
+Step 1/3: Authenticating with Angelone...
+2026-02-02 09:56:49,445 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_angelone.txt
+2026-02-02 09:56:49,446 - paper_trading.brokers.adapter.factory - INFO - Created angelone adapter
+2026-02-02 09:56:50,961 - paper_trading.brokers.adapter.plugins.angelone - INFO - Loading AngelOne master instruments for token lookup...
+2026-02-02 09:57:15,746 - paper_trading.brokers.adapter.plugins.angelone - INFO - Loaded 41276 NFO instruments
+2026-02-02 09:57:15,755 - paper_trading.brokers.adapter.plugins.angelone - INFO - Extracted 1660 NIFTY options
+2026-02-02 09:57:15,756 - paper_trading.brokers.adapter.plugins.angelone - INFO - Connected to AngelOne
+2026-02-02 09:57:15,811 - __main__ - INFO - ✓ Authentication successful
+2026-02-02 09:57:15,812 - __main__ - INFO - 
+Step 2/3: Loading instruments from AngelOne...
+2026-02-02 09:57:15,812 - paper_trading.brokers.adapter.plugins.angelone - INFO - load_instruments() called - SKIPPED (using token-based approach)
+2026-02-02 09:57:15,812 - paper_trading.brokers.adapter.plugins.angelone - INFO - All lookups use ContractManager → contracts_cache.json
+2026-02-02 09:57:15,812 - __main__ - INFO - Refreshing contracts...
+2026-02-02 09:57:15,812 - __main__ - INFO - Processing NIFTY futures...
+2026-02-02 09:57:15,821 - __main__ - INFO - Found 3 NIFTY futures contracts
+2026-02-02 09:57:15,822 - __main__ - INFO - Processing NIFTY options...
+2026-02-02 09:57:15,822 - __main__ - INFO - Found 18 unique options expiry dates
+2026-02-02 09:57:15,822 - __main__ - INFO - Options lot size: 65 units per lot
+2026-02-02 09:57:15,822 - __main__ - INFO - Building options instrument token map (using exchange tokens)...
+2026-02-02 09:57:15,822 - __main__ - INFO - Loading existing cache to preserve Zerodha instrument tokens...
+2026-02-02 09:57:15,823 - __main__ - INFO - Loaded existing cache with 18 expiries
+2026-02-02 09:57:15,874 - __main__ - INFO - Preserved 0/1660 Zerodha instrument tokens from existing cache
+2026-02-02 09:57:15,874 - __main__ - INFO - Cached 1660 options instrument tokens across 18 expiries
+2026-02-02 09:57:15,885 - __main__ - INFO - Saved 3 futures and 18 options expiries to cache: contracts_cache.json
+2026-02-02 09:57:15,885 - __main__ - INFO - Using UNIVERSAL exchange tokens (same for all brokers)
+2026-02-02 09:57:16,015 - __main__ - INFO - ✓ Contracts refreshed successfully
+2026-02-02 09:57:16,015 - __main__ - INFO - 
+Step 3/3: Verifying contracts...
+2026-02-02 09:57:16,015 - __main__ - INFO - 
+======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - FUTURES CONTRACTS
+2026-02-02 09:57:16,015 - __main__ - INFO - ======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - Current Month:  NIFTY24FEB26FUT - Expiry: 2026-02-24 (22 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - Next Month:     NIFTY30MAR26FUT - Expiry: 2026-03-30 (56 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - Far Next Month: NIFTY28APR26FUT - Expiry: 2026-04-28 (85 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - 
+======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - OPTIONS EXPIRY DATES
+2026-02-02 09:57:16,015 - __main__ - INFO - ======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - Current Week:   2026-02-03 (1 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - Next Week:      2026-02-10 (8 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - Current Month:  2026-02-24 (22 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - Next Month:     2026-03-30 (56 days)
+2026-02-02 09:57:16,015 - __main__ - INFO - 
+======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - FUTURES ROLLOVER CHECK (7-day threshold)
+2026-02-02 09:57:16,015 - __main__ - INFO - ======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - ✓ OK: current_month (NIFTY24FEB26FUT - 22 days to expiry)
+2026-02-02 09:57:16,015 - __main__ - INFO - ✓ OK: next_month (NIFTY30MAR26FUT - 56 days to expiry)
+2026-02-02 09:57:16,015 - __main__ - INFO - ✓ OK: far_next_month (NIFTY28APR26FUT - 85 days to expiry)
+2026-02-02 09:57:16,015 - __main__ - INFO - 
+======================================================================
+2026-02-02 09:57:16,015 - __main__ - INFO - OPTIONS ROLLOVER CHECK (2-day threshold)
+2026-02-02 09:57:16,015 - __main__ - INFO - ======================================================================
+2026-02-02 09:57:16,015 - __main__ - WARNING - ⚠️  ROLLOVER NEEDED: current_week (2026-02-03 - 1 days to expiry)
+2026-02-02 09:57:16,015 - __main__ - INFO - ✓ OK: current_month (2026-02-24 - 22 days to expiry)
+2026-02-02 09:57:16,016 - __main__ - INFO - 
+======================================================================
+2026-02-02 09:57:16,016 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
+2026-02-02 09:57:16,016 - __main__ - INFO - ======================================================================
+
+2026-02-02 15:15:57,195 - __main__ - INFO - ======================================================================
+2026-02-02 15:15:57,195 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-02 15:15:57
+2026-02-02 15:15:57,195 - __main__ - INFO - ======================================================================
+2026-02-02 15:15:57,196 - __main__ - INFO - Broker: ZERODHA
+2026-02-02 15:15:57,196 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-02 15:15:57,783 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-02 15:15:57,784 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-02 15:15:58,398 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Connected to Zerodha
+2026-02-02 15:15:58,399 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly
+2026-02-02 15:15:58,399 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO tradingsymbol lookups - tokens from contracts_cache.json
+2026-02-02 15:15:58,399 - paper_trading.brokers.adapter.plugins.zerodha - WARNING - ⚠️  ContractManager has no tokens - run: python refresh_contracts.py --broker zerodha
+2026-02-02 15:15:58,399 - __main__ - INFO - ✓ Authentication successful
+2026-02-02 15:15:58,399 - __main__ - INFO - 
+Step 2/3: Loading instruments from Zerodha...
+2026-02-02 15:16:00,174 - __main__ - INFO - Refreshing contracts...
+2026-02-02 15:16:00,174 - __main__ - INFO - Fetching instruments from Zerodha...
+2026-02-02 15:16:02,621 - __main__ - INFO - Fetched 41871 NFO instruments
+2026-02-02 15:16:02,621 - __main__ - INFO - Processing NIFTY futures...
+2026-02-02 15:16:02,631 - __main__ - INFO - Found 3 NIFTY futures contracts
+2026-02-02 15:16:02,631 - __main__ - INFO - Processing NIFTY options...
+2026-02-02 15:16:02,640 - __main__ - INFO - Found 1660 NIFTY options contracts
+2026-02-02 15:16:02,643 - __main__ - INFO - Found 18 unique options expiry dates
+2026-02-02 15:16:02,644 - __main__ - INFO - Options lot size: 65 units per lot
+2026-02-02 15:16:02,644 - __main__ - INFO - Building options instrument token map (using exchange tokens)...
+2026-02-02 15:16:02,648 - __main__ - INFO - Cached 1660 options instrument tokens across 18 expiries
+2026-02-02 15:16:02,659 - __main__ - INFO - Saved 3 futures and 18 options expiries to cache: contracts_cache.json
+2026-02-02 15:16:02,659 - __main__ - INFO - Using UNIVERSAL exchange tokens (same for all brokers)
+2026-02-02 15:16:02,719 - __main__ - INFO - ✓ Contracts refreshed successfully
+2026-02-02 15:16:02,719 - __main__ - INFO - 
+Step 3/3: Verifying contracts...
+2026-02-02 15:16:02,719 - __main__ - INFO - 
+======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - FUTURES CONTRACTS
+2026-02-02 15:16:02,719 - __main__ - INFO - ======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - Current Month:  NIFTY26FEBFUT - Expiry: 2026-02-24 (22 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - Next Month:     NIFTY26MARFUT - Expiry: 2026-03-30 (56 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - Far Next Month: NIFTY26APRFUT - Expiry: 2026-04-28 (85 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - 
+======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - OPTIONS EXPIRY DATES
+2026-02-02 15:16:02,719 - __main__ - INFO - ======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - Current Week:   2026-02-03 (1 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - Next Week:      2026-02-10 (8 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - Current Month:  2026-02-24 (22 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - Next Month:     2026-03-30 (56 days)
+2026-02-02 15:16:02,719 - __main__ - INFO - 
+======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - FUTURES ROLLOVER CHECK (7-day threshold)
+2026-02-02 15:16:02,719 - __main__ - INFO - ======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - ✓ OK: current_month (NIFTY26FEBFUT - 22 days to expiry)
+2026-02-02 15:16:02,719 - __main__ - INFO - ✓ OK: next_month (NIFTY26MARFUT - 56 days to expiry)
+2026-02-02 15:16:02,719 - __main__ - INFO - ✓ OK: far_next_month (NIFTY26APRFUT - 85 days to expiry)
+2026-02-02 15:16:02,719 - __main__ - INFO - 
+======================================================================
+2026-02-02 15:16:02,719 - __main__ - INFO - OPTIONS ROLLOVER CHECK (2-day threshold)
+2026-02-02 15:16:02,719 - __main__ - INFO - ======================================================================
+2026-02-02 15:16:02,719 - __main__ - WARNING - ⚠️  ROLLOVER NEEDED: current_week (2026-02-03 - 1 days to expiry)
+2026-02-02 15:16:02,720 - __main__ - INFO - ✓ OK: current_month (2026-02-24 - 22 days to expiry)
+2026-02-02 15:16:02,720 - __main__ - INFO - 
+======================================================================
+2026-02-02 15:16:02,720 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
+2026-02-02 15:16:02,720 - __main__ - INFO - ======================================================================
+

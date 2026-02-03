@@ -324,24 +324,48 @@ class IntradayMomentumOIPaper:
             return
 
         # Check if strike needs updating based on spot price
-        strikes = options_data['strike'].unique()
+        # Use available_strikes from metadata if provided (optimized fetch path),
+        # otherwise use strikes from options_data (full fetch path)
+        if hasattr(options_data, 'attrs') and 'available_strikes' in options_data.attrs:
+            strikes = options_data.attrs['available_strikes']
+        else:
+            strikes = options_data['strike'].unique()
+
         new_strike = self.oi_analyzer.get_nearest_strike(
             spot_price, self.daily_direction, strikes
         )
 
         if new_strike is not None:
             new_strike = int(new_strike)  # Ensure integer
+        else:
+            # Log when no suitable strike found (spot moved outside available range)
+            print(f"[{current_time}] ⚠️  Could not calculate new strike for spot {spot_price:.2f} (direction: {self.daily_direction})")
+            print(f"[{current_time}]    Available strikes: {min(strikes)} to {max(strikes)}, keeping current strike: {self.daily_strike}")
 
         if new_strike != self.daily_strike and new_strike is not None:
             old_strike = self.daily_strike
             self.daily_strike = new_strike
             print(f"[{current_time}] 📍 STRIKE UPDATED: {old_strike} → {new_strike} (Spot: {spot_price:.2f})")
+
             # Reset entry OI when strike changes
             if hasattr(self, 'entry_oi'):
                 delattr(self, 'entry_oi')
+
             # Reset VWAP tracking when strike changes
             if hasattr(self, 'vwap_initialized'):
                 self.vwap_initialized = False
+
+            # Clean up old strike's VWAP data to prevent memory bloat
+            # Remove entries for the old strike from vwap_running_totals
+            keys_to_remove = [
+                key for key in self.vwap_running_totals.keys()
+                if key[0] == old_strike  # key format: (strike, option_type, expiry)
+            ]
+            for key in keys_to_remove:
+                del self.vwap_running_totals[key]
+
+            if keys_to_remove:
+                print(f"[{current_time}] 🧹 Cleaned up VWAP data for old strike {old_strike}")
 
         # Get option data for daily strike
         option_data = self._get_option_data(
