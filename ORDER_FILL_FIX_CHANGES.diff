@@ -1,0 +1,267 @@
+diff --git a/paper_trading/core/live_broker.py b/paper_trading/core/live_broker.py
+index 8c15d54..970de20 100644
+--- a/paper_trading/core/live_broker.py
++++ b/paper_trading/core/live_broker.py
+@@ -178,20 +178,38 @@ class LiveBroker:
+ 
+         print(f"[{datetime.now()}] ✓ Order placed: {response.order_id}")
+ 
+-        # 4. Wait for fill (for MARKET orders)
+-        actual_price = price
+-        if self.order_type == OrderType.MARKET:
+-            filled = self._wait_for_fill(response.order_id, timeout=30)
+-            if not filled:
+-                print(f"[{datetime.now()}] ⚠️  Order not filled within timeout, attempting cancel...")
+-                self.adapter.cancel_order(response.order_id)
+-                return None
+-
+-            # 5. Get actual fill price with retry logic
+-            print(f"[{datetime.now()}] Fetching fill price from broker...")
+-            order_status = self._get_order_with_retry(response.order_id)  # Uses config defaults
+-
+-            if order_status and order_status.average_price:
++        # 4. Wait for order to reach final state (COMPLETE, REJECTED, or CANCELLED)
++        # This is the KEY fix - don't create position until we KNOW what happened
++        order_status = self._wait_until_order_resolved(
++            response.order_id,
++            timeout=120  # 2 minutes max wait
++        )
++
++        if not order_status:
++            # Could not get status even after 2 minutes
++            print(f"[{datetime.now()}] ✗ Could not determine order status after 2 minutes")
++            print(f"[{datetime.now()}] ⚠️  Attempting to cancel order {response.order_id}...")
++            self.adapter.cancel_order(response.order_id)
++            return None  # Go to next candle
++
++        # 5. Handle different order statuses
++        if order_status.status == OrderStatus.REJECTED:
++            # Order was rejected by broker
++            print(f"[{datetime.now()}] ✗ Order {response.order_id} was REJECTED by broker")
++            if order_status.message:
++                print(f"[{datetime.now()}]   Reason: {order_status.message}")
++            return None  # Go to next candle
++
++        elif order_status.status == OrderStatus.CANCELLED:
++            # Order was cancelled
++            print(f"[{datetime.now()}] ✗ Order {response.order_id} was CANCELLED")
++            return None  # Go to next candle
++
++        elif order_status.status == OrderStatus.COMPLETE:
++            # ✅ Order is FILLED - Proceed with position creation
++
++            # Get fill price
++            if order_status.average_price:
+                 actual_price = order_status.average_price
+                 slippage = actual_price - price
+                 slippage_pct = (slippage / price) * 100 if price > 0 else 0
+@@ -200,9 +218,20 @@ class LiveBroker:
+                 if abs(slippage) > 0.01:  # Show slippage if > 1 paisa
+                     print(f"[{datetime.now()}]   Slippage: ₹{slippage:+.2f} ({slippage_pct:+.2f}%)")
+             else:
+-                print(f"[{datetime.now()}] ⚠️  Could not get fill price after retries, using requested price ₹{price:.2f}")
++                # Status is COMPLETE but no fill price (rare API issue)
++                # Use requested price as fallback since we confirmed order filled
++                print(f"[{datetime.now()}] ⚠️  Order is COMPLETE but no fill price available")
++                print(f"[{datetime.now()}] ⚠️  Using requested price ₹{price:.2f}")
++                actual_price = price
++
++        else:
++            # Order is still PENDING/OPEN after timeout
++            print(f"[{datetime.now()}] ⚠️  Order {response.order_id} still in state: {order_status.status.value}")
++            print(f"[{datetime.now()}] ⚠️  Attempting to cancel...")
++            self.adapter.cancel_order(response.order_id)
++            return None  # Go to next candle
+ 
+-        # 6. Create position object
++        # 6. Create position object (ONLY if order was COMPLETE)
+         position = LivePosition(
+             strike=strike,
+             option_type=option_type,
+@@ -280,20 +309,40 @@ class LiveBroker:
+ 
+         print(f"[{datetime.now()}] ✓ Sell order placed: {response.order_id}")
+ 
+-        # 4. Wait for fill
+-        actual_exit_price = price
+-        if self.order_type == OrderType.MARKET:
+-            filled = self._wait_for_fill(response.order_id, timeout=30)
+-            if not filled:
+-                print(f"[{datetime.now()}] ✗ Sell order not filled within timeout")
+-                position._sold = False
+-                return False
++        # 4. Wait for order to reach final state (COMPLETE, REJECTED, or CANCELLED)
++        order_status = self._wait_until_order_resolved(
++            response.order_id,
++            timeout=120  # 2 minutes max wait
++        )
++
++        if not order_status:
++            # Could not get status even after 2 minutes
++            print(f"[{datetime.now()}] ✗ Could not determine exit order status after 2 minutes")
++            print(f"[{datetime.now()}] ⚠️  Attempting to cancel order {response.order_id}...")
++            self.adapter.cancel_order(response.order_id)
++            position._sold = False  # Reset so exit can be retried
++            return False
+ 
+-            # 5. Get actual exit price with retry logic
+-            print(f"[{datetime.now()}] Fetching exit fill price from broker...")
+-            order_status = self._get_order_with_retry(response.order_id)  # Uses config defaults
++        # 5. Handle different order statuses
++        if order_status.status == OrderStatus.REJECTED:
++            # Exit order was rejected by broker
++            print(f"[{datetime.now()}] ✗ Exit order {response.order_id} was REJECTED by broker")
++            if order_status.message:
++                print(f"[{datetime.now()}]   Reason: {order_status.message}")
++            position._sold = False  # Reset so exit can be retried
++            return False
+ 
+-            if order_status and order_status.average_price:
++        elif order_status.status == OrderStatus.CANCELLED:
++            # Exit order was cancelled
++            print(f"[{datetime.now()}] ✗ Exit order {response.order_id} was CANCELLED")
++            position._sold = False  # Reset so exit can be retried
++            return False
++
++        elif order_status.status == OrderStatus.COMPLETE:
++            # ✅ Exit order is FILLED - Proceed with P&L calculation
++
++            # Get exit fill price
++            if order_status.average_price:
+                 actual_exit_price = order_status.average_price
+                 slippage = actual_exit_price - price
+                 slippage_pct = (slippage / price) * 100 if price > 0 else 0
+@@ -302,9 +351,21 @@ class LiveBroker:
+                 if abs(slippage) > 0.01:  # Show slippage if > 1 paisa
+                     print(f"[{datetime.now()}]   Slippage: ₹{slippage:+.2f} ({slippage_pct:+.2f}%)")
+             else:
+-                print(f"[{datetime.now()}] ⚠️  Could not get exit fill price after retries, using requested price ₹{price:.2f}")
++                # Status is COMPLETE but no fill price (rare API issue)
++                # Use requested price as fallback since we confirmed order filled
++                print(f"[{datetime.now()}] ⚠️  Exit order is COMPLETE but no fill price available")
++                print(f"[{datetime.now()}] ⚠️  Using requested price ₹{price:.2f}")
++                actual_exit_price = price
+ 
+-        # 6. Calculate P&L
++        else:
++            # Exit order is still PENDING/OPEN after timeout
++            print(f"[{datetime.now()}] ⚠️  Exit order {response.order_id} still in state: {order_status.status.value}")
++            print(f"[{datetime.now()}] ⚠️  Attempting to cancel...")
++            self.adapter.cancel_order(response.order_id)
++            position._sold = False  # Reset so exit can be retried
++            return False
++
++        # 6. Calculate P&L (ONLY if exit order was COMPLETE)
+         proceeds = actual_exit_price * position.size
+         cost = position.entry_price * position.size
+         pnl = proceeds - cost
+@@ -441,6 +502,109 @@ class LiveBroker:
+         print(f"[{datetime.now()}] ⚠️  Timeout waiting for order fill after {timeout}s")
+         return False
+ 
++    def _wait_until_order_resolved(self, order_id, timeout=None):
++        """
++        Wait for order to reach a final state (COMPLETE, REJECTED, or CANCELLED).
++
++        This method keeps checking order status until we get a definitive answer.
++        Don't create position until we KNOW the order filled or was rejected.
++
++        Final states:
++        - COMPLETE: Order filled successfully
++        - REJECTED: Broker rejected the order
++        - CANCELLED: Order was cancelled
++
++        Non-final states (keep waiting):
++        - PENDING: Order placed, waiting to fill
++        - OPEN: Order active, not filled yet
++        - TRIGGER_PENDING: Stop loss order, trigger not hit
++
++        Args:
++            order_id: Order ID to monitor
++            timeout: Maximum wait time in seconds (default: 120s)
++
++        Returns:
++            OrderResponse with confirmed final status, or None if timeout
++        """
++        if timeout is None:
++            timeout = 120  # Default 2 minutes for order resolution
++
++        start_time = time.time()
++        check_interval = self.status_check_interval  # From config (default 2s)
++        last_check = 0
++
++        last_successful_status = None
++        consecutive_failures = 0
++        max_consecutive_failures = 5  # Allow 5 consecutive fetch failures
++
++        print(f"[{datetime.now()}] ⏳ Waiting for order {order_id} to resolve...")
++
++        while time.time() - start_time < timeout:
++            # Rate limit protection: don't check too frequently
++            elapsed_since_check = time.time() - last_check
++            if elapsed_since_check < check_interval:
++                time.sleep(check_interval - elapsed_since_check)
++
++            last_check = time.time()
++
++            # Try to fetch order status with retry logic
++            order_status = self._get_order_with_retry(order_id)
++
++            if order_status:
++                # Successfully fetched status
++                consecutive_failures = 0
++                last_successful_status = order_status
++
++                # Check if order is in a final state
++                if order_status.status == OrderStatus.COMPLETE:
++                    elapsed = int(time.time() - start_time)
++                    print(f"[{datetime.now()}] ✓ Order {order_id} is COMPLETE (after {elapsed}s)")
++                    return order_status
++
++                elif order_status.status == OrderStatus.REJECTED:
++                    print(f"[{datetime.now()}] ✗ Order {order_id} was REJECTED")
++                    if order_status.message:
++                        print(f"[{datetime.now()}]   Reason: {order_status.message}")
++                    return order_status
++
++                elif order_status.status == OrderStatus.CANCELLED:
++                    print(f"[{datetime.now()}] ✗ Order {order_id} was CANCELLED")
++                    return order_status
++
++                else:
++                    # Still pending/open/trigger_pending - keep waiting
++                    status_name = order_status.status.value
++                    elapsed = int(time.time() - start_time)
++                    remaining = int(timeout - elapsed)
++                    print(f"[{datetime.now()}] ⏳ Order status: {status_name} ({elapsed}s elapsed, {remaining}s remaining)")
++
++            else:
++                # Failed to fetch status
++                consecutive_failures += 1
++
++                if consecutive_failures >= max_consecutive_failures:
++                    print(f"[{datetime.now()}] ✗ Failed to fetch order status {consecutive_failures} times consecutively")
++
++                    if last_successful_status:
++                        print(f"[{datetime.now()}] ⚠️  Using last known status: {last_successful_status.status.value}")
++                        return last_successful_status
++                    else:
++                        print(f"[{datetime.now()}] ✗ No status ever received, cannot proceed")
++                        return None
++
++                print(f"[{datetime.now()}] ⚠️  Could not fetch status (failure {consecutive_failures}/{max_consecutive_failures}), retrying...")
++
++        # Timeout reached
++        elapsed = int(timeout)
++        print(f"[{datetime.now()}] ⚠️  Timeout waiting for order resolution after {elapsed}s")
++
++        if last_successful_status:
++            print(f"[{datetime.now()}] ⚠️  Last known status: {last_successful_status.status.value}")
++            return last_successful_status
++        else:
++            print(f"[{datetime.now()}] ✗ No status ever received during {elapsed}s wait")
++            return None
++
+     def _log_trade(self, position, vwap_at_exit, oi_at_exit):
+         """Log live trade to CSV (separate file from paper trades)"""
+         trade_data = {
