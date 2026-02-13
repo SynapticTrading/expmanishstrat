@@ -537,8 +537,11 @@ class AngelOneAdapter(BrokerAdapter):
 
             # Build AngelOne order params
             # AngelOne requires BOTH tradingsymbol AND symboltoken (cannot use token alone)
+            # IMPORTANT: For stop loss orders, variety must be "STOPLOSS", not "NORMAL"
+            variety = 'STOPLOSS' if order.order_type in [OrderType.SL, OrderType.SL_M] else 'NORMAL'
+
             order_params = {
-                'variety': 'NORMAL',
+                'variety': variety,
                 'tradingsymbol': trading_symbol,  # Actual symbol (e.g., "NIFTY27JAN2625000CE")
                 'symboltoken': str(token),         # Token from cache
                 'transactiontype': order.transaction_type.value,
@@ -559,9 +562,20 @@ class AngelOneAdapter(BrokerAdapter):
             else:
                 order_params['triggerprice'] = "0"
 
+            # Log order params being sent (INFO level for debugging)
+            logger.info(f"Place order params being sent to AngelOne API:")
+            logger.info(f"  variety: {order_params.get('variety')}")
+            logger.info(f"  ordertype: {order_params.get('ordertype')}")
+            logger.info(f"  tradingsymbol: {order_params.get('tradingsymbol')}")
+            logger.info(f"  triggerprice: {order_params.get('triggerprice')}")
+            logger.info(f"  price: {order_params.get('price')}")
+            logger.info(f"  quantity: {order_params.get('quantity')}")
+            logger.info(f"  producttype: {order_params.get('producttype')}")
+
             # Place order
             response = self._smart_api.placeOrder(order_params)
-            
+
+            logger.info(f"Place order response: {response}")
             logger.debug(f"Order response type: {type(response)}, value: {response}")
 
             # Handle different response types
@@ -607,7 +621,22 @@ class AngelOneAdapter(BrokerAdapter):
             )
 
     def modify_order(self, order_id: str, changes: dict) -> OrderResponse:
-        """Modify existing order."""
+        """
+        Modify existing order.
+
+        FIXED VERSION - Includes all required AngelOne API fields.
+
+        Args:
+            order_id: Order ID to modify
+            changes: Dict with fields to modify ('price', 'quantity', 'trigger_price')
+
+        Returns:
+            OrderResponse with success status
+
+        Note:
+            This method fetches the full order details from order book first,
+            then includes all required fields in the modify request.
+        """
         if not self._connected:
             return OrderResponse(
                 success=False,
@@ -617,37 +646,145 @@ class AngelOneAdapter(BrokerAdapter):
             )
 
         try:
+            # Fetch full order book to get current order details
+            # Add retry logic for rate limiting
+            logger.debug(f"Fetching order book to get details for order {order_id}")
+
+            max_retries = 3
+            retry_delay = 2
+            orders = None
+
+            for attempt in range(max_retries):
+                try:
+                    orders = self._smart_api.orderBook()
+                    break  # Success, exit retry loop
+                except Exception as e:
+                    if 'rate' in str(e).lower() and attempt < max_retries - 1:
+                        logger.warning(f"Rate limit hit, retrying in {retry_delay}s... (attempt {attempt + 1}/{max_retries})")
+                        time_module.sleep(retry_delay)
+                        retry_delay *= 2  # Exponential backoff
+                    else:
+                        raise  # Re-raise if not rate limit or last attempt
+
+            if not orders or not orders.get('status'):
+                return OrderResponse(
+                    success=False,
+                    order_id=order_id,
+                    status=OrderStatus.REJECTED,
+                    message="Could not fetch order book"
+                )
+
+            # Find our order in the order book
+            order_data = None
+            for o in orders.get('data', []):
+                if str(o.get('orderid')) == str(order_id):
+                    order_data = o
+                    break
+
+            if not order_data:
+                return OrderResponse(
+                    success=False,
+                    order_id=order_id,
+                    status=OrderStatus.REJECTED,
+                    message=f"Order {order_id} not found in order book"
+                )
+
+            logger.debug(f"Found order {order_id} in order book")
+            logger.debug(f"Current order data: tradingsymbol={order_data.get('tradingsymbol')}, "
+                        f"ordertype={order_data.get('ordertype')}, "
+                        f"producttype={order_data.get('producttype')}")
+
+            # Build modify_params with ALL required fields from current order
             modify_params = {
-                'variety': 'NORMAL',
-                'orderid': order_id
+                'variety': order_data.get('variety', 'NORMAL'),
+                'orderid': order_id,
+                'tradingsymbol': order_data.get('tradingsymbol'),
+                'symboltoken': order_data.get('symboltoken'),
+                'exchange': order_data.get('exchange', 'NFO'),
+                'ordertype': order_data.get('ordertype', 'MARKET'),
+                'producttype': order_data.get('producttype', 'INTRADAY'),
+                'duration': order_data.get('duration', 'DAY'),
+                'quantity': str(order_data.get('quantity', 0))
             }
 
+            # Get current prices from order data (for logging)
+            current_price = order_data.get('price', 0)
+            current_trigger = order_data.get('triggerprice', 0)
+
+            # Apply modifications
             if 'price' in changes:
                 modify_params['price'] = str(changes['price'])
-            if 'quantity' in changes:
-                modify_params['quantity'] = str(changes['quantity'])
+                logger.info(f"Modifying price: {current_price} -> {changes['price']}")
+            else:
+                modify_params['price'] = str(current_price)
+
             if 'trigger_price' in changes:
                 modify_params['triggerprice'] = str(changes['trigger_price'])
+                logger.info(f"Modifying trigger price: {current_trigger} -> {changes['trigger_price']}")
+            else:
+                modify_params['triggerprice'] = str(current_trigger)
 
-            response = self._smart_api.modifyOrder(modify_params)
+            if 'quantity' in changes:
+                modify_params['quantity'] = str(changes['quantity'])
+                logger.info(f"Modifying quantity: {order_data.get('quantity')} -> {changes['quantity']}")
+
+            # Log all parameters being sent (INFO level so it shows in output)
+            logger.info(f"Modify order params being sent to AngelOne API:")
+            logger.info(f"  variety: {modify_params.get('variety')}")
+            logger.info(f"  orderid: {modify_params.get('orderid')}")
+            logger.info(f"  tradingsymbol: {modify_params.get('tradingsymbol')}")
+            logger.info(f"  symboltoken: {modify_params.get('symboltoken')}")
+            logger.info(f"  exchange: {modify_params.get('exchange')}")
+            logger.info(f"  ordertype: {modify_params.get('ordertype')}")
+            logger.info(f"  producttype: {modify_params.get('producttype')}")
+            logger.info(f"  duration: {modify_params.get('duration')}")
+            logger.info(f"  price: {modify_params.get('price')}")
+            logger.info(f"  triggerprice: {modify_params.get('triggerprice')}")
+            logger.info(f"  quantity: {modify_params.get('quantity')}")
+
+            # Add delay to avoid rate limiting (2 seconds between API calls)
+            time_module.sleep(2)
+
+            # Send modification request with retry logic
+            max_retries = 3
+            retry_delay = 2
+            response = None
+
+            for attempt in range(max_retries):
+                try:
+                    response = self._smart_api.modifyOrder(modify_params)
+                    break  # Success, exit retry loop
+                except Exception as e:
+                    if 'rate' in str(e).lower() and attempt < max_retries - 1:
+                        logger.warning(f"Rate limit hit on modify, retrying in {retry_delay}s... (attempt {attempt + 1}/{max_retries})")
+                        time_module.sleep(retry_delay)
+                        retry_delay *= 2  # Exponential backoff
+                    else:
+                        raise  # Re-raise if not rate limit or last attempt
+
+            logger.info(f"Modify response from AngelOne: {response}")
 
             if response and response.get('status'):
                 return OrderResponse(
                     success=True,
                     order_id=order_id,
                     status=OrderStatus.PENDING,
-                    message="Order modified"
+                    message="Order modified successfully"
                 )
             else:
+                error_msg = response.get('message', 'Modification failed')
+                logger.error(f"Modification failed: {error_msg}")
                 return OrderResponse(
                     success=False,
                     order_id=order_id,
                     status=OrderStatus.REJECTED,
-                    message=response.get('message', 'Modification failed')
+                    message=error_msg
                 )
 
         except Exception as e:
             logger.error(f"Order modification error: {e}")
+            import traceback
+            traceback.print_exc()
             return OrderResponse(
                 success=False,
                 order_id=order_id,

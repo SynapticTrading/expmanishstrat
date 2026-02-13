@@ -573,27 +573,54 @@ class IntradayMomentumOIPaper:
 
             exit_reason = None
 
-            # 1. Initial stop loss (25%)
-            if current_price <= stop_loss_price:
-                exit_reason = f"Stop Loss ({self.initial_stop_loss_pct*100:.0f}%)"
-
-            # 2. VWAP stop (only in loss)
-            elif pnl_pct < 0 and vwap:
-                vwap_stop_price = vwap * (1 - self.vwap_stop_pct)
-                if current_price <= vwap_stop_price:
-                    exit_reason = f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"
-
-            # 3. OI increase stop (only in loss)
-            elif pnl_pct < 0:
-                oi_change_pct = (current_oi / position.oi_at_entry - 1)
-                if oi_change_pct > self.oi_increase_stop_pct:
-                    exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
-
-            # 4. Trailing stop (only if activated)
-            elif position.trailing_stop_active:
+            if position.trailing_stop_active:
                 trailing_stop_price = position.peak_price * (1 - self.trailing_stop_pct)
-                if current_price <= trailing_stop_price:
-                    exit_reason = f"Trailing Stop ({self.trailing_stop_pct*100:.0f}%)"
+
+                if pnl_pct >= 0:
+                    # In profit: only trailing stop fires
+                    if current_price <= trailing_stop_price:
+                        exit_reason = f"Trailing Stop ({self.trailing_stop_pct*100:.0f}%)"
+                else:
+                    # In loss: collect all triggered price-based stops, pick highest (= least loss)
+                    triggered = []
+
+                    if current_price <= trailing_stop_price:
+                        triggered.append((trailing_stop_price, f"Trailing Stop ({self.trailing_stop_pct*100:.0f}%)"))
+
+                    if current_price <= stop_loss_price:
+                        triggered.append((stop_loss_price, f"Stop Loss ({self.initial_stop_loss_pct*100:.0f}%)"))
+
+                    if vwap:
+                        vwap_stop_price = vwap * (1 - self.vwap_stop_pct)
+                        if current_price <= vwap_stop_price:
+                            triggered.append((vwap_stop_price, f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"))
+
+                    if triggered:
+                        # Highest stop price = would have fired first = least loss
+                        exit_reason = max(triggered, key=lambda x: x[0])[1]
+                    else:
+                        # No price-based stop triggered — check OI stop as fallback
+                        oi_change_pct = (current_oi / position.oi_at_entry - 1)
+                        if oi_change_pct > self.oi_increase_stop_pct:
+                            exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
+
+            else:
+                # Trailing not active — use normal stop priority
+                # 1. Initial stop loss (25%)
+                if current_price <= stop_loss_price:
+                    exit_reason = f"Stop Loss ({self.initial_stop_loss_pct*100:.0f}%)"
+
+                # 2. VWAP stop (only in loss)
+                elif pnl_pct < 0 and vwap:
+                    vwap_stop_price = vwap * (1 - self.vwap_stop_pct)
+                    if current_price <= vwap_stop_price:
+                        exit_reason = f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"
+
+                # 3. OI increase stop (only in loss)
+                elif pnl_pct < 0:
+                    oi_change_pct = (current_oi / position.oi_at_entry - 1)
+                    if oi_change_pct > self.oi_increase_stop_pct:
+                        exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
 
             # Execute exit if reason found
             if exit_reason:
