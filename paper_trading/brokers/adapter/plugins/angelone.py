@@ -289,6 +289,121 @@ class AngelOneAdapter(BrokerAdapter):
 
         return results
 
+    def get_historical_candles(self, underlying: str, option_type: str,
+                              strike: int, expiry: str,
+                              from_time: datetime, to_time: datetime) -> List[Dict]:
+        """
+        Fetch historical 5-min candles from AngelOne SmartAPI.
+
+        API Limits:
+        - Max 1000+ candles per call (intraday = ~75 candles) ✓
+        - Rate limit: ~10 req/sec (we only call once per strike change)
+        """
+        if not self._connected or not self._smart_api:
+            logger.error("Not connected to AngelOne")
+            return []
+
+        try:
+            # Step 1: Resolve instrument token
+            contract = self._resolve_instrument(underlying, option_type, strike, expiry)
+            if not contract:
+                logger.warning(f"Could not resolve instrument: {option_type} {strike} {expiry}")
+                return []
+
+            token = contract.get('token')
+            if not token:
+                logger.error(f"No token for {option_type} {strike}")
+                return []
+
+            logger.info(f"Fetching historical candles: {option_type} {strike} from {from_time} to {to_time}")
+            logger.info(f"Using token: {token}")
+
+            # Step 2: Format dates for AngelOne API
+            from_date_str = from_time.strftime("%Y-%m-%d %H:%M")
+            to_date_str = to_time.strftime("%Y-%m-%d %H:%M")
+
+            # Step 3: Fetch candle data from AngelOne API
+            historic_param = {
+                "exchange": "NFO",
+                "symboltoken": str(token),
+                "interval": "FIVE_MINUTE",
+                "fromdate": from_date_str,
+                "todate": to_date_str
+            }
+
+            response = self._smart_api.getCandleData(historic_param)
+
+            if not response or response.get('status') != True:
+                logger.warning(f"No candle data returned for {option_type} {strike}")
+                logger.warning(f"Response: {response}")
+                return []
+
+            candle_data = response.get('data', [])
+            if not candle_data:
+                logger.warning(f"Empty candle data for {option_type} {strike}")
+                return []
+
+            logger.info(f"✓ Fetched {len(candle_data)} candles for {option_type} {strike}")
+
+            # Step 4: Fetch OI data separately (AngelOne requires separate API call)
+            oi_param = {
+                "exchange": "NFO",
+                "symboltoken": str(token),
+                "interval": "FIVE_MINUTE",
+                "fromdate": from_date_str,
+                "todate": to_date_str
+            }
+
+            oi_data = {}
+            try:
+                oi_response = self._smart_api.getOIData(oi_param)
+                if oi_response and oi_response.get('status'):
+                    oi_list = oi_response.get('data', [])
+                    # Create OI lookup map: timestamp -> OI value
+                    # AngelOne OI format: [timestamp, open_interest]
+                    for oi_entry in oi_list:
+                        timestamp_str = oi_entry[0]
+                        oi_value = int(oi_entry[1])
+                        oi_data[timestamp_str] = oi_value
+                    logger.info(f"✓ Fetched OI data for {len(oi_list)} candles")
+                else:
+                    logger.warning(f"Could not fetch OI data, will use 0 as default")
+            except Exception as e:
+                logger.warning(f"Error fetching OI data: {e}, will use 0 as default")
+
+            # Step 5: Convert to standard format and merge with OI
+            # AngelOne format: [timestamp, open, high, low, close, volume]
+            candles = []
+            for candle in candle_data:
+                try:
+                    # Parse timestamp (format: "2026-02-16T09:20:00+05:30")
+                    timestamp_str = candle[0]
+                    timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S%z")
+
+                    # Get OI for this timestamp (default to 0 if not found)
+                    oi_value = oi_data.get(timestamp_str, 0)
+
+                    candles.append({
+                        'timestamp': timestamp.replace(tzinfo=None),  # Remove timezone
+                        'open': float(candle[1]),
+                        'high': float(candle[2]),
+                        'low': float(candle[3]),
+                        'close': float(candle[4]),
+                        'volume': int(candle[5]),  # Volume from AngelOne (auto-detected as interval/cumulative)
+                        'oi': oi_value  # OI fetched from separate getOIData() call
+                    })
+                except Exception as e:
+                    logger.error(f"Error parsing candle: {candle}, error: {e}")
+                    continue
+
+            return candles
+
+        except Exception as e:
+            logger.error(f"Error fetching historical candles from AngelOne: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
+
     def get_option_chain(self, underlying: str, expiry: str,
                          strikes: List[int]) -> pd.DataFrame:
         """
@@ -456,21 +571,38 @@ class AngelOneAdapter(BrokerAdapter):
         })
 
     def get_spot_price(self, underlying: str = "NIFTY") -> Optional[float]:
-        """Get spot price for underlying."""
+        """
+        Get spot price for underlying.
+        Includes retry mechanism for network errors.
+        """
         if not self._connected:
             return None
 
-        try:
-            ltp_data = self._smart_api.ltpData("NSE", "NIFTY 50", self.NIFTY_TOKEN)
+        # Retry configuration
+        max_retries = 3
+        retry_delay = 1
 
-            if ltp_data and ltp_data.get('status'):
-                return float(ltp_data['data'].get('ltp', 0))
+        for attempt in range(max_retries):
+            try:
+                ltp_data = self._smart_api.ltpData("NSE", "NIFTY 50", self.NIFTY_TOKEN)
 
-            return None
+                if ltp_data and ltp_data.get('status'):
+                    return float(ltp_data['data'].get('ltp', 0))
 
-        except Exception as e:
-            logger.error(f"Error getting spot price: {e}")
-            return None
+                return None
+
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.warning(f"Spot price fetch failed (attempt {attempt + 1}/{max_retries}): {e}")
+                    logger.info(f"Retrying in {retry_delay}s...")
+                    import time as time_module
+                    time_module.sleep(retry_delay)
+                    retry_delay *= 2
+                else:
+                    logger.error(f"Error getting spot price after {max_retries} attempts: {e}")
+                    return None
+
+        return None
 
     # ══════════════════════════════════════════════════════════════════════════
     # ORDER MANAGEMENT

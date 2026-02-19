@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-01-30T15:00:05.013805+05:30",
+  "date": "2026-01-30",
+  "session_id": "SESSION_20260130_1319",
+  "mode": "live",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "LIVE_20260130_001",
+      "broker_order_id": "260130000655752",
+      "exit_broker_order_id": "260130000751610",
+      "mode": "LIVE",
+      "strike": 25250,
+      "option_type": "CALL",
+      "expiry": "2026-02-03",
+      "entry_time": "2026-01-30T13:45:02.537011+05:30",
+      "exit_time": "2026-01-30T14:27:38.032588+05:30",
+      "entry_price": 238.35,
+      "exit_price": 258.7,
+      "size": 65,
+      "pnl": 1322.75,
+      "pnl_pct": 8.537864485001045,
+      "vwap_at_entry": 206.68064169834662,
+      "vwap_at_exit": 212.84409299967083,
+      "oi_at_entry": 5264155,
+      "oi_change_at_entry": -48.473211750033954,
+      "oi_at_exit": 2712450,
+      "exit_reason": "Trailing Stop (10%)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 25352.45,
+    "trading_strike": 25250,
+    "trading_expiry": "2026-02-03",
+    "direction": "CALL",
+    "max_call_oi_strike": 25300,
+    "max_put_oi_strike": 25000,
+    "last_oi_check": "2026-01-30T14:55:00.139805+05:30",
+    "vwap_tracking": {
+      "25250CALL": {
+        "sum_typical_price_volume": 27992942230.5,
+        "sum_volume": 131518530.0,
+        "current_vwap": 212.84409299967083,
+        "last_update": "2026-01-30T14:55:00.139822+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 1322.75,
+    "win_count": 1,
+    "loss_count": 0,
+    "win_rate": 100.0
+  },
+  "portfolio": {
+    "initial_capital": 100000,
+    "current_cash": 100000,
+    "positions_value": 16841.5,
+    "total_value": 116841.5,
+    "total_return_pct": 16.841499999999996
+  },
+  "api_stats": {
+    "calls_5min_loop": 13,
+    "calls_1min_ltp": 43,
+    "total_calls_today": 56,
+    "last_api_call": "2026-01-30T14:55:00.140261+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-01-30T15:00:05.013752+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false,
+    "recovered": true,
+    "recovery_time": "2026-01-30T13:29:49.112332+05:30"
+  }
+}

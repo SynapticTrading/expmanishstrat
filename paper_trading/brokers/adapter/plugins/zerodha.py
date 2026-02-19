@@ -77,7 +77,6 @@ class ZerodhaAdapter(BrokerAdapter):
         """
         super().__init__(credentials, contract_manager)
         self._kite = None
-        self._data_feed = None
 
     # ══════════════════════════════════════════════════════════════════════════
     # CONNECTION
@@ -88,8 +87,6 @@ class ZerodhaAdapter(BrokerAdapter):
         try:
             # Import Zerodha connection utilities
             from paper_trading.legacy.zerodha_connection import ZerodhaConnection
-            from paper_trading.legacy.zerodha_data_feed import ZerodhaDataFeed
-
             # Create connection
             connection = ZerodhaConnection(
                 api_key=self.credentials.get('api_key'),
@@ -103,12 +100,11 @@ class ZerodhaAdapter(BrokerAdapter):
             if kite:
                 self._kite = kite
                 self._connection = connection
-                # Pass ContractManager to DataFeed for token-based lookups
-                self._data_feed = ZerodhaDataFeed(connection, contract_manager=self.contract_manager)
                 self._connected = True
                 logger.info("Connected to Zerodha")
                 logger.info("✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly")
                 logger.info("✓ NO tradingsymbol lookups - tokens from contracts_cache.json")
+                logger.info("✓ NO legacy data feed - pure adapter + ContractManager architecture")
                 
                 if self.contract_manager and self.contract_manager.has_instrument_tokens():
                     logger.info("✓ ContractManager ready with cached tokens")
@@ -253,26 +249,221 @@ class ZerodhaAdapter(BrokerAdapter):
 
     def get_option_chain(self, underlying: str, expiry: str,
                          strikes: List[int]) -> pd.DataFrame:
-        """Get option chain data with 5-min candles (for entry decisions)."""
-        if not self._connected or not self._data_feed:
+        """
+        Get option chain data using token-based approach.
+
+        Uses ContractManager + Kite API directly (no legacy data feed).
+        Fetches LTP, OI, and volume for all strikes in a single batch call.
+        """
+        if not self._connected or not self._kite:
+            logger.error("Not connected to Zerodha")
             return pd.DataFrame()
 
         try:
-            return self._data_feed.get_options_chain(expiry, strikes)
+            # Build list of contracts to fetch
+            contracts = []
+            for strike in strikes:
+                for option_type in ['CE', 'PE']:
+                    contracts.append((expiry, strike, option_type))
+
+            # Batch resolve instrument tokens using ContractManager
+            contract_data = self.contract_manager.batch_get_instrument_tokens(contracts)
+
+            # Collect tokens for batch quote fetch
+            token_map = {}  # token -> (strike, option_type, expiry)
+            instrument_tokens = []
+
+            for (exp, strike, opt_type), contract in contract_data.items():
+                if contract:
+                    token = contract.get('zerodha_instrument_token')
+                    if token:
+                        instrument_tokens.append(str(token))
+                        token_map[str(token)] = (strike, opt_type, exp)
+
+            if not instrument_tokens:
+                logger.warning(f"No valid tokens found for expiry {expiry}")
+                return pd.DataFrame()
+
+            logger.info(f"Fetching quotes for {len(instrument_tokens)} options (TOKEN-BASED)...")
+
+            # Batch fetch all quotes using tokens with retry
+            max_retries = 3
+            retry_delay = 1
+            quotes = None
+
+            for attempt in range(max_retries):
+                try:
+                    quotes = self._kite.quote(instrument_tokens)
+                    break  # Success
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Quote fetch failed (attempt {attempt + 1}/{max_retries}): {e}")
+                        logger.info(f"Retrying in {retry_delay}s...")
+                        import time as time_module
+                        time_module.sleep(retry_delay)
+                        retry_delay *= 2
+                    else:
+                        logger.error(f"Quote fetch failed after {max_retries} attempts: {e}")
+                        raise
+
+            if not quotes:
+                logger.warning("No quotes returned")
+                return pd.DataFrame()
+
+            # Build result DataFrame
+            result_data = []
+            for token_str, (strike, option_type, expiry_str) in token_map.items():
+                quote = quotes.get(token_str, {})
+                if quote:
+                    ltp = quote.get('last_price', 0)
+                    volume = quote.get('volume', 0)
+                    oi = quote.get('oi', 0)
+
+                    result_data.append({
+                        'strike': strike,
+                        'option_type': option_type,
+                        'expiry': expiry_str,
+                        'open': ltp,
+                        'high': ltp,
+                        'low': ltp,
+                        'close': ltp,
+                        'OI': oi,
+                        'volume': volume,
+                        'instrument_token': token_str
+                    })
+
+            result_df = pd.DataFrame(result_data)
+            logger.info(f"✓ Retrieved {len(result_df)} option quotes")
+
+            return result_df
+
         except Exception as e:
             logger.error(f"Error getting option chain: {e}")
+            import traceback
+            traceback.print_exc()
             return pd.DataFrame()
 
     def get_spot_price(self, underlying: str = "NIFTY") -> Optional[float]:
-        """Get spot price for underlying."""
-        if not self._connected or not self._data_feed:
+        """
+        Get spot price using Kite API directly (token-based).
+
+        NIFTY 50 Index Token: 256265 (NSE:NIFTY 50)
+        Includes retry mechanism for network errors.
+        """
+        if not self._connected or not self._kite:
             return None
 
+        # NIFTY 50 index token (hardcoded, doesn't change)
+        nifty_token = "NSE:NIFTY 50"
+
+        # Retry configuration
+        max_retries = 3
+        retry_delay = 1  # seconds
+
+        for attempt in range(max_retries):
+            try:
+                quote = self._kite.quote([nifty_token])
+
+                if quote and nifty_token in quote:
+                    return quote[nifty_token].get('last_price')
+
+                return None
+
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.warning(f"Spot price fetch failed (attempt {attempt + 1}/{max_retries}): {e}")
+                    logger.info(f"Retrying in {retry_delay}s...")
+                    import time as time_module
+                    time_module.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                else:
+                    logger.error(f"Error getting spot price after {max_retries} attempts: {e}")
+                    return None
+
+        return None
+
+    def get_historical_candles(self, underlying: str, option_type: str,
+                              strike: int, expiry: str,
+                              from_time: datetime, to_time: datetime) -> List[Dict]:
+        """
+        Fetch historical 5-min candles from Zerodha Kite API.
+
+        API Limits:
+        - Max 2000 candles per call (intraday = ~75 candles) ✓
+        - Rate limit: 3 req/sec (we only call once per strike change)
+        """
+        if not self._connected or not self._kite:
+            logger.error("Not connected to Zerodha")
+            return []
+
         try:
-            return self._data_feed.get_spot_price()
+            # Step 1: Resolve instrument token
+            contract = self._resolve_instrument(underlying, option_type, strike, expiry)
+            if not contract:
+                logger.warning(f"Could not resolve instrument: {option_type} {strike} {expiry}")
+                return []
+
+            instrument_token = contract.get('zerodha_instrument_token')
+            if not instrument_token:
+                logger.error(f"No instrument token for {option_type} {strike}")
+                return []
+
+            logger.info(f"Fetching historical candles: {option_type} {strike} from {from_time} to {to_time}")
+            logger.info(f"Using instrument token: {instrument_token}")
+
+            # Step 2: Fetch historical data from Kite API with retry
+            # NOTE: historical_data() returns a list of dicts, not a DataFrame
+            max_retries = 3
+            retry_delay = 1
+            historical_data = None
+
+            for attempt in range(max_retries):
+                try:
+                    historical_data = self._kite.historical_data(
+                        instrument_token=int(instrument_token),
+                        from_date=from_time,
+                        to_date=to_time,
+                        interval="5minute",
+                        oi=True  # Include Open Interest data
+                    )
+                    break  # Success
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Historical data fetch failed (attempt {attempt + 1}/{max_retries}): {e}")
+                        logger.info(f"Retrying in {retry_delay}s...")
+                        import time as time_module
+                        time_module.sleep(retry_delay)
+                        retry_delay *= 2
+                    else:
+                        logger.error(f"Historical data fetch failed after {max_retries} attempts: {e}")
+                        raise
+
+            if not historical_data:
+                logger.warning(f"No historical data returned for {option_type} {strike}")
+                return []
+
+            logger.info(f"✓ Fetched {len(historical_data)} candles for {option_type} {strike}")
+
+            # Step 3: Convert to standard format
+            candles = []
+            for candle in historical_data:
+                candles.append({
+                    'timestamp': candle['date'],
+                    'open': float(candle['open']),
+                    'high': float(candle['high']),
+                    'low': float(candle['low']),
+                    'close': float(candle['close']),
+                    'volume': int(candle['volume']),  # INTERVAL volume (per-candle, not cumulative)
+                    'oi': int(candle.get('oi', 0))  # Open Interest (if available)
+                })
+
+            return candles
+
         except Exception as e:
-            logger.error(f"Error getting spot price: {e}")
-            return None
+            logger.error(f"Error fetching historical candles from Zerodha: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
 
     # ══════════════════════════════════════════════════════════════════════════
     # ORDER MANAGEMENT
@@ -568,23 +759,46 @@ class ZerodhaAdapter(BrokerAdapter):
     # ══════════════════════════════════════════════════════════════════════════
 
     def is_market_open(self) -> bool:
-        """Check if market is open."""
-        if not self._connected or not self._data_feed:
+        """
+        Check if market is open based on IST time.
+
+        Market hours: 9:15 AM - 3:30 PM IST (Mon-Fri)
+        """
+        if not self._connected:
             return False
-        return self._data_feed.is_market_open()
+
+        try:
+            from datetime import datetime, time
+            import pytz
+
+            ist = pytz.timezone('Asia/Kolkata')
+            now = datetime.now(ist)
+
+            # Check if weekday (Monday=0, Sunday=6)
+            if now.weekday() >= 5:  # Saturday or Sunday
+                return False
+
+            current_time = now.time()
+            market_open = time(9, 15)
+            market_close = time(15, 30)
+
+            return market_open <= current_time <= market_close
+
+        except Exception as e:
+            logger.error(f"Error checking market hours: {e}")
+            return False
 
     def load_instruments(self) -> bool:
         """
-        DEPRECATED: No longer needed in token-based approach.
-        
-        This method is kept for backward compatibility but delegates to DataFeed.
-        In token-based mode, this is a no-op since all lookups use ContractManager.
-        
+        NO-OP in token-based mode.
+
+        ContractManager handles all instrument lookups via contracts_cache.json.
+        No need to load Zerodha's full instrument CSV.
+
         Returns:
             bool: Always returns True (no-op in token-based mode)
         """
-        if self._data_feed:
-            return self._data_feed.load_instruments()  # Returns True (no-op)
+        logger.info("Token-based mode: Using ContractManager (no instrument CSV needed)")
         return True
 
     def logout(self) -> None:
@@ -592,11 +806,14 @@ class ZerodhaAdapter(BrokerAdapter):
         self.disconnect()
 
     def get_next_expiry(self) -> Optional[str]:
-        """Get next weekly expiry."""
-        # Try contract_manager first
+        """
+        Get next weekly expiry using ContractManager.
+
+        Returns:
+            str: Expiry date (YYYY-MM-DD) or None
+        """
         if self.contract_manager:
             return self.contract_manager.get_options_expiry('current_week')
-        # Fallback to data_feed
-        if self._data_feed:
-            return self._data_feed.get_next_expiry()
+
+        logger.warning("No contract manager available for expiry lookup")
         return None

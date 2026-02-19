@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-02-06T15:00:05.025135+05:30",
+  "date": "2026-02-06",
+  "session_id": "SESSION_20260206_0935",
+  "mode": "live",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "LIVE_20260206_001",
+      "broker_order_id": "260206000168144",
+      "exit_broker_order_id": "260206000182550",
+      "mode": "LIVE",
+      "strike": 25500,
+      "option_type": "PUT",
+      "expiry": "2026-02-10",
+      "entry_time": "2026-02-06T09:45:00.331339+05:30",
+      "exit_time": "2026-02-06T09:49:09.751077+05:30",
+      "entry_price": 96.8,
+      "exit_price": 84.35,
+      "size": 65,
+      "pnl": -809.25,
+      "pnl_pct": -12.861570247933884,
+      "vwap_at_entry": 89.67666187567373,
+      "vwap_at_exit": 89.37124716644364,
+      "oi_at_entry": 11772085,
+      "oi_change_at_entry": -3.1019993484586617,
+      "oi_at_exit": 11406915,
+      "exit_reason": "VWAP Stop (>5% below VWAP)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 25651.3,
+    "trading_strike": 25600,
+    "trading_expiry": "2026-02-10",
+    "direction": "PUT",
+    "max_call_oi_strike": 25800,
+    "max_put_oi_strike": 25600,
+    "last_oi_check": "2026-02-06T14:55:00.155733+05:30",
+    "vwap_tracking": {
+      "25600PUT": {
+        "sum_typical_price_volume": 41704538885.75,
+        "sum_volume": 458693495.0,
+        "current_vwap": 90.92027539163162,
+        "last_update": "2026-02-06T14:55:00.155753+05:30"
+      }
+    }
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": -809.25,
+    "win_count": 0,
+    "loss_count": 1,
+    "win_rate": 0.0
+  },
+  "portfolio": {
+    "initial_capital": 0.0,
+    "current_cash": 0.0,
+    "positions_value": 5492.5,
+    "total_value": 5492.5,
+    "total_return_pct": 0
+  },
+  "api_stats": {
+    "calls_5min_loop": 65,
+    "calls_1min_ltp": 5,
+    "total_calls_today": 70,
+    "last_api_call": "2026-02-06T14:55:00.156207+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-02-06T15:00:05.025078+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false
+  }
+}

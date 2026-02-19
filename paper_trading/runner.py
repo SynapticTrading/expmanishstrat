@@ -23,6 +23,8 @@ from paper_trading.core.state_manager import StateManager
 from paper_trading.core.contract_manager import ContractManager
 # Broker adapter for unified interface - FULLY MIGRATED
 from paper_trading.brokers.adapter import create_adapter
+from paper_trading.data_store.data_recorder import DataRecorder
+import datetime as _dt
 import pandas as pd
 import signal
 import threading
@@ -149,6 +151,7 @@ class UniversalPaperTrader:
         self.paper_broker = None
         self.strategy = None
         self.oi_analyzer = None
+        self.recorder = None  # DataRecorder for persistent market data + VWAP storage
 
         # Contract management for automatic expiry selection
         self.contract_manager = None  # Initialized before adapter connection
@@ -170,6 +173,8 @@ class UniversalPaperTrader:
         self.contract_monitor_thread = None
         # THREAD SAFETY: Lock to prevent concurrent exit checks causing duplicate sells
         self.exit_monitor_lock = threading.Lock()
+        # Track last 5-min boundary where VWAP was updated in the exit monitor loop
+        self.last_vwap_boundary = None
 
         # Shared data
         self.current_spot_price = None
@@ -495,6 +500,10 @@ class UniversalPaperTrader:
         dummy_options_df = pd.DataFrame()
         self.oi_analyzer = OIAnalyzer(dummy_options_df)
 
+        # Initialize persistent data recorder (one DB file per trading day)
+        data_store_dir = str(Path(__file__).parent / 'data_store')
+        self.recorder = DataRecorder(date=_dt.date.today(), base_dir=data_store_dir)
+
         # Initialize strategy
         print(f"[{self._get_ist_now()}] Initializing strategy...")
         self.strategy = IntradayMomentumOIPaper(
@@ -503,7 +512,8 @@ class UniversalPaperTrader:
             oi_analyzer=self.oi_analyzer,
             state_manager=self.state_manager,
             contract_manager=self.contract_manager,
-            adapter=self.adapter  # New: pass adapter for token-based lookups
+            adapter=self.adapter,  # New: pass adapter for token-based lookups
+            recorder=self.recorder  # Persistent data store
         )
 
         # GLOBAL TRADE CHECK: Check if ANY broker took a trade today
@@ -709,8 +719,18 @@ class UniversalPaperTrader:
                 # Get options data for ENTRY decisions only (no open positions)
                 options_data = self._get_options_data(current_time, spot_price)
 
-                if options_data.empty:
-                    print(f"[{current_time}] ✗ No options data, skipping...")
+                # Check if direction is determined
+                direction_determined = (
+                    hasattr(self.strategy, 'daily_direction') and
+                    self.strategy.daily_direction is not None and
+                    hasattr(self.strategy, 'daily_strike') and
+                    self.strategy.daily_strike is not None
+                )
+
+                # Skip only if empty AND direction not determined (true error)
+                # If direction IS determined, empty DataFrame is OK (optimized path)
+                if options_data.empty and not direction_determined:
+                    print(f"[{current_time}] ✗ No options data for direction determination, skipping...")
                     self.adapter.wait_for_next_candle()
                     continue
 
@@ -723,6 +743,10 @@ class UniversalPaperTrader:
                 # THREAD SAFETY: on_candle calls _check_exits internally
                 with self.exit_monitor_lock:
                     self.strategy.on_candle(current_time, spot_price, options_data)
+                    # Mark this 5-min boundary as VWAP-updated so the exit monitor
+                    # doesn't refetch the same candle seconds later and double-count it
+                    bm = (current_time.minute // 5) * 5
+                    self.last_vwap_boundary = current_time.replace(minute=bm, second=0, microsecond=0)
 
                 # Update state
                 self.state_manager.update_api_stats('5min')
@@ -782,10 +806,18 @@ class UniversalPaperTrader:
                     time_module.sleep(60)
                     continue
 
-                # Check exits using strategy logic (with thread lock)
-                # THREAD SAFETY: Prevent concurrent exit checks with strategy loop
+                # Calculate current 5-min candle boundary
+                bm = (current_time.minute // 5) * 5
+                current_boundary = current_time.replace(minute=bm, second=0, microsecond=0)
+
                 with self.exit_monitor_lock:
-                    self.strategy._check_exits(current_time, options_data)
+                    # Update VWAP once per 5-min candle boundary (not every minute)
+                    if current_boundary != self.last_vwap_boundary:
+                        self.strategy._update_vwap_for_positions(current_time)
+                        self.last_vwap_boundary = current_boundary
+
+                    # Check exits with real-time LTP + updated VWAP from cache
+                    self.strategy._check_exits(current_time, options_data, use_ltp_only=True)
 
                 # Update state
                 self.state_manager.update_api_stats('1min')
@@ -876,7 +908,8 @@ class UniversalPaperTrader:
         )
 
         if direction_determined:
-            # OPTIMIZED PATH: Calculate potential strike range, fetch data, let strategy decide final strike
+            # OPTIMIZED PATH: No API call needed! Strategy fetches its own candles.
+            # We just provide the strike range metadata for strike update logic.
 
             # Calculate current ATM strike based on spot price
             strike_interval = 50
@@ -901,22 +934,14 @@ class UniversalPaperTrader:
                 print(f"[{current_time}]    Using existing strike: {self.strategy.daily_strike}")
                 current_strike = self.strategy.daily_strike
 
-            print(f"[{current_time}] 🚀 OPTIMIZED FETCH: Direction determined ({self.strategy.daily_direction} @ {current_strike})")
-            print(f"[{current_time}] Fetching LTP for specific strike only (1 API call, fast!)")
+            print(f"[{current_time}] 🚀 OPTIMIZED PATH: Direction determined ({self.strategy.daily_direction} @ {current_strike})")
+            print(f"[{current_time}] ✓ No quote fetch needed - strategy will fetch candle data with OI included")
 
-            # Fetch data for the calculated strike (strategy will update its internal state)
-            options_df = self._get_ltp_for_entry(
-                current_time=current_time,
-                strike=current_strike,
-                option_type=self.strategy.daily_direction,
-                expiry=expiry
-            )
-
-            # Add available strikes as metadata for strategy's strike update logic
-            # This ensures strategy has the strike range to make decisions
-            if not options_df.empty:
-                # Store available strikes in DataFrame metadata for strategy to use
-                options_df.attrs['available_strikes'] = available_strikes
+            # Create a minimal DataFrame with just metadata (no API call!)
+            # Strategy doesn't use this data - it fetches its own candles
+            # We just provide available_strikes for strike update logic
+            options_df = pd.DataFrame()
+            options_df.attrs['available_strikes'] = available_strikes
 
             return options_df
         else:
@@ -936,6 +961,15 @@ class UniversalPaperTrader:
 
             # Fetch full options chain (22 strikes, one-time cost for direction determination)
             options_df = self.adapter.get_options_chain(expiry, strikes)
+
+            # Record full chain snapshot to persistent store
+            if self.recorder and options_df is not None and not options_df.empty:
+                self.recorder.record_option_chain(
+                    spot_price=spot_price,
+                    direction=None,  # Direction not yet determined at this point
+                    chain_df=options_df
+                )
+
             return options_df if options_df is not None else pd.DataFrame()
 
     def _get_ltp_for_entry(self, current_time, strike, option_type, expiry):
@@ -1238,6 +1272,9 @@ def main():
         import traceback
         traceback.print_exc()
     finally:
+        # Close persistent data recorder
+        if trader and trader.recorder:
+            trader.recorder.close()
         # Print session summary
         print_session_summary(log_file, start_time, trader)
 

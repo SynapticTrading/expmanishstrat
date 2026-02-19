@@ -20,7 +20,7 @@ class IntradayMomentumOIPaper:
     Uses same logic as backtest but with real-time data
     """
 
-    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None, contract_manager=None, adapter=None):
+    def __init__(self, config, broker: PaperBroker, oi_analyzer: OIAnalyzer, state_manager=None, contract_manager=None, adapter=None, recorder=None):
         """
         Initialize strategy
 
@@ -31,6 +31,7 @@ class IntradayMomentumOIPaper:
             state_manager: StateManager instance (optional)
             contract_manager: ContractManager instance (optional)
             adapter: BrokerAdapter instance for token-based lookups (optional)
+            recorder: DataRecorder instance for persistent data storage (optional)
         """
         self.config = config
         self.broker = broker
@@ -38,6 +39,7 @@ class IntradayMomentumOIPaper:
         self.state_manager = state_manager
         self.contract_manager = contract_manager
         self.adapter = adapter  # Broker adapter for unified interface
+        self.recorder = recorder  # DataRecorder for persistent market data + VWAP storage
 
         # Extract config parameters
         entry_cfg = config['entry']
@@ -82,6 +84,11 @@ class IntradayMomentumOIPaper:
 
         # VWAP tracking: {(strike, option_type, expiry): {'tpv': float, 'volume': float}}
         self.vwap_running_totals = {}
+
+        # Historical candles storage for VWAP initialization
+        # Format: {(strike, option_type, expiry): [(timestamp, close, volume), ...]}
+        self.historical_candles = {}
+        self.historical_candles_max_size = 100  # Keep last 100 candles per strike
 
         print(f"[{datetime.now()}] Strategy initialized")
         print(f"  Entry: {self.entry_start_time} - {self.entry_end_time}")
@@ -184,7 +191,10 @@ class IntradayMomentumOIPaper:
             else:
                 self.daily_trade_taken = False
 
-            self.vwap_running_totals = {}  # Reset VWAP for new day
+            # Reset VWAP data for new day
+            self.vwap_running_totals = {}
+            self.historical_candles = {}
+            print(f"[{current_time}] 🔄 Reset VWAP data and historical candles for new day")
 
             # Determine direction based on max OI buildup
             try:
@@ -243,6 +253,15 @@ class IntradayMomentumOIPaper:
                     return
 
                 print(f"[{current_time}] ✓ Daily Analysis Complete: Direction={self.daily_direction}, Strike={self.daily_strike}, Expiry={self.daily_expiry}, Spot={spot_price:.2f}")
+
+                # Initialize VWAP with historical candles from 9:15 AM if started late
+                from datetime import time as time_class
+                if current_time.time() > time_class(9, 15):
+                    self._initialize_vwap_from_market_open(current_time)
+                    # Mark that we just initialized to avoid duplicate candle processing
+                    self._skip_next_candle_fetch = True
+                else:
+                    self._skip_next_candle_fetch = False
 
                 # Update strategy state
                 if self.state_manager:
@@ -313,7 +332,7 @@ class IntradayMomentumOIPaper:
             self.state_manager.save()
 
     def _check_entry(self, current_time, spot_price, options_data):
-        """Check if entry conditions are met"""
+        """Check if entry conditions are met (CANDLE-BASED with HLC/3 VWAP)"""
 
         # Skip if already have any open positions (only check entries when flat)
         if len(self.broker.get_open_positions()) > 0:
@@ -323,149 +342,264 @@ class IntradayMomentumOIPaper:
         if not self.daily_direction or not self.daily_strike:
             return
 
-        # Check if strike needs updating based on spot price
-        # Use available_strikes from metadata if provided (optimized fetch path),
-        # otherwise use strikes from options_data (full fetch path)
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 1: Calculate Strike Based on Current Spot
+        # ═══════════════════════════════════════════════════════════════
+
+        # Use available_strikes from metadata if provided, otherwise from options_data
         if hasattr(options_data, 'attrs') and 'available_strikes' in options_data.attrs:
             strikes = options_data.attrs['available_strikes']
-        else:
+        elif options_data is not None and not options_data.empty:
             strikes = options_data['strike'].unique()
+        else:
+            # Fallback: generate strikes around spot
+            import numpy as np
+            strikes = np.arange(int(spot_price) - 500, int(spot_price) + 500, 50)
 
         new_strike = self.oi_analyzer.get_nearest_strike(
             spot_price, self.daily_direction, strikes
         )
 
         if new_strike is not None:
-            new_strike = int(new_strike)  # Ensure integer
+            new_strike = int(new_strike)
         else:
-            # Log when no suitable strike found (spot moved outside available range)
-            print(f"[{current_time}] ⚠️  Could not calculate new strike for spot {spot_price:.2f} (direction: {self.daily_direction})")
-            print(f"[{current_time}]    Available strikes: {min(strikes)} to {max(strikes)}, keeping current strike: {self.daily_strike}")
+            print(f"[{current_time}] ⚠️  Could not calculate strike for spot {spot_price:.2f}")
+            return
 
-        if new_strike != self.daily_strike and new_strike is not None:
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 2: Check if Strike Changed → Fetch Historical Candles
+        # ═══════════════════════════════════════════════════════════════
+
+        if new_strike != self.daily_strike:
             old_strike = self.daily_strike
             self.daily_strike = new_strike
             print(f"[{current_time}] 📍 STRIKE UPDATED: {old_strike} → {new_strike} (Spot: {spot_price:.2f})")
 
-            # Reset entry OI when strike changes
+            # Reset entry OI
             if hasattr(self, 'entry_oi'):
                 delattr(self, 'entry_oi')
 
-            # Reset VWAP tracking when strike changes
-            if hasattr(self, 'vwap_initialized'):
-                self.vwap_initialized = False
-
-            # Clean up old strike's VWAP data to prevent memory bloat
-            # Remove entries for the old strike from vwap_running_totals
-            keys_to_remove = [
-                key for key in self.vwap_running_totals.keys()
-                if key[0] == old_strike  # key format: (strike, option_type, expiry)
-            ]
-            for key in keys_to_remove:
+            # Clean up old strike's VWAP data
+            vwap_keys_to_remove = [k for k in self.vwap_running_totals.keys() if k[0] == old_strike]
+            for key in vwap_keys_to_remove:
                 del self.vwap_running_totals[key]
 
-            if keys_to_remove:
-                print(f"[{current_time}] 🧹 Cleaned up VWAP data for old strike {old_strike}")
+            hist_keys_to_remove = [k for k in self.historical_candles.keys() if k[0] == old_strike]
+            for key in hist_keys_to_remove:
+                del self.historical_candles[key]
 
-        # Get option data for daily strike
-        option_data = self._get_option_data(
-            options_data,
-            self.daily_strike,
-            self.daily_direction,
-            self.daily_expiry
-        )
+            if vwap_keys_to_remove or hist_keys_to_remove:
+                print(f"[{current_time}] 🧹 Cleaned up old strike {old_strike} data")
 
-        if option_data is None:
-            print(f"[{current_time}] ⚠️  Could not find option data for {self.daily_direction} {self.daily_strike} expiry={self.daily_expiry}")
-            return
+            # ╔═════════════════════════════════════════════════════════════╗
+            # ║ FETCH HISTORICAL CANDLES FOR NEW STRIKE (from 9:15 AM)     ║
+            # ╚═════════════════════════════════════════════════════════════╝
 
-        # Extract data
-        option_price = option_data['close']
-        option_oi = option_data['OI']  # Uppercase to match data format
-        option_volume = option_data['volume']
+            from datetime import time as time_class
+            if self.adapter and current_time.time() > time_class(9, 15):
+                print(f"[{current_time}] 📥 Fetching historical candles from 9:15 AM for {self.daily_direction} {new_strike}...")
 
-        # Calculate VWAP
-        vwap = self._calculate_vwap(
-            self.daily_strike,
-            self.daily_direction,
-            self.daily_expiry,
-            option_price,
-            option_volume
-        )
+                market_open = current_time.replace(hour=9, minute=15, second=0, microsecond=0)
 
-        # Log VWAP initialization
+                # Convert CALL/PUT to CE/PE for adapter
+                option_type_code = 'CE' if self.daily_direction == 'CALL' else 'PE'
+
+                try:
+                    historical_candles = self.adapter.get_historical_candles(
+                        underlying="NIFTY",
+                        option_type=option_type_code,
+                        strike=new_strike,
+                        expiry=self.daily_expiry,
+                        from_time=market_open,
+                        to_time=current_time
+                    )
+
+                    if historical_candles:
+                        print(f"[{current_time}] ✓ Fetched {len(historical_candles)} historical candles")
+
+                        # Initialize VWAP with historical candles (HLC/3 formula)
+                        success = self._initialize_vwap_with_history(
+                            new_strike,
+                            self.daily_direction,
+                            self.daily_expiry,
+                            historical_candles
+                        )
+
+                        if success:
+                            self._store_historical_candles_bulk(
+                                new_strike,
+                                self.daily_direction,
+                                self.daily_expiry,
+                                historical_candles
+                            )
+                            self.vwap_initialized = True
+
+                            # Use the last historical candle as the current candle
+                            # (avoids duplicate processing)
+                            last_candle = historical_candles[-1]
+                            current_candle = {
+                                'open': last_candle['open'],
+                                'high': last_candle['high'],
+                                'low': last_candle['low'],
+                                'close': last_candle['close'],
+                                'volume': last_candle['volume'],
+                                'oi': last_candle.get('oi', 0)  # Use OI from candle if available
+                            }
+
+                            # Fetch OI separately only if not available in candle
+                            if current_candle['oi'] == 0:
+                                print(f"[{current_time}] ⚠️  OI not in historical candle, fetching via quote API...")
+                                current_candle['oi'] = self._fetch_oi_for_strike(
+                                    new_strike,
+                                    'CE' if self.daily_direction == 'CALL' else 'PE',
+                                    self.daily_expiry
+                                )
+                            else:
+                                print(f"[{current_time}] ✓ Using OI from historical candle: {current_candle['oi']:,} (no quote fetch needed)")
+
+                            # Store the candle for use in STEP 3 (avoids re-fetch)
+                            self._last_initialized_candle = current_candle
+
+                            # Skip the normal current candle fetch (already have it from historical)
+                            skip_current_candle_fetch = True
+                        else:
+                            print(f"[{current_time}] ⚠️  Failed to initialize VWAP with historical data")
+                            skip_current_candle_fetch = False
+                    else:
+                        print(f"[{current_time}] ⚠️  No historical candles available for {self.daily_direction} {new_strike}")
+                        skip_current_candle_fetch = False
+
+                except Exception as e:
+                    print(f"[{current_time}] ✗ Error fetching historical candles: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    skip_current_candle_fetch = False
+            else:
+                skip_current_candle_fetch = False
+        else:
+            skip_current_candle_fetch = False
+
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 3: Fetch Current Candle for Selected Strike
+        # ═══════════════════════════════════════════════════════════════
+
+        # Check if we should skip (either from strike update or from on_new_day initialization)
+        should_skip = skip_current_candle_fetch or getattr(self, '_skip_next_candle_fetch', False)
+
+        if should_skip:
+            # Use the last candle from historical initialization
+            if hasattr(self, '_last_initialized_candle'):
+                current_candle = self._last_initialized_candle
+
+                # Fetch OI separately if not set
+                if current_candle['oi'] == 0:
+                    print(f"[{current_time}] ⚠️  OI not in stored candle, fetching via quote API...")
+                    current_candle['oi'] = self._fetch_oi_for_strike(
+                        self.daily_strike,
+                        'CE' if self.daily_direction == 'CALL' else 'PE',
+                        self.daily_expiry
+                    )
+                else:
+                    print(f"[{current_time}] ✓ Using OI from stored candle: {current_candle['oi']:,} (no quote fetch needed)")
+
+                # Clear the stored candle
+                delattr(self, '_last_initialized_candle')
+            else:
+                print(f"[{current_time}] ⚠️  No stored candle from initialization")
+                return
+
+        # Clear the skip flag after checking
+        if hasattr(self, '_skip_next_candle_fetch'):
+            self._skip_next_candle_fetch = False
+
+        if not should_skip:
+            current_candle = self._fetch_current_strike_candle(
+                self.daily_strike,
+                self.daily_direction,
+                self.daily_expiry,
+                current_time
+            )
+
+            if not current_candle:
+                print(f"[{current_time}] ⚠️  Could not fetch current candle for {self.daily_direction} {self.daily_strike}")
+                return
+
+        # Extract OHLCV data
+        ohlc_data = {
+            'open': current_candle['open'],
+            'high': current_candle['high'],
+            'low': current_candle['low'],
+            'close': current_candle['close']
+        }
+        option_volume = current_candle['volume']
+        option_oi = current_candle['oi']
+        option_price = current_candle['close']  # For entry price comparison
+
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 4: Calculate VWAP using HLC/3 Formula
+        # ═══════════════════════════════════════════════════════════════
+
+        # Only update VWAP if we fetched a new candle (not using stored historical candle)
+        if should_skip:
+            # VWAP already initialized with historical data - just retrieve it
+            key = (self.daily_strike, self.daily_direction, self.daily_expiry)
+            if key in self.vwap_running_totals and self.vwap_running_totals[key]['volume'] > 0:
+                vwap = self.vwap_running_totals[key]['tpv'] / self.vwap_running_totals[key]['volume']
+            else:
+                vwap = None
+        else:
+            # Update VWAP with new candle
+            vwap = self._calculate_vwap_ohlc(
+                self.daily_strike,
+                self.daily_direction,
+                self.daily_expiry,
+                ohlc_data,
+                option_volume
+            )
+
+        # Log VWAP initialization (first time only)
         if vwap and not getattr(self, 'vwap_initialized', False):
-            # Calculate bars from 9:15 AM
-            market_open = current_time.replace(hour=9, minute=15, second=0, microsecond=0)
-            bars_count = int((current_time - market_open).total_seconds() / 300) + 1  # 300s = 5min
-
-            # Check if this is a new day for VWAP
-            if not hasattr(self, 'vwap_reset_date') or self.vwap_reset_date != current_time.date():
-                print(f"[{current_time}] 🔄 Reset VWAP running totals for new day: {current_time.date()}")
-                self.vwap_reset_date = current_time.date()
-
-            print(f"[{current_time}] 🎯 Initialized VWAP for {self.daily_direction} {self.daily_strike}: {bars_count} bars from 9:15 AM")
+            print(f"[{current_time}] 🎯 VWAP initialized for {self.daily_direction} {self.daily_strike}: ₹{vwap:.2f}")
             self.vwap_initialized = True
 
-        # Calculate OI change
-        # Note: For paper trading, we calculate from current options data instead
-        # since we don't have historical OI snapshots
-        current_oi_data = self._get_option_data(
-            options_data,
-            self.daily_strike,
-            self.daily_direction,
-            self.daily_expiry
-        )
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 5: Calculate OI Change and Check Entry Conditions
+        # ═══════════════════════════════════════════════════════════════
 
-        if current_oi_data is not None:
-            current_oi = current_oi_data['OI']
-            # For paper trading, use entry OI if we have it, otherwise assume 0 change
-            if hasattr(self, 'entry_oi'):
-                oi_change = current_oi - self.entry_oi
-                oi_change_pct = (oi_change / self.entry_oi * 100) if self.entry_oi > 0 else 0
-            else:
-                # First check - save as baseline
-                self.entry_oi = current_oi
-                oi_change_pct = 0
-                oi_change = 0
+        # Calculate OI change vs baseline (set when strike is first established/updated)
+        if hasattr(self, 'entry_oi'):
+            oi_change = option_oi - self.entry_oi
+            oi_change_pct = (oi_change / self.entry_oi * 100) if self.entry_oi > 0 else 0
         else:
+            # First candle for this strike - record as baseline, no signal yet
+            self.entry_oi = option_oi
             oi_change_pct = 0
             oi_change = 0
 
         # Check entry conditions
-        # 1. OI unwinding (decreasing)
-        is_unwinding = oi_change_pct < 0  # Negative change = unwinding
-
-        # 2. Price above VWAP
+        is_unwinding = oi_change_pct < 0  # OI unwinding (decreasing)
         price_above_vwap = option_price > vwap if vwap else False
 
-        # Display direction (already in CALL/PUT format)
-        display_type = self.daily_direction
+        # Detailed logging
+        print(f"[{current_time}] Checking entry: {self.daily_direction} {self.daily_strike}, Expiry={self.daily_expiry}")
 
-        # Detailed logging like backtest
-        print(f"[{current_time}] Checking entry: {display_type} {self.daily_strike}, Expiry={self.daily_expiry}")
-
-        # Show OI status with BUILDING/UNWINDING
         oi_status = "UNWINDING ✓" if is_unwinding else "BUILDING"
-        print(f"[{current_time}] {display_type} {self.daily_strike}: OI={option_oi:,.0f}, Change={oi_change:,.0f} ({oi_change_pct:+.2f}%) - {oi_status}")
+        print(f"[{current_time}] {self.daily_direction} {self.daily_strike}: OI={option_oi:,.0f}, Change={oi_change:,.0f} ({oi_change_pct:+.2f}%) - {oi_status}")
 
-        # Show price vs VWAP check (only if VWAP is initialized)
         if vwap:
             vwap_status = "ABOVE ✓" if price_above_vwap else "BELOW ✗"
-            print(f"[{current_time}] {display_type} {self.daily_strike}: Price=₹{option_price:.2f}, VWAP=₹{vwap:.2f} - {vwap_status}")
+            print(f"[{current_time}] {self.daily_direction} {self.daily_strike}: Price=₹{option_price:.2f}, VWAP=₹{vwap:.2f} - {vwap_status}")
 
         # Enter trade if conditions met
         if is_unwinding and price_above_vwap:
-            print(f"[{current_time}] 🎯 ENTRY SIGNAL: {display_type} {self.daily_strike} - Price: {option_price:.2f}, VWAP: {vwap:.2f}, OI Change: {oi_change:,.0f} ({oi_change_pct:.2f}%)")
+            print(f"[{current_time}] 🎯 ENTRY SIGNAL: {self.daily_direction} {self.daily_strike} - Price: {option_price:.2f}, VWAP: {vwap:.2f}, OI Change: {oi_change:,.0f} ({oi_change_pct:.2f}%)")
 
-            # Check if already took trade today
             if self.daily_trade_taken:
                 print(f"[{current_time}] ⛔ Entry blocked: Daily trade limit reached (1 trade/day)")
                 return
 
             print(f"[{current_time}] 📈 PLACING BUY ORDER: size=1, expected_price={option_price:.2f}")
 
-            # Execute buy order
             position = self.broker.buy(
                 strike=self.daily_strike,
                 option_type=self.daily_direction,
@@ -479,11 +613,60 @@ class IntradayMomentumOIPaper:
 
             if position:
                 self.daily_trade_taken = True
-                print(f"[{current_time}] 🔵 BUY OPTION EXECUTED: {display_type} {self.daily_strike} @ ₹{option_price:.2f} (Expiry: {self.daily_expiry}, 1 lot = {self.lot_size} qty)")
+                print(f"[{current_time}] 🔵 BUY OPTION EXECUTED: {self.daily_direction} {self.daily_strike} @ ₹{option_price:.2f} (Expiry: {self.daily_expiry}, 1 lot = {self.lot_size} qty)")
                 print(f"[{current_time}]    📊 ENTRY DATA: VWAP={vwap:.2f}, OI={option_oi:,.0f}, OI Change={oi_change:,.0f} ({oi_change_pct:.2f}%)")
 
-    def _check_exits(self, current_time, options_data):
-        """Check exit conditions for all open positions"""
+    def _update_vwap_for_positions(self, current_time):
+        """
+        Fetch the latest completed 5-min candle for each open position and update VWAP.
+        Called once per 5-min boundary from the 1-min exit monitor loop.
+        """
+        positions = self.broker.get_open_positions()
+        for position in positions:
+            try:
+                candle = self._fetch_current_strike_candle(
+                    position.strike,
+                    position.option_type,
+                    position.expiry,
+                    current_time
+                )
+                if not candle:
+                    continue
+                ohlc_data = {
+                    'open':  candle['open'],
+                    'high':  candle['high'],
+                    'low':   candle['low'],
+                    'close': candle['close']
+                }
+                self._calculate_vwap_ohlc(
+                    position.strike,
+                    position.option_type,
+                    position.expiry,
+                    ohlc_data,
+                    candle['volume']
+                )
+            except Exception as e:
+                print(f"[{current_time}] ⚠️  VWAP update failed for {position.strike} {position.option_type}: {e}")
+
+    def _get_current_vwap(self, strike, option_type, expiry):
+        """Return current VWAP from cached running totals without updating it."""
+        key = (strike, option_type, expiry)
+        if key in self.vwap_running_totals:
+            totals = self.vwap_running_totals[key]
+            if totals.get('volume', 0) > 0:
+                return totals['tpv'] / totals['volume']
+        return None
+
+    def _check_exits(self, current_time, options_data, use_ltp_only=False):
+        """Check exit conditions for all open positions.
+
+        Args:
+            use_ltp_only: When True (1-min LTP loop), use LTP already present in
+                          options_data instead of fetching historical candles.
+                          VWAP is read from cache and NOT updated.
+                          When False (5-min strategy loop), fetch a fresh candle
+                          and update VWAP as normal.
+        """
 
         positions = self.broker.get_open_positions()
 
@@ -491,31 +674,67 @@ class IntradayMomentumOIPaper:
             return
 
         for position in positions.copy():  # Use copy to avoid modification during iteration
-            # Get current option data
-            option_data = self._get_option_data(
-                options_data,
-                position.strike,
-                position.option_type,
-                position.expiry
-            )
 
-            if option_data is None:
-                print(f"[{current_time}] ⚠️  Could not find option data for {position.strike} {position.option_type}")
-                continue
+            if use_ltp_only:
+                # ── 1-min LTP path: use pre-fetched quote, skip candle API call ──
+                option_type_code = 'PE' if position.option_type in ('PUT', 'PE') else 'CE'
+                strike = int(position.strike)
 
-            # Extract data
-            current_price = option_data['close']
-            current_oi = option_data['OI']  # Uppercase to match data format
-            current_volume = option_data['volume']
+                row = None
+                if options_data is not None and not options_data.empty:
+                    mask = (
+                        (options_data['strike'] == strike) &
+                        (options_data['option_type'] == option_type_code)
+                    )
+                    matching = options_data[mask]
+                    if not matching.empty:
+                        row = matching.iloc[0]
 
-            # Calculate VWAP
-            vwap = self._calculate_vwap(
-                position.strike,
-                position.option_type,
-                position.expiry,
-                current_price,
-                current_volume
-            )
+                if row is None:
+                    print(f"[{current_time}] ⚠️  LTP not found in options_data for {strike} {option_type_code}, skipping")
+                    continue
+
+                current_price = float(row['close'])   # actual current LTP
+                current_oi    = float(row['OI'])
+
+                # Use cached VWAP — do NOT update it (only 5-min candles update VWAP)
+                vwap = self._get_current_vwap(position.strike, position.option_type, position.expiry)
+
+            else:
+                # ── 5-min candle path: fetch fresh candle and update VWAP ──
+                try:
+                    current_candle = self._fetch_current_strike_candle(
+                        position.strike,
+                        position.option_type,
+                        position.expiry,
+                        current_time
+                    )
+                except Exception as e:
+                    print(f"[{current_time}] ⚠️  Could not fetch candle for {position.strike} {position.option_type}: {e}")
+                    continue
+
+                if not current_candle:
+                    print(f"[{current_time}] ⚠️  No candle data for {position.strike} {position.option_type}")
+                    continue
+
+                current_price  = current_candle['close']
+                current_oi     = current_candle['oi']
+                current_volume = current_candle['volume']
+
+                ohlc_data = {
+                    'open':  current_candle['open'],
+                    'high':  current_candle['high'],
+                    'low':   current_candle['low'],
+                    'close': current_candle['close']
+                }
+
+                vwap = self._calculate_vwap_ohlc(
+                    position.strike,
+                    position.option_type,
+                    position.expiry,
+                    ohlc_data,
+                    current_volume
+                )
 
             # Check for EOD exit FIRST (priority exit)
             current_time_only = current_time.time()
@@ -628,7 +847,7 @@ class IntradayMomentumOIPaper:
                 self.broker.sell(position, current_price, vwap, current_oi, exit_reason)
 
     def _force_eod_exit(self, current_time, options_data):
-        """Force exit all positions at end of day"""
+        """Force exit all positions at end of day (CANDLE-BASED with HLC/3 VWAP)"""
 
         positions = self.broker.get_open_positions()
 
@@ -636,26 +855,35 @@ class IntradayMomentumOIPaper:
             print(f"[{current_time}] Forcing EOD exit for {len(positions)} position(s)")
 
             for position in positions.copy():
-                # Get current option data
-                option_data = self._get_option_data(
-                    options_data,
-                    position.strike,
-                    position.option_type,
-                    position.expiry
-                )
-
-                if option_data is None:
+                # Fetch current candle for this position's strike (CANDLE-BASED)
+                try:
+                    current_candle = self._fetch_current_strike_candle(
+                        position.strike,
+                        position.option_type,
+                        position.expiry,
+                        current_time
+                    )
+                except Exception as e:
+                    print(f"[{current_time}] ⚠️  Could not fetch candle for EOD exit {position.strike} {position.option_type}: {e}")
                     continue
 
-                current_price = option_data['close']
-                current_oi = option_data['OI']  # Uppercase to match data format
-                current_volume = option_data['volume']
+                current_price = current_candle['close']
+                current_oi = current_candle['oi']
+                current_volume = current_candle['volume']
 
-                vwap = self._calculate_vwap(
+                # Extract OHLC data for OHLC/4 VWAP calculation (same as entry)
+                ohlc_data = {
+                    'open': current_candle['open'],
+                    'high': current_candle['high'],
+                    'low': current_candle['low'],
+                    'close': current_candle['close']
+                }
+
+                vwap = self._calculate_vwap_ohlc(
                     position.strike,
                     position.option_type,
                     position.expiry,
-                    current_price,
+                    ohlc_data,
                     current_volume
                 )
 
@@ -720,6 +948,310 @@ class IntradayMomentumOIPaper:
             traceback.print_exc()
             return None
 
+    def _store_historical_candle(self, strike, option_type, expiry, timestamp, close, volume):
+        """
+        Store historical candle data for VWAP backfilling.
+
+        Args:
+            strike: Strike price
+            option_type: CALL or PUT
+            expiry: Expiry date
+            timestamp: Candle timestamp
+            close: Close price
+            volume: Cumulative volume
+        """
+        key = (strike, option_type, expiry)
+
+        if key not in self.historical_candles:
+            self.historical_candles[key] = []
+
+        # Store candle data as tuple: (timestamp, close, volume)
+        self.historical_candles[key].append((timestamp, close, volume))
+
+        # Limit history size to prevent memory bloat
+        if len(self.historical_candles[key]) > self.historical_candles_max_size:
+            self.historical_candles[key].pop(0)  # Remove oldest
+
+    def _store_historical_candles_bulk(self, strike, option_type, expiry, candles):
+        """
+        Store multiple historical candles at once (for strike initialization).
+
+        Args:
+            strike: Strike price
+            option_type: CALL or PUT
+            expiry: Expiry date
+            candles: List of candle dicts from adapter (with OHLCV data)
+        """
+        if not candles:
+            return
+
+        key = (strike, option_type, expiry)
+
+        if key not in self.historical_candles:
+            self.historical_candles[key] = []
+
+        # Store all candles
+        for candle in candles:
+            self.historical_candles[key].append((
+                candle['timestamp'],
+                candle['close'],
+                candle['volume']
+            ))
+
+        # Limit size to prevent memory bloat
+        if len(self.historical_candles[key]) > self.historical_candles_max_size:
+            # Keep only the most recent candles
+            self.historical_candles[key] = self.historical_candles[key][-self.historical_candles_max_size:]
+
+        print(f"[{datetime.now()}] 📦 Stored {len(candles)} historical candles for {option_type} {strike}")
+
+    def _initialize_vwap_from_market_open(self, current_time):
+        """
+        Initialize VWAP with historical candles from 9:15 AM (market open).
+
+        Called when direction is first determined (especially when starting late).
+        Fetches all candles from market open to now and initializes VWAP.
+
+        Args:
+            current_time: Current datetime
+        """
+        if not self.adapter or not self.daily_direction or not self.daily_strike:
+            return
+
+        print(f"[{current_time}] 📥 Fetching historical candles from 9:15 AM for {self.daily_direction} {self.daily_strike}...")
+
+        market_open = current_time.replace(hour=9, minute=15, second=0, microsecond=0)
+
+        # Convert CALL/PUT to CE/PE for adapter
+        option_type_code = 'CE' if self.daily_direction == 'CALL' else 'PE'
+
+        try:
+            historical_candles = self.adapter.get_historical_candles(
+                underlying="NIFTY",
+                option_type=option_type_code,
+                strike=self.daily_strike,
+                expiry=self.daily_expiry,
+                from_time=market_open,
+                to_time=current_time
+            )
+
+            if historical_candles:
+                num_candles = len(historical_candles)
+                print(f"[{current_time}] ✓ Fetched {num_candles} historical candles from 9:15 AM")
+
+                # Drop the last candle if it is still in progress.
+                # The broker returns the current incomplete candle (e.g. started at 10:50,
+                # fetched at 10:51 — only 1 min of data). Including it here would
+                # double-count it when the live_update adds the completed version at 10:55.
+                from datetime import timedelta
+                if historical_candles:
+                    last_candle = historical_candles[-1]
+                    last_ts = last_candle.get('timestamp')
+                    if last_ts is not None:
+                        # Candle is complete only when candle_time + 5 min <= current_time
+                        if hasattr(last_ts, 'tzinfo') and last_ts.tzinfo and not current_time.tzinfo:
+                            # Make current_time tz-aware to compare
+                            import pytz
+                            ist = pytz.timezone('Asia/Kolkata')
+                            current_time_aware = ist.localize(current_time)
+                        else:
+                            current_time_aware = current_time
+                        if last_ts + timedelta(minutes=5) > current_time_aware:
+                            dropped = historical_candles[-1]
+                            historical_candles = historical_candles[:-1]
+                            print(f"[{current_time}] ⚠️  Dropped incomplete last candle: "
+                                  f"{dropped.get('timestamp')} (still in progress, vol={dropped.get('volume', 0):,})")
+
+                if not historical_candles:
+                    print(f"[{current_time}] ⚠️  No complete candles to initialize VWAP")
+                    return
+
+                print(f"[{current_time}] 🎯 Initializing VWAP with {len(historical_candles)} complete candles")
+
+                # Initialize VWAP with historical candles (HLC/3 formula)
+                success = self._initialize_vwap_with_history(
+                    self.daily_strike,
+                    self.daily_direction,
+                    self.daily_expiry,
+                    historical_candles
+                )
+
+                if success:
+                    # Also store the candles for reference
+                    self._store_historical_candles_bulk(
+                        self.daily_strike,
+                        self.daily_direction,
+                        self.daily_expiry,
+                        historical_candles
+                    )
+                    print(f"[{current_time}] 🎯 Initialized VWAP for {self.daily_direction} {self.daily_strike}: {num_candles} bars from 9:15 AM")
+
+                    # Store the last candle for use in _check_entry (avoid duplicate fetch)
+                    last_candle = historical_candles[-1]
+                    self._last_initialized_candle = {
+                        'open': last_candle['open'],
+                        'high': last_candle['high'],
+                        'low': last_candle['low'],
+                        'close': last_candle['close'],
+                        'volume': last_candle['volume'],
+                        'oi': last_candle.get('oi', 0)  # Use OI from candle if available
+                    }
+                else:
+                    print(f"[{current_time}] ⚠️  Failed to initialize VWAP with historical data")
+            else:
+                print(f"[{current_time}] ⚠️  No historical candles available from 9:15 AM")
+
+        except Exception as e:
+            print(f"[{current_time}] ✗ Error fetching historical candles: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def _initialize_vwap_with_history(self, strike, option_type, expiry, candles_data):
+        """
+        Initialize VWAP with historical candles using HLC/3 formula.
+
+        Args:
+            strike: Strike price
+            option_type: CALL or PUT
+            expiry: Expiry date
+            candles_data: List of candle dicts with OHLCV data (from adapter)
+
+        Returns:
+            bool: True if initialized successfully
+        """
+        if not candles_data:
+            return False
+
+        key = (strike, option_type, expiry)
+
+        # Initialize VWAP state
+        self.vwap_running_totals[key] = {
+            'tpv': 0.0,
+            'volume': 0.0,
+            'prev_cumulative_volume': 0.0
+        }
+
+        print(f"[{datetime.now()}] 🔄 Initializing VWAP for {option_type} {strike} with {len(candles_data)} historical candles")
+
+        # Detect if volume is cumulative or interval by checking multiple candles
+        # Check first 10 candles (or all if less) for decreasing volume
+        is_interval_volume = False
+        if len(candles_data) > 1:
+            # Check up to first 10 candles for any decrease in volume
+            check_count = min(10, len(candles_data))
+            decreases_found = 0
+
+            for i in range(1, check_count):
+                if candles_data[i]['volume'] < candles_data[i-1]['volume']:
+                    decreases_found += 1
+
+            # If we find ANY decreases, it's interval volume
+            if decreases_found > 0:
+                is_interval_volume = True
+                print(f"[{datetime.now()}] ℹ️  Detected INTERVAL volume (per-candle) - found {decreases_found} decrease(s) in first {check_count} candles")
+            else:
+                print(f"[{datetime.now()}] ℹ️  Detected CUMULATIVE volume (from market open) - no decreases in first {check_count} candles")
+
+        # Persist the volume type so ongoing updates use the same logic
+        self.vwap_running_totals[key]['is_interval_volume'] = is_interval_volume
+
+        # Record the full candle fetch to persistent store (once, before loop)
+        if self.recorder:
+            self.recorder.record_candle_fetch(
+                fetch_reason='vwap_init',
+                strike=strike,
+                option_type=option_type if option_type in ('CE', 'PE') else ('CE' if option_type == 'CALL' else 'PE'),
+                expiry=expiry,
+                from_time=candles_data[0].get('timestamp') if candles_data else None,
+                to_time=candles_data[-1].get('timestamp') if candles_data else None,
+                candles=candles_data
+            )
+
+        # Backfill VWAP with each historical candle using OHLC/4 formula
+        debug_first_3 = []
+        debug_last_3 = []
+
+        for idx, candle in enumerate(candles_data):
+            # Calculate typical price using OHLC/4 formula (more accurate than HLC/3)
+            typical_price = (candle['open'] + candle['high'] + candle['low'] + candle['close']) / 4
+
+            # Calculate incremental volume based on type
+            if is_interval_volume:
+                # Volume is already per-candle, use it directly
+                incremental_volume = candle['volume']
+            else:
+                # Volume is cumulative, calculate the delta
+                prev_cumul = self.vwap_running_totals[key]['prev_cumulative_volume']
+                incremental_volume = candle['volume'] - prev_cumul
+                self.vwap_running_totals[key]['prev_cumulative_volume'] = candle['volume']
+
+            # Capture state BEFORE update for recorder
+            cum_tpv_before = self.vwap_running_totals[key]['tpv']
+            cum_vol_before = self.vwap_running_totals[key]['volume']
+
+            # Accumulate TPV
+            tpv_added = typical_price * incremental_volume
+            self.vwap_running_totals[key]['tpv'] += tpv_added
+            self.vwap_running_totals[key]['volume'] += incremental_volume
+
+            # Record this VWAP init step with full before/after state
+            if self.recorder:
+                self.recorder.record_vwap_step(
+                    step_type='init_candle',
+                    strike=strike,
+                    option_type=option_type if option_type in ('CE', 'PE') else ('CE' if option_type == 'CALL' else 'PE'),
+                    expiry=expiry,
+                    candle_time=candle.get('timestamp'),
+                    ohlc={'open': candle['open'], 'high': candle['high'],
+                          'low': candle['low'], 'close': candle['close']},
+                    raw_volume=candle['volume'],
+                    is_interval_volume=is_interval_volume,
+                    incremental_volume=incremental_volume,
+                    cum_tpv_before=cum_tpv_before,
+                    cum_volume_before=cum_vol_before,
+                    cum_tpv_after=self.vwap_running_totals[key]['tpv'],
+                    cum_volume_after=self.vwap_running_totals[key]['volume']
+                )
+
+            # Debug: Store first 3 and last 3 candles
+            candle_info = {
+                'idx': idx,
+                'time': candle.get('timestamp', 'N/A'),
+                'ohlc4': f"₹{typical_price:.2f}",
+                'vol': incremental_volume,
+                'o': candle['open'],
+                'h': candle['high'],
+                'l': candle['low'],
+                'c': candle['close']
+            }
+            if idx < 3:
+                debug_first_3.append(candle_info)
+            if idx >= len(candles_data) - 3:
+                debug_last_3.append(candle_info)
+
+        # Calculate and log the initialized VWAP
+        if self.vwap_running_totals[key]['volume'] > 0:
+            vwap = self.vwap_running_totals[key]['tpv'] / self.vwap_running_totals[key]['volume']
+            total_tpv = self.vwap_running_totals[key]['tpv']
+            total_vol = self.vwap_running_totals[key]['volume']
+
+            print(f"[{datetime.now()}] ✓ Initialized VWAP: ₹{vwap:.2f} (using {len(candles_data)} candles with OHLC/4 formula)")
+            print(f"[{datetime.now()}] 📊 VWAP Debug: TPV={total_tpv:,.0f}, Volume={total_vol:,.0f}")
+
+            # Print first 3 candles
+            print(f"[{datetime.now()}] 🔍 First 3 candles:")
+            for c in debug_first_3:
+                print(f"   [{c['idx']}] {c['time']} → OHLC4={c['ohlc4']} (O={c['o']}, H={c['h']}, L={c['l']}, C={c['c']}), Vol={c['vol']:,}")
+
+            # Print last 3 candles
+            print(f"[{datetime.now()}] 🔍 Last 3 candles:")
+            for c in debug_last_3:
+                print(f"   [{c['idx']}] {c['time']} → OHLC4={c['ohlc4']} (O={c['o']}, H={c['h']}, L={c['l']}, C={c['c']}), Vol={c['vol']:,}")
+
+            return True
+
+        return False
+
     def _calculate_vwap(self, strike, option_type, expiry, price, volume):
         """
         Calculate incremental VWAP for option using cumulative volume.
@@ -739,13 +1271,20 @@ class IntradayMomentumOIPaper:
         """
         key = (strike, option_type, expiry)
 
-        # Initialize if first time
+        # Initialize if first time - try to backfill with historical data
         if key not in self.vwap_running_totals:
-            self.vwap_running_totals[key] = {
-                'tpv': 0.0,                      # Total Price × Volume
-                'volume': 0.0,                   # Total Volume
-                'prev_cumulative_volume': 0.0    # Track previous cumulative volume
-            }
+            # Try to initialize with historical candles
+            initialized_with_history = self._initialize_vwap_with_history(
+                strike, option_type, expiry, datetime.now()
+            )
+
+            # If no historical data available, initialize with zeros
+            if not initialized_with_history:
+                self.vwap_running_totals[key] = {
+                    'tpv': 0.0,                      # Total Price × Volume
+                    'volume': 0.0,                   # Total Volume
+                    'prev_cumulative_volume': 0.0    # Track previous cumulative volume
+                }
 
         # Calculate incremental volume (delta since last update)
         # This handles cumulative volume from quote data
@@ -765,6 +1304,192 @@ class IntradayMomentumOIPaper:
             return vwap
         else:
             return price  # Fallback to current price if no volume
+
+    def _calculate_vwap_ohlc(self, strike, option_type, expiry, ohlc_data, volume):
+        """
+        Calculate VWAP using OHLC/4 (Open + High + Low + Close) / 4 formula.
+
+        Args:
+            strike: Strike price
+            option_type: CALL or PUT
+            expiry: Expiry date
+            ohlc_data: Dict with {open, high, low, close}
+            volume: Cumulative volume from market open
+
+        Returns:
+            float: VWAP value
+        """
+        key = (strike, option_type, expiry)
+
+        # Initialize if first time (and not already initialized with historical data)
+        if key not in self.vwap_running_totals:
+            # Single-candle fetches always return interval (per-candle) volume
+            self.vwap_running_totals[key] = {
+                'tpv': 0.0,
+                'volume': 0.0,
+                'prev_cumulative_volume': 0.0,
+                'is_interval_volume': True
+            }
+
+        # Calculate typical price using OHLC/4 formula (more accurate)
+        typical_price = (ohlc_data['open'] + ohlc_data['high'] + ohlc_data['low'] + ohlc_data['close']) / 4
+
+        # Determine incremental volume based on how the broker reports it
+        is_interval = self.vwap_running_totals[key].get('is_interval_volume', True)
+        if is_interval:
+            # Volume is per-candle (interval) — use it directly; no delta needed
+            incremental_volume = volume
+        else:
+            # Volume is cumulative from market open — compute the delta to avoid double-counting
+            prev_cumulative = self.vwap_running_totals[key]['prev_cumulative_volume']
+            incremental_volume = volume - prev_cumulative
+            self.vwap_running_totals[key]['prev_cumulative_volume'] = volume
+
+        # Capture state BEFORE update for recorder
+        cum_tpv_before = self.vwap_running_totals[key]['tpv']
+        cum_vol_before = self.vwap_running_totals[key]['volume']
+
+        # Update running totals
+        self.vwap_running_totals[key]['tpv'] += typical_price * incremental_volume
+        self.vwap_running_totals[key]['volume'] += incremental_volume
+
+        # Record this live VWAP step with full before/after state
+        if self.recorder:
+            self.recorder.record_vwap_step(
+                step_type='live_update',
+                strike=strike,
+                option_type=option_type if option_type in ('CE', 'PE') else ('CE' if option_type == 'CALL' else 'PE'),
+                expiry=expiry,
+                candle_time=None,  # caller can set; live updates don't carry candle_time
+                ohlc=ohlc_data,
+                raw_volume=volume,
+                is_interval_volume=is_interval,
+                incremental_volume=incremental_volume,
+                cum_tpv_before=cum_tpv_before,
+                cum_volume_before=cum_vol_before,
+                cum_tpv_after=self.vwap_running_totals[key]['tpv'],
+                cum_volume_after=self.vwap_running_totals[key]['volume']
+            )
+
+        # Calculate VWAP
+        if self.vwap_running_totals[key]['volume'] > 0:
+            vwap = self.vwap_running_totals[key]['tpv'] / self.vwap_running_totals[key]['volume']
+            return vwap
+        else:
+            return typical_price  # Fallback to typical price if no volume
+
+    def _fetch_current_strike_candle(self, strike, option_type, expiry, current_time):
+        """
+        Fetch ONLY the latest 5-min candle for the current strike.
+
+        Returns:
+            dict: {
+                'open': float,
+                'high': float,
+                'low': float,
+                'close': float,
+                'volume': int,
+                'oi': int
+            } or None if error
+        """
+        if not self.adapter:
+            return None
+
+        try:
+            from datetime import timedelta
+
+            # Convert CALL/PUT to CE/PE for adapter
+            if option_type == 'CALL':
+                option_type_code = 'CE'
+            elif option_type == 'PUT':
+                option_type_code = 'PE'
+            else:
+                option_type_code = option_type  # Already CE/PE
+
+            # Calculate last complete 5-min boundary
+            current_minute = current_time.minute
+            boundary_minute = (current_minute // 5) * 5
+            to_time = current_time.replace(minute=boundary_minute, second=0, microsecond=0)
+            from_time = to_time - timedelta(minutes=5)  # Fetch only last 5 min (gets only 1 candle)
+
+            # Fetch candle for selected strike ONLY
+            candles = self.adapter.get_historical_candles(
+                underlying="NIFTY",
+                option_type=option_type_code,
+                strike=strike,
+                expiry=expiry,
+                from_time=from_time,
+                to_time=to_time
+            )
+
+            if not candles:
+                print(f"[{current_time}] ⚠️  No candle data for {option_type} {strike}")
+                return None
+
+            # Record all candles from this fetch to persistent store
+            if self.recorder:
+                self.recorder.record_candle_fetch(
+                    fetch_reason='strategy_update',
+                    strike=strike,
+                    option_type=option_type_code,
+                    expiry=expiry,
+                    from_time=from_time,
+                    to_time=to_time,
+                    candles=candles
+                )
+
+            # Get last candle (most recent complete)
+            last_candle = candles[-1]
+
+            # Use OI from candle if available, otherwise fetch separately
+            oi = last_candle.get('oi', 0)
+            if oi == 0:
+                # Fallback: Fetch OI separately if not included in candle data
+                print(f"[{current_time}] ⚠️  OI not in candle data, fetching via quote API...")
+                oi = self._fetch_oi_for_strike(strike, option_type_code, expiry)
+            else:
+                print(f"[{current_time}] ✓ Using OI from candle data: {oi:,} (no quote fetch needed)")
+
+            return {
+                'open': last_candle['open'],
+                'high': last_candle['high'],
+                'low': last_candle['low'],
+                'close': last_candle['close'],
+                'volume': last_candle['volume'],
+                'oi': oi
+            }
+
+        except Exception as e:
+            print(f"[{current_time}] ✗ Error fetching current candle: {e}")
+            import traceback
+            traceback.print_exc()
+            return None
+
+    def _fetch_oi_for_strike(self, strike, option_type, expiry):
+        """
+        Fetch only OI using quote API (faster than candle).
+
+        Args:
+            option_type: Should be 'CE' or 'PE' (already converted from CALL/PUT)
+        """
+        try:
+            quote = self.adapter.get_quote(
+                underlying="NIFTY",
+                option_type=option_type,
+                strike=strike,
+                expiry=expiry
+            )
+            if self.recorder and quote:
+                self.recorder.record_quote(
+                    fetch_reason='oi_fallback',
+                    strike=strike,
+                    option_type=option_type,
+                    expiry=expiry,
+                    quote=quote
+                )
+            return quote.oi if quote else 0
+        except:
+            return 0
 
     def get_status(self):
         """Get current strategy status"""

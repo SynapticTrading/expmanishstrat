@@ -7,6 +7,7 @@ Strategies use standard params -> Adapters map to broker-specific formats.
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
+from datetime import datetime
 import logging
 import pandas as pd
 
@@ -227,6 +228,48 @@ class BrokerAdapter(ABC):
         Note:
             The 'close' column contains candle close price, which may differ from
             current LTP. This provides more accurate 5-minute price action data.
+        """
+        pass
+
+    @abstractmethod
+    def get_historical_candles(self, underlying: str, option_type: str,
+                              strike: int, expiry: str,
+                              from_time: datetime, to_time: datetime) -> List[Dict]:
+        """
+        Fetch historical 5-minute OHLCV candles for a specific option strike.
+
+        Used for:
+        1. Initializing VWAP when strike changes mid-day
+        2. Backfilling data when system starts after 9:15 AM
+
+        Args:
+            underlying: "NIFTY" or "BANKNIFTY"
+            option_type: "CE" or "PE"
+            strike: Strike price (e.g., 25450)
+            expiry: Expiry date (YYYY-MM-DD)
+            from_time: Start time (typically 9:15 AM)
+            to_time: End time (current time)
+
+        Returns:
+            List[Dict]: List of candles, each with:
+                {
+                    'timestamp': datetime,
+                    'open': float,
+                    'high': float,
+                    'low': float,
+                    'close': float,
+                    'volume': int  # Cumulative from market open
+                }
+
+            Returns empty list if:
+            - No data available
+            - API error
+            - Invalid instrument
+
+        Notes:
+            - Volume is CUMULATIVE from 9:15 AM (not interval volume)
+            - Candles are sorted chronologically (oldest first)
+            - Both brokers can fetch full day (~75 candles) in one API call
         """
         pass
 

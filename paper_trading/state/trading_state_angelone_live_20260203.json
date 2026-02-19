@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-02-03T15:00:05.020184+05:30",
+  "date": "2026-02-03",
+  "session_id": "SESSION_20260203_0931",
+  "mode": "live",
+  "active_positions": {},
+  "closed_positions": [
+    {
+      "order_id": "LIVE_20260203_001",
+      "broker_order_id": "260203000537634",
+      "exit_broker_order_id": "260203000596110",
+      "mode": "LIVE",
+      "strike": 25800,
+      "option_type": "CALL",
+      "expiry": "2026-02-03",
+      "entry_time": "2026-02-03T10:30:02.470515+05:30",
+      "exit_time": "2026-02-03T10:44:38.654710+05:30",
+      "entry_price": 90.5,
+      "exit_price": 100.5,
+      "size": 65,
+      "pnl": 650.0,
+      "pnl_pct": 11.049723756906072,
+      "vwap_at_entry": 88.74001551526314,
+      "vwap_at_exit": 91.19215685085409,
+      "oi_at_entry": 17786860,
+      "oi_change_at_entry": 1.2885354694420537,
+      "oi_at_exit": 18016050,
+      "exit_reason": "Trailing Stop (10%)"
+    }
+  ],
+  "strategy_state": {
+    "current_spot": 25764.0,
+    "trading_strike": 25800,
+    "trading_expiry": "2026-02-03",
+    "direction": "CALL",
+    "max_call_oi_strike": null,
+    "max_put_oi_strike": null,
+    "last_oi_check": "2026-02-03T14:55:00.641619+05:30",
+    "vwap_tracking": {}
+  },
+  "daily_stats": {
+    "trades_today": 1,
+    "max_trades_allowed": 1,
+    "max_concurrent_positions": 2,
+    "current_positions": 0,
+    "total_pnl_today": 650.0,
+    "win_count": 1,
+    "loss_count": 0,
+    "win_rate": 100.0
+  },
+  "portfolio": {
+    "initial_capital": 0.0,
+    "current_cash": 0.0,
+    "positions_value": 6532.5,
+    "total_value": 6532.5,
+    "total_return_pct": 0
+  },
+  "api_stats": {
+    "calls_5min_loop": 61,
+    "calls_1min_ltp": 15,
+    "total_calls_today": 76,
+    "last_api_call": "2026-02-03T14:55:00.642397+05:30"
+  },
+  "system_health": {
+    "last_heartbeat": "2026-02-03T15:00:05.020095+05:30",
+    "broker_connected": true,
+    "data_feed_status": "ACTIVE",
+    "ltp_loop_running": false,
+    "strategy_loop_running": false,
+    "recovered": true,
+    "recovery_time": "2026-02-03T14:35:46.846137+05:30"
+  }
+}

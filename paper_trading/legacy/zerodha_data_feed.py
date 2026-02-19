@@ -258,10 +258,13 @@ class ZerodhaDataFeed:
                     volume = quote.get('volume', 0)  # Cumulative volume
                     oi = quote.get('oi', 0)
 
+                    # Convert expiry to string format if it's a date object
+                    expiry_str = expiry.strftime('%Y-%m-%d') if hasattr(expiry, 'strftime') else str(expiry)
+
                     result_data.append({
                         'strike': strike,
                         'option_type': option_type,
-                        'expiry': expiry,
+                        'expiry': expiry_str,
                         'open': ltp,   # Use LTP for all OHLC fields
                         'high': ltp,
                         'low': ltp,
