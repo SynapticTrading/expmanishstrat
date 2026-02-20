@@ -829,17 +829,18 @@ class IntradayMomentumOIPaper:
                 if current_price <= stop_loss_price:
                     exit_reason = f"Stop Loss ({self.initial_stop_loss_pct*100:.0f}%)"
 
-                # 2. VWAP stop (only in loss)
-                elif pnl_pct < 0 and vwap:
-                    vwap_stop_price = vwap * (1 - self.vwap_stop_pct)
-                    if current_price <= vwap_stop_price:
-                        exit_reason = f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"
-
-                # 3. OI increase stop (only in loss)
+                # 2. Loss-based stops: VWAP stop, then OI increase stop
                 elif pnl_pct < 0:
-                    oi_change_pct = (current_oi / position.oi_at_entry - 1)
-                    if oi_change_pct > self.oi_increase_stop_pct:
-                        exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
+                    if vwap:
+                        vwap_stop_price = vwap * (1 - self.vwap_stop_pct)
+                        if current_price <= vwap_stop_price:
+                            exit_reason = f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"
+
+                    # 3. OI increase stop (only if VWAP stop didn't fire)
+                    if not exit_reason:
+                        oi_change_pct = (current_oi / position.oi_at_entry - 1)
+                        if oi_change_pct > self.oi_increase_stop_pct:
+                            exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
 
             # Execute exit if reason found
             if exit_reason:
