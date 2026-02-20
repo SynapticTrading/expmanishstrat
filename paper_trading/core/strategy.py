@@ -781,7 +781,7 @@ class IntradayMomentumOIPaper:
                 print(f"    VWAP Stop: ₹{vwap_stop_price:.2f} | Current VWAP: ₹{vwap:.2f}")
 
             # OI change info (only in loss)
-            if pnl_pct < 0:
+            if pnl_pct < 0 and position.oi_at_entry > 0:
                 oi_change_pct = (current_oi / position.oi_at_entry - 1)
                 print(f"    OI Change: {oi_change_pct*100:+.2f}% (Threshold: {self.oi_increase_stop_pct*100:.0f}%)")
 
@@ -819,9 +819,10 @@ class IntradayMomentumOIPaper:
                         exit_reason = max(triggered, key=lambda x: x[0])[1]
                     else:
                         # No price-based stop triggered — check OI stop as fallback
-                        oi_change_pct = (current_oi / position.oi_at_entry - 1)
-                        if oi_change_pct > self.oi_increase_stop_pct:
-                            exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
+                        if position.oi_at_entry > 0:
+                            oi_change_pct = (current_oi / position.oi_at_entry - 1)
+                            if oi_change_pct > self.oi_increase_stop_pct:
+                                exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
 
             else:
                 # Trailing not active — use normal stop priority
@@ -837,7 +838,7 @@ class IntradayMomentumOIPaper:
                             exit_reason = f"VWAP Stop (>{self.vwap_stop_pct*100:.0f}% below VWAP)"
 
                     # 3. OI increase stop (only if VWAP stop didn't fire)
-                    if not exit_reason:
+                    if not exit_reason and position.oi_at_entry > 0:
                         oi_change_pct = (current_oi / position.oi_at_entry - 1)
                         if oi_change_pct > self.oi_increase_stop_pct:
                             exit_reason = f"OI Increase Stop ({oi_change_pct*100:+.1f}%)"
