@@ -322,7 +322,7 @@ class AngelOneAdapter(BrokerAdapter):
             from_date_str = from_time.strftime("%Y-%m-%d %H:%M")
             to_date_str = to_time.strftime("%Y-%m-%d %H:%M")
 
-            # Step 3: Fetch candle data from AngelOne API
+            # Step 3: Fetch candle data from AngelOne API (with retry for rate limits)
             historic_param = {
                 "exchange": "NFO",
                 "symboltoken": str(token),
@@ -331,7 +331,26 @@ class AngelOneAdapter(BrokerAdapter):
                 "todate": to_date_str
             }
 
-            response = self._smart_api.getCandleData(historic_param)
+            max_retries = 3
+            retry_delay = 2
+            response = None
+
+            for attempt in range(max_retries):
+                response = self._smart_api.getCandleData(historic_param)
+                if response and response.get('status') == True:
+                    break  # Success
+                error_code = response.get('errorcode', '') if response else ''
+                message = response.get('message', '') if response else ''
+                if error_code == 'AB1004' or 'TooManyRequests' in message:
+                    if attempt < max_retries - 1:
+                        logger.warning(f"Rate limited by AngelOne (attempt {attempt + 1}/{max_retries}), retrying in {retry_delay}s...")
+                        import time as time_module
+                        time_module.sleep(retry_delay)
+                        retry_delay *= 2
+                    else:
+                        logger.error(f"Rate limited after {max_retries} attempts, giving up")
+                else:
+                    break  # Non-rate-limit error, don't retry
 
             if not response or response.get('status') != True:
                 logger.warning(f"No candle data returned for {option_type} {strike}")
@@ -345,52 +364,24 @@ class AngelOneAdapter(BrokerAdapter):
 
             logger.info(f"✓ Fetched {len(candle_data)} candles for {option_type} {strike}")
 
-            # Step 4: Fetch OI data separately (AngelOne requires separate API call)
-            oi_param = {
-                "exchange": "NFO",
-                "symboltoken": str(token),
-                "interval": "FIVE_MINUTE",
-                "fromdate": from_date_str,
-                "todate": to_date_str
-            }
-
-            oi_data = {}
-            try:
-                oi_response = self._smart_api.getOIData(oi_param)
-                if oi_response and oi_response.get('status'):
-                    oi_list = oi_response.get('data', [])
-                    # Create OI lookup map: timestamp -> OI value
-                    # AngelOne OI format: [timestamp, open_interest]
-                    for oi_entry in oi_list:
-                        timestamp_str = oi_entry[0]
-                        oi_value = int(oi_entry[1])
-                        oi_data[timestamp_str] = oi_value
-                    logger.info(f"✓ Fetched OI data for {len(oi_list)} candles")
-                else:
-                    logger.warning(f"Could not fetch OI data, will use 0 as default")
-            except Exception as e:
-                logger.warning(f"Error fetching OI data: {e}, will use 0 as default")
-
-            # Step 5: Convert to standard format and merge with OI
+            # Step 4: Convert to standard format
+            # AngelOne: getCandleData and getOIData share the same /historical/v1/ rate limit
+            # pool — calling both back-to-back always triggers TooManyRequests regardless of
+            # delay/retries. OI is fetched via getMarketData (separate pool) by the strategy.
             # AngelOne format: [timestamp, open, high, low, close, volume]
             candles = []
             for candle in candle_data:
                 try:
-                    # Parse timestamp (format: "2026-02-16T09:20:00+05:30")
                     timestamp_str = candle[0]
                     timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S%z")
-
-                    # Get OI for this timestamp (default to 0 if not found)
-                    oi_value = oi_data.get(timestamp_str, 0)
-
                     candles.append({
-                        'timestamp': timestamp.replace(tzinfo=None),  # Remove timezone
+                        'timestamp': timestamp.replace(tzinfo=None),
                         'open': float(candle[1]),
                         'high': float(candle[2]),
                         'low': float(candle[3]),
                         'close': float(candle[4]),
-                        'volume': int(candle[5]),  # Volume from AngelOne (auto-detected as interval/cumulative)
-                        'oi': oi_value  # OI fetched from separate getOIData() call
+                        'volume': int(candle[5]),
+                        'oi': 0  # Populated by strategy via quote API (getMarketData)
                     })
                 except Exception as e:
                     logger.error(f"Error parsing candle: {candle}, error: {e}")

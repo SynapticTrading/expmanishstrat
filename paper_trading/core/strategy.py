@@ -446,16 +446,13 @@ class IntradayMomentumOIPaper:
                                 'oi': last_candle.get('oi', 0)  # Use OI from candle if available
                             }
 
-                            # Fetch OI separately only if not available in candle
+                            # Fetch OI via quote API if not in candle (AngelOne always needs this)
                             if current_candle['oi'] == 0:
-                                print(f"[{current_time}] ⚠️  OI not in historical candle, fetching via quote API...")
                                 current_candle['oi'] = self._fetch_oi_for_strike(
                                     new_strike,
                                     'CE' if self.daily_direction == 'CALL' else 'PE',
                                     self.daily_expiry
                                 )
-                            else:
-                                print(f"[{current_time}] ✓ Using OI from historical candle: {current_candle['oi']:,} (no quote fetch needed)")
 
                             # Store the candle for use in STEP 3 (avoids re-fetch)
                             self._last_initialized_candle = current_candle
@@ -491,16 +488,13 @@ class IntradayMomentumOIPaper:
             if hasattr(self, '_last_initialized_candle'):
                 current_candle = self._last_initialized_candle
 
-                # Fetch OI separately if not set
+                # Fetch OI if not already set (e.g. on_new_day init path)
                 if current_candle['oi'] == 0:
-                    print(f"[{current_time}] ⚠️  OI not in stored candle, fetching via quote API...")
                     current_candle['oi'] = self._fetch_oi_for_strike(
                         self.daily_strike,
                         'CE' if self.daily_direction == 'CALL' else 'PE',
                         self.daily_expiry
                     )
-                else:
-                    print(f"[{current_time}] ✓ Using OI from stored candle: {current_candle['oi']:,} (no quote fetch needed)")
 
                 # Clear the stored candle
                 delattr(self, '_last_initialized_candle')
@@ -1051,14 +1045,18 @@ class IntradayMomentumOIPaper:
                     last_ts = last_candle.get('timestamp')
                     if last_ts is not None:
                         # Candle is complete only when candle_time + 5 min <= current_time
-                        if hasattr(last_ts, 'tzinfo') and last_ts.tzinfo and not current_time.tzinfo:
-                            # Make current_time tz-aware to compare
-                            import pytz
-                            ist = pytz.timezone('Asia/Kolkata')
-                            current_time_aware = ist.localize(current_time)
-                        else:
-                            current_time_aware = current_time
-                        if last_ts + timedelta(minutes=5) > current_time_aware:
+                        # Normalise both to naive IST for comparison (handles all broker combinations)
+                        import pytz
+                        ist = pytz.timezone('Asia/Kolkata')
+
+                        def _to_naive_ist(dt):
+                            if dt.tzinfo is not None:
+                                return dt.astimezone(ist).replace(tzinfo=None)
+                            return dt
+
+                        last_ts_naive = _to_naive_ist(last_ts)
+                        current_time_naive = _to_naive_ist(current_time)
+                        if last_ts_naive + timedelta(minutes=5) > current_time_naive:
                             dropped = historical_candles[-1]
                             historical_candles = historical_candles[:-1]
                             print(f"[{current_time}] ⚠️  Dropped incomplete last candle: "
@@ -1090,13 +1088,19 @@ class IntradayMomentumOIPaper:
 
                     # Store the last candle for use in _check_entry (avoid duplicate fetch)
                     last_candle = historical_candles[-1]
+                    oi = last_candle.get('oi', 0)
+                    if oi == 0:
+                        # AngelOne candles have no OI — fetch via quote API now so
+                        # STEP 3 in _check_entry doesn't need a separate call
+                        option_type_code = 'CE' if self.daily_direction == 'CALL' else 'PE'
+                        oi = self._fetch_oi_for_strike(self.daily_strike, option_type_code, self.daily_expiry)
                     self._last_initialized_candle = {
                         'open': last_candle['open'],
                         'high': last_candle['high'],
                         'low': last_candle['low'],
                         'close': last_candle['close'],
                         'volume': last_candle['volume'],
-                        'oi': last_candle.get('oi', 0)  # Use OI from candle if available
+                        'oi': oi
                     }
                 else:
                     print(f"[{current_time}] ⚠️  Failed to initialize VWAP with historical data")
@@ -1411,8 +1415,11 @@ class IntradayMomentumOIPaper:
             # Calculate last complete 5-min boundary
             current_minute = current_time.minute
             boundary_minute = (current_minute // 5) * 5
-            to_time = current_time.replace(minute=boundary_minute, second=0, microsecond=0)
-            from_time = to_time - timedelta(minutes=5)  # Fetch only last 5 min (gets only 1 candle)
+            candle_start = current_time.replace(minute=boundary_minute, second=0, microsecond=0)
+            from_time = candle_start - timedelta(minutes=5)
+            # Subtract 1s so AngelOne formats to_time as "HH:MM-1" not "HH:MM",
+            # preventing the just-started boundary candle from being returned.
+            to_time = candle_start - timedelta(seconds=1)
 
             # Fetch candle for selected strike ONLY
             candles = self.adapter.get_historical_candles(
@@ -1443,14 +1450,11 @@ class IntradayMomentumOIPaper:
             # Get last candle (most recent complete)
             last_candle = candles[-1]
 
-            # Use OI from candle if available, otherwise fetch separately
+            # Use OI from candle if available, otherwise fetch via quote API
+            # (AngelOne candles never include OI, so quote API is always used)
             oi = last_candle.get('oi', 0)
             if oi == 0:
-                # Fallback: Fetch OI separately if not included in candle data
-                print(f"[{current_time}] ⚠️  OI not in candle data, fetching via quote API...")
                 oi = self._fetch_oi_for_strike(strike, option_type_code, expiry)
-            else:
-                print(f"[{current_time}] ✓ Using OI from candle data: {oi:,} (no quote fetch needed)")
 
             return {
                 'open': last_candle['open'],
