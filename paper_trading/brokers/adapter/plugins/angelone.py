@@ -387,6 +387,33 @@ class AngelOneAdapter(BrokerAdapter):
                     logger.error(f"Error parsing candle: {candle}, error: {e}")
                     continue
 
+            # Step 5: Filter out incomplete candles
+            # AngelOne now returns the current incomplete candle (e.g., 10:25 candle fetched at 10:26).
+            # Drop the last candle if it's still in progress to avoid duplicate storage.
+            if candles:
+                last_candle = candles[-1]
+                last_ts = last_candle.get('timestamp')
+                if last_ts is not None:
+                    # Candle is complete only when candle_time + 5 min <= current_time
+                    import pytz
+                    ist = pytz.timezone('Asia/Kolkata')
+                    
+                    def _to_naive_ist(dt):
+                        if dt.tzinfo is not None:
+                            return dt.astimezone(ist).replace(tzinfo=None)
+                        return dt
+                    
+                    last_ts_naive = _to_naive_ist(last_ts)
+                    current_time_naive = _to_naive_ist(datetime.now(ist))
+                    
+                    # A 5-min candle starting at T is complete only after T+5min
+                    # So drop it if current_time < candle_start + 5min
+                    if last_ts_naive + timedelta(minutes=5) > current_time_naive:
+                        dropped = candles[-1]
+                        candles = candles[:-1]
+                        logger.info(f"⚠️  Dropped incomplete last candle: "
+                                  f"{dropped.get('timestamp')} (still in progress, vol={dropped.get('volume', 0):,})")
+
             return candles
 
         except Exception as e:
