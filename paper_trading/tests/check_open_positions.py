@@ -80,7 +80,7 @@ def main():
         order_book = adapter._smart_api.orderBook()
 
         if order_book and order_book.get('status'):
-            orders = order_book.get('data', [])
+            orders = order_book.get('data') or []
 
             # Filter for pending/open orders
             pending_orders = [

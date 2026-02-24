@@ -222,7 +222,7 @@ class AngelOneAdapter(BrokerAdapter):
             )
 
             if market_data and market_data.get('status'):
-                fetched = market_data.get('data', {}).get('fetched', [])
+                fetched = (market_data.get('data') or {}).get('fetched', [])
                 if fetched and len(fetched) > 0:
                     return float(fetched[0].get('ltp', 0))
 
@@ -255,7 +255,7 @@ class AngelOneAdapter(BrokerAdapter):
             )
 
             if market_data and market_data.get('status'):
-                fetched = market_data.get('data', {}).get('fetched', [])
+                fetched = (market_data.get('data') or {}).get('fetched', [])
                 if fetched:
                     q = fetched[0]
                     return Quote(
@@ -357,7 +357,7 @@ class AngelOneAdapter(BrokerAdapter):
                 logger.warning(f"Response: {response}")
                 return []
 
-            candle_data = response.get('data', [])
+            candle_data = response.get('data') or []
             if not candle_data:
                 logger.warning(f"Empty candle data for {option_type} {strike}")
                 return []
@@ -498,7 +498,7 @@ class AngelOneAdapter(BrokerAdapter):
                     )
 
                     if market_data and market_data.get('status'):
-                        fetched = market_data.get('data', {}).get('fetched', [])
+                        fetched = (market_data.get('data') or {}).get('fetched', [])
                         for q in fetched:
                             token = q.get('symbolToken', '')
                             quotes_map[token] = q
@@ -826,7 +826,7 @@ class AngelOneAdapter(BrokerAdapter):
 
             # Find our order in the order book
             order_data = None
-            for o in orders.get('data', []):
+            for o in orders.get('data') or []:
                 if str(o.get('orderid')) == str(order_id):
                     order_data = o
                     break
@@ -987,7 +987,7 @@ class AngelOneAdapter(BrokerAdapter):
         try:
             orders = self._smart_api.orderBook()
             if orders and orders.get('status'):
-                for o in orders.get('data', []):
+                for o in orders.get('data') or []:
                     if str(o.get('orderid')) == str(order_id):
                         return OrderResponse(
                             success=True,
@@ -1020,7 +1020,7 @@ class AngelOneAdapter(BrokerAdapter):
                         average_price=float(o.get('averageprice', 0)),
                         message=o.get('text', '')
                     )
-                    for o in orders.get('data', [])
+                    for o in orders.get('data') or []
                 ]
             return []
 
@@ -1041,7 +1041,7 @@ class AngelOneAdapter(BrokerAdapter):
             positions = self._smart_api.position()
             if positions and positions.get('status'):
                 result = []
-                for p in positions.get('data', []):
+                for p in positions.get('data') or []:
                     qty = int(p.get('netqty', 0))
                     if qty == 0:
                         continue
@@ -1091,7 +1091,7 @@ class AngelOneAdapter(BrokerAdapter):
                         pnl=float(h.get('profitandloss', 0)),
                         symbol=h.get('tradingsymbol', '')
                     )
-                    for h in holdings.get('data', [])
+                    for h in holdings.get('data') or []
                 ]
             return []
 
