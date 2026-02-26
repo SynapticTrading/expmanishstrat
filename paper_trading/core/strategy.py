@@ -499,8 +499,26 @@ class IntradayMomentumOIPaper:
                 # Clear the stored candle
                 delattr(self, '_last_initialized_candle')
             else:
-                print(f"[{current_time}] ⚠️  No stored candle from initialization")
-                return
+                # Skip flag was set but init failed at 9:15 (window too small, no complete
+                # candle yet). Retry the historical fetch now — by this point (9:30+) there
+                # should be complete 5-min candles available.
+                print(f"[{current_time}] ⚠️  No stored candle from initialization - fetching historical candles now...")
+                # Always clear the stuck flag so future ticks aren't blocked
+                if hasattr(self, '_skip_next_candle_fetch'):
+                    self._skip_next_candle_fetch = False
+                self._initialize_vwap_from_market_open(current_time)
+                if hasattr(self, '_last_initialized_candle'):
+                    current_candle = self._last_initialized_candle
+                    if current_candle['oi'] == 0:
+                        current_candle['oi'] = self._fetch_oi_for_strike(
+                            self.daily_strike,
+                            'CE' if self.daily_direction == 'CALL' else 'PE',
+                            self.daily_expiry
+                        )
+                    delattr(self, '_last_initialized_candle')
+                else:
+                    print(f"[{current_time}] ⚠️  Still no historical candles available - will retry next candle")
+                    return
 
         # Clear the skip flag after checking
         if hasattr(self, '_skip_next_candle_fetch'):

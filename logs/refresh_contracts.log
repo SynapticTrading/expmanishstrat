@@ -3435,3 +3435,285 @@ Step 3/3: Verifying contracts...
 2026-02-23 09:37:12,189 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
 2026-02-23 09:37:12,189 - __main__ - INFO - ======================================================================
 
+2026-02-24 16:10:00,735 - __main__ - INFO - ======================================================================
+2026-02-24 16:10:00,736 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-24 16:10:00
+2026-02-24 16:10:00,736 - __main__ - INFO - ======================================================================
+2026-02-24 16:10:00,736 - __main__ - INFO - Broker: ZERODHA
+2026-02-24 16:10:00,736 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-24 16:10:01,336 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-24 16:10:01,344 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-24 16:10:01,556 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha
+2026-02-24 16:10:01,556 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-24 16:16:43,751 - __main__ - INFO - ======================================================================
+2026-02-24 16:16:43,752 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-24 16:16:43
+2026-02-24 16:16:43,752 - __main__ - INFO - ======================================================================
+2026-02-24 16:16:43,752 - __main__ - INFO - Broker: ZERODHA
+2026-02-24 16:16:43,752 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-24 16:16:44,277 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-24 16:16:44,278 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-24 16:16:44,561 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha
+2026-02-24 16:16:44,562 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-24 16:54:55,458 - __main__ - INFO - ======================================================================
+2026-02-24 16:54:55,458 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-24 16:54:55
+2026-02-24 16:54:55,458 - __main__ - INFO - ======================================================================
+2026-02-24 16:54:55,458 - __main__ - INFO - Broker: ZERODHA
+2026-02-24 16:54:55,458 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-24 16:54:56,148 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-24 16:54:56,149 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-24 16:54:56,415 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha
+2026-02-24 16:54:56,415 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-25 10:05:28,771 - __main__ - INFO - ======================================================================
+2026-02-25 10:05:28,771 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:05:28
+2026-02-25 10:05:28,771 - __main__ - INFO - ======================================================================
+2026-02-25 10:05:28,771 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:05:28,771 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:05:29,449 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:05:29,450 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:05:29,752 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha
+2026-02-25 10:05:29,753 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-25 10:11:48,371 - __main__ - INFO - ======================================================================
+2026-02-25 10:11:48,371 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:11:48
+2026-02-25 10:11:48,371 - __main__ - INFO - ======================================================================
+2026-02-25 10:11:48,371 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:11:48,371 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:11:48,948 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:11:48,954 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:11:49,153 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Generated TOTP: 801531
+2026-02-25 10:11:49,253 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha: Could not obtain request_token. Last redirect URL: https://kite.zerodha.com/connect/login?v=3&api_key=8unsgy4cfas4aovi
+2026-02-25 10:11:49,259 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-25 10:14:25,185 - __main__ - INFO - ======================================================================
+2026-02-25 10:14:25,185 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:14:25
+2026-02-25 10:14:25,185 - __main__ - INFO - ======================================================================
+2026-02-25 10:14:25,185 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:14:25,185 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:14:25,838 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:14:25,844 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:14:26,140 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Generated TOTP: 424051
+2026-02-25 10:14:26,209 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Redirect status=400 Location=
+2026-02-25 10:14:26,240 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Fallback-A final URL: https://kite.zerodha.com/connect/login?v=3&api_key=8unsgy4cfas4aovi&skip_session=true
+2026-02-25 10:14:26,240 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha: Could not obtain request_token. connect_url=https://kite.zerodha.com/connect/login?v=3&api_key=8unsgy4cfas4aovi&skip_session=true
+2026-02-25 10:14:26,244 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-25 10:16:36,296 - __main__ - INFO - ======================================================================
+2026-02-25 10:16:36,296 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:16:36
+2026-02-25 10:16:36,296 - __main__ - INFO - ======================================================================
+2026-02-25 10:16:36,296 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:16:36,296 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:16:36,983 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:16:36,989 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:16:37,121 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Generated TOTP: 773545
+2026-02-25 10:16:37,154 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Cookies after 2FA: {'_cfuvid': 'YsB2i8hOUOcUFalR1H6ShNNHIsuVtJ7Yn.Mzd8m85Ck-1771994797076-0.0.1.1-604800000', '__cf_bm': 'HBeUGsPUVGIICsEMX0TLN9.UMAqsnxleq9xeLtGdbl8-1771994797-1.0.1.1-ZDlWr1UFFI6.XEgyzG0VIgZAuU_tNa1gHPqWh_v64n8_KNQTe42yyQJJuW6vCA_iVfBAp9SObgpmFAl9BLxOO7lWh19m0iizFNvRiewBBwY', 'public_token': 'AHMefH39yLSnmJk64MGy6RxkU8uE9kHX', 'enctoken': 'lVSzbFcYSpKPnAKmOU4zuSzYGSNvl3eu8r8u7fqSHAsvRorAqe8JDKLRFnrYxZXdgrVmlw3sSBW9D27pv3/IvJrlFH2ORVfPedMyRJFPgxsNoHZGZS20rg==', 'kf_session': 'zur70LW09Yyru7BQD67hmG6IF0P8xGoU', 'user_id': 'SHM035'}
+2026-02-25 10:16:37,177 - paper_trading.brokers.adapter.plugins.zerodha - INFO - [A] status=400 Location=
+2026-02-25 10:16:37,177 - paper_trading.brokers.adapter.plugins.zerodha - INFO - [A] body={"status":"error","message":"Invalid `api_key`.","data":null,"error_type":"InputException"}
+2026-02-25 10:16:37,207 - paper_trading.brokers.adapter.plugins.zerodha - INFO - [B] status=400 Location=
+2026-02-25 10:16:37,207 - paper_trading.brokers.adapter.plugins.zerodha - INFO - [B] body={"status":"error","message":"Invalid `api_key`.","data":null,"error_type":"InputException"}
+2026-02-25 10:16:37,230 - paper_trading.brokers.adapter.plugins.zerodha - INFO - [C] final_url=https://kite.zerodha.com/connect/login?v=3&api_key=8unsgy4cfas4aovi
+2026-02-25 10:16:37,230 - paper_trading.brokers.adapter.plugins.zerodha - ERROR - Failed to connect to Zerodha: Could not obtain request_token — see diagnostics above
+2026-02-25 10:16:37,234 - __main__ - ERROR - Failed to connect to Zerodha
+2026-02-25 10:18:57,241 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:57,242 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:18:57
+2026-02-25 10:18:57,242 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:57,242 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:18:57,242 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:18:57,904 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:18:57,910 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:18:57,985 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Generated TOTP: 741836
+2026-02-25 10:18:58,050 - paper_trading.brokers.adapter.plugins.zerodha - INFO - enctoken obtained from session — bypassing Kite Connect OAuth
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Connected to Zerodha
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO tradingsymbol lookups - tokens from contracts_cache.json
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO legacy data feed - pure adapter + ContractManager architecture
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - WARNING - ⚠️  ContractManager has no tokens - run: python refresh_contracts.py --broker zerodha
+2026-02-25 10:18:58,051 - __main__ - INFO - ✓ Authentication successful
+2026-02-25 10:18:58,051 - __main__ - INFO - 
+Step 2/3: Loading instruments from Zerodha...
+2026-02-25 10:18:58,051 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Token-based mode: Using ContractManager (no instrument CSV needed)
+2026-02-25 10:18:58,051 - __main__ - INFO - Refreshing contracts...
+2026-02-25 10:18:58,051 - __main__ - INFO - Fetching instruments from Zerodha...
+2026-02-25 10:18:59,215 - __main__ - INFO - Fetched 41824 NFO instruments
+2026-02-25 10:18:59,215 - __main__ - INFO - Processing NIFTY futures...
+2026-02-25 10:18:59,231 - __main__ - INFO - Found 3 NIFTY futures contracts
+2026-02-25 10:18:59,233 - __main__ - INFO - Processing NIFTY options...
+2026-02-25 10:18:59,237 - __main__ - INFO - Found 1554 NIFTY options contracts
+2026-02-25 10:18:59,241 - __main__ - INFO - Found 18 unique options expiry dates
+2026-02-25 10:18:59,241 - __main__ - INFO - Options lot size: 65 units per lot
+2026-02-25 10:18:59,241 - __main__ - INFO - Building options instrument token map (using exchange tokens)...
+2026-02-25 10:18:59,245 - __main__ - INFO - Cached 1554 options instrument tokens across 18 expiries
+2026-02-25 10:18:59,255 - __main__ - INFO - Saved 3 futures and 18 options expiries to cache: contracts_cache.json
+2026-02-25 10:18:59,255 - __main__ - INFO - Using UNIVERSAL exchange tokens (same for all brokers)
+2026-02-25 10:18:59,291 - paper_trading.brokers.adapter.plugins.zerodha - WARNING - Error during logout: `api_key` or token is invalid.
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ Contracts refreshed successfully
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+Step 3/3: Verifying contracts...
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - FUTURES CONTRACTS
+2026-02-25 10:18:59,291 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - Current Month:  NIFTY26MARFUT - Expiry: 2026-03-30 (33 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - Next Month:     NIFTY26APRFUT - Expiry: 2026-04-28 (62 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - Far Next Month: NIFTY26MAYFUT - Expiry: 2026-05-26 (90 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - OPTIONS EXPIRY DATES
+2026-02-25 10:18:59,291 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - Current Week:   2026-03-02 (5 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - Next Week:      2026-03-10 (13 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - Current Month:  2026-03-24 (27 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - Next Month:     2026-04-28 (62 days)
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - FUTURES ROLLOVER CHECK (7-day threshold)
+2026-02-25 10:18:59,291 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ OK: current_month (NIFTY26MARFUT - 33 days to expiry)
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ OK: next_month (NIFTY26APRFUT - 62 days to expiry)
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ OK: far_next_month (NIFTY26MAYFUT - 90 days to expiry)
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - OPTIONS ROLLOVER CHECK (2-day threshold)
+2026-02-25 10:18:59,291 - __main__ - INFO - ======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ OK: current_week (2026-03-02 - 5 days to expiry)
+2026-02-25 10:18:59,291 - __main__ - INFO - ✓ OK: current_month (2026-03-24 - 27 days to expiry)
+2026-02-25 10:18:59,291 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:18:59,291 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
+2026-02-25 10:18:59,292 - __main__ - INFO - ======================================================================
+
+2026-02-25 10:25:17,712 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:17,713 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:25:17
+2026-02-25 10:25:17,713 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:17,713 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:25:17,713 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:25:18,405 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:25:18,411 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:25:18,767 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Connected to Zerodha
+2026-02-25 10:25:18,768 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly
+2026-02-25 10:25:18,768 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO tradingsymbol lookups - tokens from contracts_cache.json
+2026-02-25 10:25:18,768 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO legacy data feed - pure adapter + ContractManager architecture
+2026-02-25 10:25:18,768 - paper_trading.brokers.adapter.plugins.zerodha - WARNING - ⚠️  ContractManager has no tokens - run: python refresh_contracts.py --broker zerodha
+2026-02-25 10:25:18,768 - __main__ - INFO - ✓ Authentication successful
+2026-02-25 10:25:18,768 - __main__ - INFO - 
+Step 2/3: Loading instruments from Zerodha...
+2026-02-25 10:25:18,768 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Token-based mode: Using ContractManager (no instrument CSV needed)
+2026-02-25 10:25:18,768 - __main__ - INFO - Refreshing contracts...
+2026-02-25 10:25:18,768 - __main__ - INFO - Fetching instruments from Zerodha...
+2026-02-25 10:25:19,862 - __main__ - INFO - Fetched 41824 NFO instruments
+2026-02-25 10:25:19,862 - __main__ - INFO - Processing NIFTY futures...
+2026-02-25 10:25:19,875 - __main__ - INFO - Found 3 NIFTY futures contracts
+2026-02-25 10:25:19,875 - __main__ - INFO - Processing NIFTY options...
+2026-02-25 10:25:19,886 - __main__ - INFO - Found 1554 NIFTY options contracts
+2026-02-25 10:25:19,889 - __main__ - INFO - Found 18 unique options expiry dates
+2026-02-25 10:25:19,889 - __main__ - INFO - Options lot size: 65 units per lot
+2026-02-25 10:25:19,889 - __main__ - INFO - Building options instrument token map (using exchange tokens)...
+2026-02-25 10:25:19,893 - __main__ - INFO - Cached 1554 options instrument tokens across 18 expiries
+2026-02-25 10:25:19,903 - __main__ - INFO - Saved 3 futures and 18 options expiries to cache: contracts_cache.json
+2026-02-25 10:25:19,903 - __main__ - INFO - Using UNIVERSAL exchange tokens (same for all brokers)
+2026-02-25 10:25:19,937 - __main__ - INFO - ✓ Contracts refreshed successfully
+2026-02-25 10:25:19,937 - __main__ - INFO - 
+Step 3/3: Verifying contracts...
+2026-02-25 10:25:19,937 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:25:19,937 - __main__ - INFO - FUTURES CONTRACTS
+2026-02-25 10:25:19,937 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:19,937 - __main__ - INFO - Current Month:  NIFTY26MARFUT - Expiry: 2026-03-30 (33 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - Next Month:     NIFTY26APRFUT - Expiry: 2026-04-28 (62 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - Far Next Month: NIFTY26MAYFUT - Expiry: 2026-05-26 (90 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:25:19,937 - __main__ - INFO - OPTIONS EXPIRY DATES
+2026-02-25 10:25:19,937 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:19,937 - __main__ - INFO - Current Week:   2026-03-02 (5 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - Next Week:      2026-03-10 (13 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - Current Month:  2026-03-24 (27 days)
+2026-02-25 10:25:19,937 - __main__ - INFO - Next Month:     2026-04-28 (62 days)
+2026-02-25 10:25:19,938 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:25:19,938 - __main__ - INFO - FUTURES ROLLOVER CHECK (7-day threshold)
+2026-02-25 10:25:19,938 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:19,938 - __main__ - INFO - ✓ OK: current_month (NIFTY26MARFUT - 33 days to expiry)
+2026-02-25 10:25:19,938 - __main__ - INFO - ✓ OK: next_month (NIFTY26APRFUT - 62 days to expiry)
+2026-02-25 10:25:19,938 - __main__ - INFO - ✓ OK: far_next_month (NIFTY26MAYFUT - 90 days to expiry)
+2026-02-25 10:25:19,938 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:25:19,938 - __main__ - INFO - OPTIONS ROLLOVER CHECK (2-day threshold)
+2026-02-25 10:25:19,938 - __main__ - INFO - ======================================================================
+2026-02-25 10:25:19,938 - __main__ - INFO - ✓ OK: current_week (2026-03-02 - 5 days to expiry)
+2026-02-25 10:25:19,938 - __main__ - INFO - ✓ OK: current_month (2026-03-24 - 27 days to expiry)
+2026-02-25 10:25:19,938 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:25:19,938 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
+2026-02-25 10:25:19,938 - __main__ - INFO - ======================================================================
+
+2026-02-25 10:26:59,197 - __main__ - INFO - ======================================================================
+2026-02-25 10:26:59,197 - __main__ - INFO - DAILY CONTRACT REFRESH (FUTURES + OPTIONS) - 2026-02-25 10:26:59
+2026-02-25 10:26:59,198 - __main__ - INFO - ======================================================================
+2026-02-25 10:26:59,198 - __main__ - INFO - Broker: ZERODHA
+2026-02-25 10:26:59,198 - __main__ - INFO - 
+Step 1/3: Authenticating with Zerodha...
+2026-02-25 10:26:59,812 - __main__ - INFO - Loading credentials from: /Users/Algo_Trading/manishsir_options/paper_trading/config/credentials_zerodha.txt
+2026-02-25 10:26:59,814 - paper_trading.brokers.adapter.factory - INFO - Created zerodha adapter
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Connected to Zerodha
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ PURE TOKEN-BASED MODE: All API calls use instrument_token directly
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO tradingsymbol lookups - tokens from contracts_cache.json
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - INFO - ✓ NO legacy data feed - pure adapter + ContractManager architecture
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - WARNING - ⚠️  ContractManager has no tokens - run: python refresh_contracts.py --broker zerodha
+2026-02-25 10:27:00,160 - __main__ - INFO - ✓ Authentication successful
+2026-02-25 10:27:00,160 - __main__ - INFO - 
+Step 2/3: Loading instruments from Zerodha...
+2026-02-25 10:27:00,160 - paper_trading.brokers.adapter.plugins.zerodha - INFO - Token-based mode: Using ContractManager (no instrument CSV needed)
+2026-02-25 10:27:00,160 - __main__ - INFO - Refreshing contracts...
+2026-02-25 10:27:00,160 - __main__ - INFO - Fetching instruments from Zerodha...
+2026-02-25 10:27:01,298 - __main__ - INFO - Fetched 41824 NFO instruments
+2026-02-25 10:27:01,298 - __main__ - INFO - Processing NIFTY futures...
+2026-02-25 10:27:01,312 - __main__ - INFO - Found 3 NIFTY futures contracts
+2026-02-25 10:27:01,314 - __main__ - INFO - Processing NIFTY options...
+2026-02-25 10:27:01,319 - __main__ - INFO - Found 1554 NIFTY options contracts
+2026-02-25 10:27:01,323 - __main__ - INFO - Found 18 unique options expiry dates
+2026-02-25 10:27:01,323 - __main__ - INFO - Options lot size: 65 units per lot
+2026-02-25 10:27:01,324 - __main__ - INFO - Building options instrument token map (using exchange tokens)...
+2026-02-25 10:27:01,328 - __main__ - INFO - Cached 1554 options instrument tokens across 18 expiries
+2026-02-25 10:27:01,338 - __main__ - INFO - Saved 3 futures and 18 options expiries to cache: contracts_cache.json
+2026-02-25 10:27:01,338 - __main__ - INFO - Using UNIVERSAL exchange tokens (same for all brokers)
+2026-02-25 10:27:01,373 - __main__ - INFO - ✓ Contracts refreshed successfully
+2026-02-25 10:27:01,373 - __main__ - INFO - 
+Step 3/3: Verifying contracts...
+2026-02-25 10:27:01,373 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:27:01,373 - __main__ - INFO - FUTURES CONTRACTS
+2026-02-25 10:27:01,373 - __main__ - INFO - ======================================================================
+2026-02-25 10:27:01,373 - __main__ - INFO - Current Month:  NIFTY26MARFUT - Expiry: 2026-03-30 (33 days)
+2026-02-25 10:27:01,373 - __main__ - INFO - Next Month:     NIFTY26APRFUT - Expiry: 2026-04-28 (62 days)
+2026-02-25 10:27:01,373 - __main__ - INFO - Far Next Month: NIFTY26MAYFUT - Expiry: 2026-05-26 (90 days)
+2026-02-25 10:27:01,373 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:27:01,373 - __main__ - INFO - OPTIONS EXPIRY DATES
+2026-02-25 10:27:01,373 - __main__ - INFO - ======================================================================
+2026-02-25 10:27:01,373 - __main__ - INFO - Current Week:   2026-03-02 (5 days)
+2026-02-25 10:27:01,373 - __main__ - INFO - Next Week:      2026-03-10 (13 days)
+2026-02-25 10:27:01,373 - __main__ - INFO - Current Month:  2026-03-24 (27 days)
+2026-02-25 10:27:01,374 - __main__ - INFO - Next Month:     2026-04-28 (62 days)
+2026-02-25 10:27:01,374 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:27:01,374 - __main__ - INFO - FUTURES ROLLOVER CHECK (7-day threshold)
+2026-02-25 10:27:01,374 - __main__ - INFO - ======================================================================
+2026-02-25 10:27:01,374 - __main__ - INFO - ✓ OK: current_month (NIFTY26MARFUT - 33 days to expiry)
+2026-02-25 10:27:01,374 - __main__ - INFO - ✓ OK: next_month (NIFTY26APRFUT - 62 days to expiry)
+2026-02-25 10:27:01,374 - __main__ - INFO - ✓ OK: far_next_month (NIFTY26MAYFUT - 90 days to expiry)
+2026-02-25 10:27:01,374 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:27:01,374 - __main__ - INFO - OPTIONS ROLLOVER CHECK (2-day threshold)
+2026-02-25 10:27:01,374 - __main__ - INFO - ======================================================================
+2026-02-25 10:27:01,374 - __main__ - INFO - ✓ OK: current_week (2026-03-02 - 5 days to expiry)
+2026-02-25 10:27:01,374 - __main__ - INFO - ✓ OK: current_month (2026-03-24 - 27 days to expiry)
+2026-02-25 10:27:01,374 - __main__ - INFO - 
+======================================================================
+2026-02-25 10:27:01,374 - __main__ - INFO - REFRESH COMPLETED SUCCESSFULLY
+2026-02-25 10:27:01,374 - __main__ - INFO - ======================================================================
+
