@@ -379,17 +379,24 @@ class IntradayMomentumOIPaper:
             if hasattr(self, 'entry_oi'):
                 delattr(self, 'entry_oi')
 
-            # Clean up old strike's VWAP data
-            vwap_keys_to_remove = [k for k in self.vwap_running_totals.keys() if k[0] == old_strike]
-            for key in vwap_keys_to_remove:
-                del self.vwap_running_totals[key]
+            # Clean up old strike's VWAP data only if no open position at that strike.
+            # If a position is still open at old_strike, it needs its VWAP state for exit
+            # monitoring — defer cleanup to the next strike update after position exits.
+            open_position_strikes = {p.strike for p in self.broker.get_open_positions()}
 
-            hist_keys_to_remove = [k for k in self.historical_candles.keys() if k[0] == old_strike]
-            for key in hist_keys_to_remove:
-                del self.historical_candles[key]
+            if old_strike not in open_position_strikes:
+                vwap_keys_to_remove = [k for k in self.vwap_running_totals.keys() if k[0] == old_strike]
+                for key in vwap_keys_to_remove:
+                    del self.vwap_running_totals[key]
 
-            if vwap_keys_to_remove or hist_keys_to_remove:
-                print(f"[{current_time}] 🧹 Cleaned up old strike {old_strike} data")
+                hist_keys_to_remove = [k for k in self.historical_candles.keys() if k[0] == old_strike]
+                for key in hist_keys_to_remove:
+                    del self.historical_candles[key]
+
+                if vwap_keys_to_remove or hist_keys_to_remove:
+                    print(f"[{current_time}] 🧹 Cleaned up old strike {old_strike} data")
+            else:
+                print(f"[{current_time}] ⚠️  Skipping cleanup for {old_strike} — open position active, will cleanup on next strike update after exit")
 
             # ╔═════════════════════════════════════════════════════════════╗
             # ║ FETCH HISTORICAL CANDLES FOR NEW STRIKE (from 9:15 AM)     ║
