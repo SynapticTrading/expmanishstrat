@@ -307,6 +307,14 @@ class IntradayMomentumOIPaper:
             print(f"{'='*80}\n")
             self.on_new_day(current_time, spot_price, options_data)
 
+        # When a position is open, the exit monitor loop (1-min) owns all exit
+        # monitoring and VWAP updates. Running _check_exits here too would
+        # double-count volume in vwap_running_totals (both paths call
+        # _calculate_vwap_ohlc for the same candle). Skip everything
+        # position-related in the main loop and let the exit monitor handle it.
+        if self.broker.get_open_positions():
+            return
+
         # Check exit conditions for open positions
         self._check_exits(current_time, options_data)
 
@@ -379,24 +387,17 @@ class IntradayMomentumOIPaper:
             if hasattr(self, 'entry_oi'):
                 delattr(self, 'entry_oi')
 
-            # Clean up old strike's VWAP data only if no open position at that strike.
-            # If a position is still open at old_strike, it needs its VWAP state for exit
-            # monitoring — defer cleanup to the next strike update after position exits.
-            open_position_strikes = {p.strike for p in self.broker.get_open_positions()}
+            # Clean up old strike's VWAP data
+            vwap_keys_to_remove = [k for k in self.vwap_running_totals.keys() if k[0] == old_strike]
+            for key in vwap_keys_to_remove:
+                del self.vwap_running_totals[key]
 
-            if old_strike not in open_position_strikes:
-                vwap_keys_to_remove = [k for k in self.vwap_running_totals.keys() if k[0] == old_strike]
-                for key in vwap_keys_to_remove:
-                    del self.vwap_running_totals[key]
+            hist_keys_to_remove = [k for k in self.historical_candles.keys() if k[0] == old_strike]
+            for key in hist_keys_to_remove:
+                del self.historical_candles[key]
 
-                hist_keys_to_remove = [k for k in self.historical_candles.keys() if k[0] == old_strike]
-                for key in hist_keys_to_remove:
-                    del self.historical_candles[key]
-
-                if vwap_keys_to_remove or hist_keys_to_remove:
-                    print(f"[{current_time}] 🧹 Cleaned up old strike {old_strike} data")
-            else:
-                print(f"[{current_time}] ⚠️  Skipping cleanup for {old_strike} — open position active, will cleanup on next strike update after exit")
+            if vwap_keys_to_remove or hist_keys_to_remove:
+                print(f"[{current_time}] 🧹 Cleaned up old strike {old_strike} data")
 
             # ╔═════════════════════════════════════════════════════════════╗
             # ║ FETCH HISTORICAL CANDLES FOR NEW STRIKE (from 9:15 AM)     ║
